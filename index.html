@@ -3,173 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HAFAR - Website Resmi</title>
+    <title>Home - HAFAR</title>
     <style>
-        :root {
-            --bg-color: #f4f4f4;
-            --text-color: #333;
-            --primary-color: #2c3e50;
-            --accent-color: #3498db;
-            --card-bg: #fff;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-        }
-
-        header {
-            background: var(--primary-color);
-            color: #fff;
-            padding: 1.5rem 0;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 2.5rem;
-            letter-spacing: 2px;
-        }
-
-        /* Navigasi & Animasi Klik Menu */
-        nav {
-            background: #34495e;
-            padding: 0.8rem;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 10px 20px;
-            border-radius: 6px;
-            transition: all 0.2s ease-in-out;
-            display: inline-block;
-        }
-
-        nav a.active-page {
-            background-color: var(--accent-color);
-        }
-
-        nav a:active {
-            transform: scale(0.90);
-            background-color: #1abc9c;
-        }
-
-        nav a:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-        }
-
-        /* Container Utama */
-        .container {
-            padding: 30px;
-            max-width: 900px;
-            margin: 30px auto;
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Layout Grid Khusus Laptop */
-        @media (min-width: 768px) {
-            .index-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 30px;
-                align-items: center;
-            }
-        }
-
-        /* Layout Khusus Handphone */
-        @media (max-width: 767px) {
-            .container {
-                margin: 15px;
-                padding: 20px;
-            }
-            header h1 {
-                font-size: 1.8rem;
-            }
-            nav {
-                flex-direction: column;
-                gap: 8px;
-                padding: 12px;
-            }
-            nav a {
-                display: block;
-                width: 90%;
-                margin: 0 auto;
-                text-align: center;
-            }
-        }
-
-        img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        img:hover {
-            transform: scale(1.02);
-        }
-
-        .footer {
-            text-align: center;
-            padding: 20px;
-            font-size: 0.9rem;
-            color: #777;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background-color: #f4f6f9; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
+        header { background-color: #1e3a5f; color: #fff; padding: 20px 0; text-align: center; }
+        header h1 { font-size: 2.2rem; letter-spacing: 1px; }
+        nav { background-color: #2c4d75; display: flex; justify-content: center; padding: 10px 0; gap: 10px; flex-wrap: wrap; }
+        nav a { color: #fff; text-decoration: none; padding: 10px 20px; font-weight: bold; border-radius: 5px; transition: background-color 0.3s; }
+        nav a:hover, nav a.active-page { background-color: #3b71ca; }
+        .container { max-width: 1000px; margin: 30px auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); flex: 1; width: 90%; }
+        .container h2 { margin-bottom: 10px; color: #1e3a5f; }
+        .container p { margin-bottom: 20px; color: #666; line-height: 1.6; }
+        .footer { background-color: #e9ecef; text-align: center; padding: 15px; font-size: 0.9rem; color: #777; margin-top: 30px; }
     </style>
 </head>
 <body>
+    <header>
+        <h1>HAFAR</h1>
+    </header>
 
-<header>
-    <h1>HAFAR</h1>
-</header>
+    <nav>
+        <a href="index.html" class="active-page">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="video.html">Video</a>
+    </nav>
 
-<nav>
-    <a href="index.html" class="active-page">Home</a>
-    <a href="about.html">About Us</a>
-    <a href="gallery.html">Gallery</a>
-    <a href="vidio.html">Video</a>
-</nav>
-
-<div class="container index-grid">
-    <div class="content-image">
-        <img src="foto-utama.jpg" alt="Foto Utama HAFAR">
-    </div>
-    <div class="content-text">
+    <div class="container">
         <h2>Selamat Datang di HAFAR</h2>
         <p>Website HAFAR kini tampil seragam, modern, dan responsif di semua perangkat!</p>
         <p>Silakan klik menu navigasi di atas untuk menjelajahi halaman lainnya dengan efek animasi tombol yang interaktif.</p>
     </div>
-</div>
 
-<div class="footer">
-    &copy; 2026 HAFAR. Semua hak dilindungi.
-</div>
-
+    <div class="footer">
+        &copy; 2026 HAFAR. Semua hak dilindungi.
+    </div>
 </body>
 </html>

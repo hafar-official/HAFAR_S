@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery Foto - HAFAR</title>
+    <title>Gallery Video - HAFAR</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: Arial, sans-serif; background-color: #f4f6f9; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
@@ -15,10 +15,17 @@
         .container { max-width: 1000px; margin: 30px auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); flex: 1; width: 90%; }
         .container h2 { margin-bottom: 10px; color: #1e3a5f; }
         .container p { margin-bottom: 20px; color: #666; }
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .gallery-item { background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-        .gallery-item img { width: 100%; height: 220px; object-fit: cover; border-radius: 6px; background-color: #eaeaea; }
-        .gallery-item p { margin-top: 12px; font-weight: bold; color: #444; }
+        
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; justify-items: center; }
+        .video-card { background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.03); width: 100%; display: flex; flex-direction: column; align-items: center; }
+        
+        /* Format khusus untuk video potret */
+        .video-card.portrait video { width: 100%; max-width: 320px; height: 480px; object-fit: cover; border-radius: 6px; background-color: #000; }
+        
+        /* Format khusus untuk video landscape */
+        .video-card.landscape video { width: 100%; height: 220px; object-fit: cover; border-radius: 6px; background-color: #000; }
+        
+        .video-card p { margin-top: 12px; font-weight: bold; color: #444; }
         .footer { background-color: #e9ecef; text-align: center; padding: 15px; font-size: 0.9rem; color: #777; margin-top: 30px; }
     </style>
 </head>
@@ -30,22 +37,22 @@
     <nav>
         <a href="index.html">Home</a>
         <a href="about.html">About Us</a>
-        <a href="gallery.html" class="active-page">Gallery</a>
-        <a href="video.html">Video</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="video.html" class="active-page">Video</a>
     </nav>
 
     <div class="container">
-        <h2>Galeri Foto HAFAR</h2>
-        <p>Koleksi foto dan dokumentasi kegiatan HAFAR:</p>
+        <h2>Galeri Video HAFAR</h2>
+        <p>Koleksi dokumentasi video kegiatan HAFAR:</p>
         
-        <div class="gallery-grid">
-            <div class="gallery-item">
-                <img src="Ketindan.jpg" alt="Dokumentasi 1">
-                <p>Dokumentasi 1</p>
-            </div>
-            <div class="gallery-item">
-                <img src="Jagung.jpeg" alt="Dokumentasi 2">
-                <p>Dokumentasi 2</p>
+        <div class="video-grid">
+            <!-- Video Potret (Tinggi/Vertical) -->
+            <div class="video-card portrait">
+                <video controls preload="metadata">
+                    <source src="Jagung Vid.mp4" type="video/mp4">
+                    Browser Anda tidak mendukung pemutaran video.
+                </video>
+                <p>Dokumentasi 3 (Potret)</p>
             </div>
         </div>
     </div>
