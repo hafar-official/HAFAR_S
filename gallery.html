@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - HAFAR</title>
+    <style>
+        :root {
+            --bg-color: #f4f4f4;
+            --text-color: #333;
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --card-bg: #fff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        header {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+        }
+
+        /* Navigasi & Animasi Klik Menu */
+        nav {
+            background: #34495e;
+            padding: 0.8rem;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 6px;
+            transition: all 0.2s ease-in-out;
+            display: inline-block;
+        }
+
+        nav a.active-page {
+            background-color: var(--accent-color);
+        }
+
+        nav a:active {
+            transform: scale(0.90);
+            background-color: #1abc9c;
+        }
+
+        nav a:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        /* Container Utama */
+        .container {
+            padding: 30px;
+            max-width: 900px;
+            margin: 30px auto;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Grid Galeri: 3 Kolom di Laptop, 1 Kolom di HP */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 767px) {
+            .container {
+                margin: 15px;
+                padding: 20px;
+            }
+            header h1 {
+                font-size: 1.8rem;
+            }
+            nav {
+                flex-direction: column;
+                gap: 8px;
+                padding: 12px;
+            }
+            nav a {
+                display: block;
+                width: 90%;
+                margin: 0 auto;
+                text-align: center;
+            }
+        }
+
+        .gallery-item {
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background: #fff;
+            text-align: center;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item img:hover {
+            transform: scale(1.08);
+        }
+
+        .gallery-item p {
+            padding: 10px;
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>HAFAR</h1>
+</header>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">About Us</a>
+    <a href="gallery.html" class="active-page">Gallery</a>
+</nav>
+
+<div class="container">
+    <h2>Galeri Foto HAFAR</h2>
+    <p>Koleksi foto dan dokumentasi kegiatan HAFAR:</p>
+
+    <div class="gallery-grid">
+        <div class="gallery-item">
+            <img src="Ketindan.jpg" alt="Dokumentasi 1">
+            <p>Dokumentasi 1</p>
+        </div>
+        <div class="gallery-item">
+            <img src="Jagung.jpeg" alt="Dokumentasi 2">
+            <p>Dokumentasi 2</p>
+        </div>
+        <div class="gallery-item">
+            <img src="Jagung Vid.mp4" alt="Dokumentasi 3">
+            <p>Dokumentasi 3</p>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    &copy; 2026 HAFAR. Semua hak dilindungi.
+</div>
+
+</body>
+</html>
