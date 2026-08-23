@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - HAFAR PKL Archive</title>
+    <title>Home - HAFAR</title>
     <link rel="stylesheet" href="style.css">
+    <!-- SDK Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <style>
+        .sidebar-user-box {
+            margin-top: auto;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -17,43 +29,60 @@
             <h2>Menu HAFAR</h2>
             <button class="close-sidebar-btn" onclick="toggleSidebar()">&times;</button>
         </div>
-        <nav class="sidebar-nav">
+        <nav class="sidebar-nav" style="display: flex; flex-direction: column; min-height: calc(100% - 70px);">
             <a href="index.html" class="active-page">Home</a>
             <a href="about.html">About Us</a>
             <a href="gallery.html">Gallery</a>
             <a href="video.html">Video</a>
+            
+            <div class="sidebar-user-box">
+                <div id="sidebar-logged-out">
+                    <p style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 10px;">Akses Kontributor HAFAR</p>
+                    <a href="gallery.html" style="display: block; text-align: center; padding: 10px; background: #2563eb; color: white; border-radius: 8px; text-decoration: none; font-weight: bold;">🔑 Login di Galeri</a>
+                </div>
+                <div id="sidebar-logged-in" style="display: none;">
+                    <p style="font-size: 0.75rem; color: #a7f3d0; font-weight: bold; text-transform: uppercase;">✓ Akses Anggota Aktif</p>
+                    <p id="user-email-display" style="font-size: 0.85rem; color: #ffffff; font-weight: bold; word-break: break-all; margin-bottom: 12px;"></p>
+                    <button onclick="logout()" style="width: 100%; padding: 8px; background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid rgba(239,68,68,0.4); border-radius: 8px; cursor: pointer; font-weight: bold;">Logout</button>
+                </div>
+            </div>
         </nav>
     </div>
     <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
 
     <div class="container">
-        <h2>Jejak Langkah & Dokumentasi PKL</h2>
-        <p>Selamat datang di platform resmi <strong>HAFAR</strong>. Website ini dirancang sebagai ruang arsip digital untuk mengabadikan seluruh proses belajar, proyek industri, serta kebersamaan kami selama masa <strong>Praktik Kerja Lapangan (PKL)</strong>.</p>
-
-        <div class="grid" style="margin-top: 2rem;">
-            <div class="card" style="padding: 1.5rem; text-align: center;">
-                <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Tentang Kami</h3>
-                <p style="font-size: 0.9rem; margin-bottom: 1rem;">Pelajari latar belakang, tujuan, serta visi dan misi utama di balik pembuatan platform HAFAR.</p>
-                <a href="about.html" style="display: inline-block; padding: 8px 16px; background: var(--secondary); color: #fff; text-decoration: none; border-radius: 6px; font-weight: 600;">Lihat Detail</a>
-            </div>
-
-            <div class="card" style="padding: 1.5rem; text-align: center;">
-                <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Galeri Foto</h3>
-                <p style="font-size: 0.9rem; margin-bottom: 1rem;">Kumpulan momen dan rekaman kegiatan harian kami selama bertugas di tempat industri.</p>
-                <a href="gallery.html" style="display: inline-block; padding: 8px 16px; background: var(--secondary); color: #fff; text-decoration: none; border-radius: 6px; font-weight: 600;">Buka Galeri</a>
-            </div>
-
-            <div class="card" style="padding: 1.5rem; text-align: center;">
-                <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Dokumentasi Video</h3>
-                <p style="font-size: 0.9rem; margin-bottom: 1rem;">Tonton tayangan video singkat yang merangkum pengerjaan proyek dan keseruan kami.</p>
-                <a href="video.html" style="display: inline-block; padding: 8px 16px; background: var(--secondary); color: #fff; text-decoration: none; border-radius: 6px; font-weight: 600;">Tonton Video</a>
-            </div>
-        </div>
+        <h2>Selamat Datang di Web HAFAR</h2>
+        <p>Website resmi dokumentasi kegiatan siswa PKL HAFAR di BBPP Ketindan.</p>
     </div>
 
     <div class="footer">&copy; 2026 HAFAR. Semua hak dilindungi.</div>
 
     <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCFrS9L0YFDB29-n5OvC2EkVFKclW2wRTk",
+            authDomain: "hafar-web.firebaseapp.com",
+            projectId: "hafar-web",
+            storageBucket: "hafar-web.firebasestorage.app",
+            messagingSenderId: "887471904367",
+            appId: "1:887471904367:web:c5bb4694916a522dbf9f9a",
+            measurementId: "G-Y5WWTJSFFK"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('sidebar-logged-out').style.display = 'none';
+                document.getElementById('sidebar-logged-in').style.display = 'block';
+                document.getElementById('user-email-display').innerText = user.email;
+            } else {
+                document.getElementById('sidebar-logged-out').style.display = 'block';
+                document.getElementById('sidebar-logged-in').style.display = 'none';
+            }
+        });
+
+        function logout() { auth.signOut(); }
         function toggleSidebar() {
             document.getElementById("sidebar").classList.toggle("active");
             document.getElementById("overlay").classList.toggle("active");

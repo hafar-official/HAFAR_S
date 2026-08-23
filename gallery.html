@@ -5,10 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gallery Foto - HAFAR</title>
     <link rel="stylesheet" href="style.css">
-    <!-- SDK Firebase Compat (Cukup Auth & Firestore) -->
+    <!-- SDK Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <style>
+        .card-wrapper {
+            position: relative;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+        }
+        .card-img-container {
+            width: 100%;
+            height: 220px;
+            background: #e2e8f0;
+            overflow: hidden;
+        }
+        .card-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            display: block;
+        }
+        .card-caption {
+            padding: 12px;
+            font-weight: 600;
+            color: #1e293b;
+            text-align: center;
+        }
+        .delete-photo-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 10;
+        }
+        .sidebar-user-box {
+            margin-top: auto;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -16,25 +67,26 @@
         <h1>HAFAR</h1>
     </header>
 
-    <!-- Sidebar / Menu Strip Tiga -->
     <div id="sidebar" class="sidebar">
         <div class="sidebar-header">
             <h2>Menu HAFAR</h2>
             <button class="close-sidebar-btn" onclick="toggleSidebar()">&times;</button>
         </div>
-        <nav class="sidebar-nav">
+        <nav class="sidebar-nav" style="display: flex; flex-direction: column; min-height: calc(100% - 70px);">
             <a href="index.html">Home</a>
             <a href="about.html">About Us</a>
             <a href="gallery.html" class="active-page">Gallery</a>
             <a href="video.html">Video</a>
             
-            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.2);">
+            <div class="sidebar-user-box">
                 <div id="sidebar-logged-out">
-                    <button onclick="showLoginModal()" style="width: 100%; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Login Anggota</button>
+                    <p style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 10px;">Akses Kontributor HAFAR</p>
+                    <button onclick="showLoginModal()" style="width: 100%; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">🔑 Login Anggota</button>
                 </div>
                 <div id="sidebar-logged-in" style="display: none;">
-                    <p style="font-size: 0.85rem; color: #a7f3d0; margin-bottom: 8px;">✓ Logged in: <span id="user-email-display" style="font-weight: bold;"></span></p>
-                    <button onclick="logout()" style="width: 100%; padding: 8px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Logout</button>
+                    <p style="font-size: 0.75rem; color: #a7f3d0; font-weight: bold; text-transform: uppercase;">✓ Akses Anggota Aktif</p>
+                    <p id="user-email-display" style="font-size: 0.85rem; color: #ffffff; font-weight: bold; word-break: break-all; margin-bottom: 12px;"></p>
+                    <button onclick="logout()" style="width: 100%; padding: 8px; background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid rgba(239,68,68,0.4); border-radius: 8px; cursor: pointer; font-weight: bold;">Logout</button>
                 </div>
             </div>
         </nav>
@@ -45,42 +97,31 @@
         <h2>Galeri Foto HAFAR</h2>
         <p>Dokumentasi foto kegiatan siswa PKL HAFAR.</p>
 
-        <!-- Area Form Upload -->
-        <div id="upload-container" style="display: none; background: #f8fafc; padding: 1.2rem; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
-            <h4 style="margin-bottom: 8px; color: var(--primary);">Upload Foto Kegiatan:</h4>
-            <input type="file" id="photo-input" accept="image/*" style="margin-bottom: 10px; display: block;">
-            <input type="text" id="photo-title" placeholder="Judul / Keterangan Foto" style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
-            <button onclick="uploadPhoto()" id="upload-btn" style="padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Upload ke Galeri</button>
-            <p id="upload-status" style="font-size: 0.85rem; margin-top: 5px; color: #2563eb;"></p>
+        <div id="upload-container" style="display: none; background: #f8fafc; padding: 1.2rem; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px;">
+            <h4 style="margin-bottom: 10px; color: var(--primary);">📷 Upload Foto Kegiatan Baru:</h4>
+            <input type="file" id="photo-input" accept="image/*" style="margin-bottom: 10px; display: block; width: 100%;">
+            <input type="text" id="photo-title" placeholder="Judul / Keterangan Foto" style="width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box;">
+            <button onclick="uploadPhoto()" id="upload-btn" style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Upload ke Galeri</button>
+            <p id="upload-status" style="font-size: 0.85rem; margin-top: 8px; color: #2563eb;"></p>
         </div>
         
-        <div class="grid" id="gallery-grid">
-            <div class="card">
-                <img src="Ketindan.jpg" alt="Dokumentasi 1" onclick="openLightbox(this)">
-                <p>Dokumentasi 1</p>
-            </div>
-            <div class="card">
-                <img src="Jagung.jpeg" alt="Dokumentasi 2" onclick="openLightbox(this)">
-                <p>Dokumentasi 2</p>
-            </div>
-        </div>
+        <div class="grid" id="gallery-grid"></div>
     </div>
 
-    <!-- Modal Form Login -->
     <div id="login-modal" class="lightbox">
-        <div style="background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 380px; position: relative;">
-            <span class="close-btn" onclick="closeLoginModal()" style="color: #333; top: 10px; right: 15px;">&times;</span>
-            <h3 style="color: var(--primary); margin-bottom: 1rem;">Login Anggota HAFAR</h3>
+        <div style="background: white; padding: 2rem; border-radius: 14px; width: 90%; max-width: 380px; position: relative;">
+            <span class="close-btn" onclick="closeLoginModal()" style="color: #64748b; top: 12px; right: 18px;">&times;</span>
+            <h3 style="color: var(--primary); margin-bottom: 0.5rem; text-align: center;">Login Anggota</h3>
+            <p style="font-size: 0.85rem; color: #64748b; text-align: center; margin-bottom: 1.2rem;">Masuk untuk mengunggah & mengelola foto</p>
             
-            <input type="email" id="login-email" placeholder="Email Anggota" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px;">
-            <input type="password" id="login-password" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px;">
+            <input type="email" id="login-email" placeholder="Email Anggota" style="width: 100%; padding: 11px; margin-bottom: 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
+            <input type="password" id="login-password" placeholder="Password" style="width: 100%; padding: 11px; margin-bottom: 16px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
             
-            <button onclick="login()" id="login-btn" style="width: 100%; padding: 10px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Masuk</button>
-            <p id="login-error" style="color: red; font-size: 0.85rem; margin-top: 10px; text-align: center;"></p>
+            <button onclick="login()" id="login-btn" style="width: 100%; padding: 11px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
+            <p id="login-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; text-align: center;"></p>
         </div>
     </div>
 
-    <!-- Modal Lightbox Pratinjau Foto -->
     <div id="lightbox" class="lightbox" onclick="closeLightbox()">
         <span class="close-btn">&times;</span>
         <img class="lightbox-content" id="lightbox-img">
@@ -105,7 +146,12 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+        let currentUser = null;
+
         auth.onAuthStateChanged(user => {
+            currentUser = user;
             if (user) {
                 document.getElementById('sidebar-logged-out').style.display = 'none';
                 document.getElementById('sidebar-logged-in').style.display = 'block';
@@ -116,6 +162,7 @@
                 document.getElementById('sidebar-logged-in').style.display = 'none';
                 document.getElementById('upload-container').style.display = 'none';
             }
+            loadPhotos();
         });
 
         function login() {
@@ -125,7 +172,7 @@
             const loginBtn = document.getElementById('login-btn');
 
             if (!email || !pass) {
-                errorMsg.innerText = "Harap isi email dan password terlebih dahulu!";
+                errorMsg.innerText = "Harap isi email dan password!";
                 return;
             }
 
@@ -144,7 +191,7 @@
                 .catch(err => {
                     loginBtn.disabled = false;
                     loginBtn.innerText = "Masuk";
-                    errorMsg.innerText = "Login gagal! Periksa kembali email dan password Anda.";
+                    errorMsg.innerText = "Login gagal! Periksa email/password.";
                 });
         }
 
@@ -174,20 +221,20 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    const imageUrl = result.data.url;
+                    const imageUrl = result.data.display_url || result.data.url;
                     await db.collection('photos').add({
                         url: imageUrl,
                         title: titleInput,
                         createdAt: new Date()
                     });
 
-                    status.innerText = "Foto berhasil di-upload!";
+                    status.innerText = "✓ Foto berhasil di-upload!";
                     fileInput.value = "";
                     document.getElementById('photo-title').value = "";
                     uploadBtn.disabled = false;
                     loadPhotos();
                 } else {
-                    throw new Error("Gagal mengunggah foto ke ImgBB");
+                    throw new Error("Gagal respon server ImgBB");
                 }
             } catch (err) {
                 uploadBtn.disabled = false;
@@ -198,42 +245,69 @@
         function loadPhotos() {
             db.collection('photos').orderBy('createdAt', 'desc').get().then(snapshot => {
                 const grid = document.getElementById('gallery-grid');
-                document.querySelectorAll('.uploaded-card').forEach(el => el.remove());
+                grid.innerHTML = ''; 
+
+                grid.innerHTML += `
+                    <div class="card-wrapper">
+                        <div class="card-img-container">
+                            <img src="Ketindan.jpg" alt="Dokumentasi 1" onclick="openLightbox(this)">
+                        </div>
+                        <div class="card-caption">Dokumentasi 1</div>
+                    </div>
+                    <div class="card-wrapper">
+                        <div class="card-img-container">
+                            <img src="Jagung.jpeg" alt="Dokumentasi 2" onclick="openLightbox(this)">
+                        </div>
+                        <div class="card-caption">Dokumentasi 2</div>
+                    </div>
+                `;
 
                 snapshot.forEach(doc => {
                     const data = doc.data();
+                    const docId = doc.id;
+
                     const card = document.createElement('div');
-                    card.className = 'card uploaded-card';
+                    card.className = 'card-wrapper';
+
+                    let deleteBtnHtml = '';
+                    if (currentUser) {
+                        deleteBtnHtml = `<button class="delete-photo-btn" onclick="deletePhoto('${docId}')" title="Hapus Foto">✕</button>`;
+                    }
+
                     card.innerHTML = `
-                        <img src="${data.url}" alt="${data.title}" onclick="openLightbox(this)">
-                        <p>${data.title}</p>
+                        ${deleteBtnHtml}
+                        <div class="card-img-container">
+                            <img src="${data.url}" alt="${data.title}" onclick="openLightbox(this)">
+                        </div>
+                        <div class="card-caption">${data.title}</div>
                     `;
-                    grid.prepend(card);
+                    grid.appendChild(card);
                 });
-            }).catch(err => console.log("Menunggu data foto..."));
+            });
         }
-        loadPhotos();
+
+        function deletePhoto(docId) {
+            if (confirm("Hapus foto ini dari galeri?")) {
+                db.collection('photos').doc(docId).delete().then(() => loadPhotos());
+            }
+        }
 
         function toggleSidebar() {
             document.getElementById("sidebar").classList.toggle("active");
             document.getElementById("overlay").classList.toggle("active");
         }
-
         function showLoginModal() {
-            toggleSidebar();
+            if (document.getElementById("sidebar").classList.contains("active")) toggleSidebar();
             document.getElementById("login-modal").style.display = "flex";
         }
-
         function closeLoginModal() {
             document.getElementById("login-modal").style.display = "none";
             document.getElementById('login-error').innerText = "";
         }
-
         function openLightbox(element) {
             document.getElementById("lightbox").style.display = "flex";
             document.getElementById("lightbox-img").src = element.src;
         }
-
         function closeLightbox() {
             document.getElementById("lightbox").style.display = "none";
         }
