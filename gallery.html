@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gallery Foto - HAFAR</title>
     <link rel="stylesheet" href="style.css">
+    <!-- SDK Firebase Gratis -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 </head>
 <body>
     <header>
@@ -28,9 +33,32 @@
 
     <div class="container">
         <h2>Galeri Foto HAFAR</h2>
-        <p>Klik foto untuk melihat tampilan penuh (fullscreen):</p>
+        <p>Dokumentasi foto kegiatan siswa PKL HAFAR.</p>
+
+        <!-- Status Login & Form Upload -->
+        <div style="background: #f8fafc; padding: 1.2rem; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
+            <div id="logged-out-view">
+                <span style="font-size: 0.9rem; color: #64748b;">Anda masuk sebagai: <strong>Publik (Hanya Lihat)</strong></span>
+                <button onclick="showLoginModal()" style="margin-left: 10px; padding: 5px 12px; background: var(--secondary); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Login Anggota</button>
+            </div>
+
+            <div id="logged-in-view" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <span style="color: #166534; font-weight: bold;">✓ Akses Anggota PKL Aktif</span>
+                    <button onclick="logout()" style="padding: 5px 12px; background: #ef4444; color: white; border: none; border-radius: 5px; cursor: pointer;">Logout</button>
+                </div>
+                
+                <div style="border-top: 1px dashed #cbd5e1; padding-top: 15px;">
+                    <h4 style="margin-bottom: 8px; color: var(--primary);">Upload Foto Kegiatan (Maksimal 10 MB):</h4>
+                    <input type="file" id="photo-input" accept="image/*" style="margin-bottom: 10px; display: block;">
+                    <input type="text" id="photo-title" placeholder="Judul / Keterangan Foto" style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    <button onclick="uploadPhoto()" id="upload-btn" style="padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Upload ke Galeri</button>
+                    <p id="upload-status" style="font-size: 0.85rem; margin-top: 5px; color: #2563eb;"></p>
+                </div>
+            </div>
+        </div>
         
-        <div class="grid">
+        <div class="grid" id="gallery-grid">
             <div class="card">
                 <img src="Ketindan.jpg" alt="Dokumentasi 1" onclick="openLightbox(this)">
                 <p>Dokumentasi 1</p>
@@ -39,6 +67,18 @@
                 <img src="Jagung.jpeg" alt="Dokumentasi 2" onclick="openLightbox(this)">
                 <p>Dokumentasi 2</p>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal Login -->
+    <div id="login-modal" class="lightbox">
+        <div style="background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 380px; position: relative;">
+            <span class="close-btn" onclick="closeLoginModal()" style="color: #333; top: 10px; right: 15px;">&times;</span>
+            <h3 style="color: var(--primary); margin-bottom: 1rem;">Login Anggota HAFAR</h3>
+            <input type="email" id="login-email" value="hafargroup@gmail.com" placeholder="Email Anggota" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px;">
+            <input type="password" id="login-password" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px;">
+            <button onclick="login()" style="width: 100%; padding: 10px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Masuk</button>
+            <p id="login-error" style="color: red; font-size: 0.85rem; margin-top: 10px; text-align: center;"></p>
         </div>
     </div>
 
@@ -51,17 +91,100 @@
     <div class="footer">&copy; 2026 HAFAR. Semua hak dilindungi.</div>
 
     <script>
+        const firebaseConfig = {
+            apiKey: "PASTE_API_KEY_ANDA_DI_SINI",
+            authDomain: "hafar-web.firebaseapp.com",
+            projectId: "hafar-web",
+            storageBucket: "hafar-web.appspot.com",
+            messagingSenderId: "887471904367",
+            appId: "PASTE_APP_ID_ANDA_DI_SINI"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('logged-out-view').style.display = 'none';
+                document.getElementById('logged-in-view').style.display = 'block';
+            } else {
+                document.getElementById('logged-out-view').style.display = 'block';
+                document.getElementById('logged-in-view').style.display = 'none';
+            }
+        });
+
+        function login() {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+            auth.signInWithEmailAndPassword(email, pass)
+                .then(() => closeLoginModal())
+                .catch(err => document.getElementById('login-error').innerText = "Login Gagal! Password Salah.");
+        }
+
+        function logout() { auth.signOut(); }
+
+        function uploadPhoto() {
+            const fileInput = document.getElementById('photo-input');
+            const titleInput = document.getElementById('photo-title').value;
+            const file = fileInput.files[0];
+            const status = document.getElementById('upload-status');
+
+            if (!file) return alert("Pilih foto terlebih dahulu!");
+            if (!titleInput) return alert("Isi judul/keterangan foto!");
+            if (file.size > 10 * 1024 * 1024) return alert("Ukuran file terlalu besar! Maksimal 10 MB.");
+
+            status.innerText = "Mengunggah foto...";
+            const fileRef = storage.ref('gallery/' + Date.now() + '_' + file.name);
+
+            fileRef.put(file).then(snapshot => snapshot.ref.getDownloadURL())
+            .then(url => {
+                return db.collection('photos').add({
+                    url: url,
+                    title: titleInput,
+                    createdAt: new Date()
+                });
+            }).then(() => {
+                status.innerText = "Foto berhasil di-upload!";
+                fileInput.value = "";
+                document.getElementById('photo-title').value = "";
+                loadPhotos();
+            }).catch(err => {
+                status.innerText = "Gagal upload: " + err.message;
+            });
+        }
+
+        function loadPhotos() {
+            db.collection('photos').orderBy('createdAt', 'desc').get().then(snapshot => {
+                const grid = document.getElementById('gallery-grid');
+                document.querySelectorAll('.uploaded-card').forEach(el => el.remove());
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const card = document.createElement('div');
+                    card.className = 'card uploaded-card';
+                    card.innerHTML = `
+                        <img src="${data.url}" alt="${data.title}" onclick="openLightbox(this)">
+                        <p>${data.title}</p>
+                    `;
+                    grid.prepend(card);
+                });
+            });
+        }
+        loadPhotos();
+
         function toggleSidebar() {
             document.getElementById("sidebar").classList.toggle("active");
             document.getElementById("overlay").classList.toggle("active");
         }
+        function showLoginModal() { document.getElementById("login-modal").style.display = "flex"; }
+        function closeLoginModal() { document.getElementById("login-modal").style.display = "none"; }
         function openLightbox(element) {
             document.getElementById("lightbox").style.display = "flex";
             document.getElementById("lightbox-img").src = element.src;
         }
-        function closeLightbox() {
-            document.getElementById("lightbox").style.display = "none";
-        }
+        function closeLightbox() { document.getElementById("lightbox").style.display = "none"; }
     </script>
 </body>
 </html>
