@@ -8,28 +8,56 @@
 </head>
 <body>
     <header>
+        <button class="menu-btn" onclick="toggleSidebar()">&#9776;</button>
         <h1>HAFAR</h1>
     </header>
 
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html" class="active-page">About Us</a>
-        <a href="gallery.html">Gallery</a>
-        <a href="video.html">Video</a>
-    </nav>
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h2>Menu HAFAR</h2>
+            <button class="close-sidebar-btn" onclick="toggleSidebar()">&times;</button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="index.html">Home</a>
+            <a href="about.html" class="active-page">About Us</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="video.html">Video</a>
+        </nav>
+    </div>
+    <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
 
     <div class="container">
         <h2>Tentang HAFAR</h2>
-        
         <p><strong>HAFAR</strong> adalah sebuah platform web arsip digital yang dirancang dan dikembangkan secara khusus untuk mendokumentasikan seluruh rekam jejak, perjalanan, serta momen berharga kami selama menjalani program <strong>Praktik Kerja Lapangan (PKL)</strong>.</p>
+        <p>Program PKL bukan sekadar bentuk pemenuhan tugas sekolah, melainkan jembatan penting yang mempertemukan teori di bangku pendidikan dengan dinamika dunia kerja nyata. Melalui ruang digital ini, kami mengabadikan setiap pengalaman belajar, tantangan harian, proyek teknis yang dikerjakan, hingga interaksi sosial dan kerja sama tim yang kami bangun di tempat industri.</p>
 
-        <p>Program PKL bukan sekadar bentuk pemenuhan tugas sekolah, melainkan sebuah jembatan penting yang mempertemukan teori di bangku pendidikan dengan dinamika dunia kerja nyata. Melalui ruang digital ini, kami mengabadikan setiap pengalaman belajar, tantangan harian, proyek teknis yang dikerjakan, hingga interaksi sosial dan kerja sama tim yang kami bangun di tempat industri.</p>
+        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 2rem 0;">
 
-        <p>Setiap foto dan video yang terlampir di dalam galeri web ini menyimpan cerita tersendiri—mulai dari proses adaptasi lingkungan kerja, pengerjaan tugas-tugas lapangan, hingga kebersamaan yang terjalin antar sesama siswa PKL maupun dengan para pembimbing. Website HAFAR menjadi bukti dedikasi, rekam jejak keterampilan, dan portofolio nyata atas apa yang telah kami pelajari dan kontribusikan.</p>
+        <h2>Visi & Misi Kami</h2>
+        
+        <div style="margin-top: 1.5rem;">
+            <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Visi</h3>
+            <p>Menjadi media arsip digital yang terintegrasi, profesional, dan inspiratif dalam mengabadikan seluruh rekam jejak serta pengalaman berharga siswa selama menjalani masa Praktik Kerja Lapangan (PKL).</p>
+        </div>
 
-        <p>Kami berharap platform ini tidak hanya berfungsi sebagai kenangan manis bagi kami para anggota, tetapi juga menjadi sumber inspirasi, referensi, dan gambaran positif bagi rekan-rekan siswa lainnya yang akan atau sedang menjalani masa PKL.</p>
+        <div style="margin-top: 1.5rem;">
+            <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Misi</h3>
+            <ul style="padding-left: 1.2rem; color: var(--text-muted); line-height: 1.8;">
+                <li><strong>Mendokumentasikan Kegiatan secara Sistematis:</strong> Menyimpan setiap momen, proyek, dan tantangan kerja dalam bentuk visual foto dan video yang tertata rapi.</li>
+                <li><strong>Membangun Portofolio Digital:</strong> Menjadikan platform ini sebagai bukti rekam jejak keterampilan, proses belajar, dan dedikasi kami selama di tempat industri.</li>
+                <li><strong>Mempererat Solidaritas Tim:</strong> Mengabadikan nilai-nilai kebersamaan, kerja sama, dan kenangan positif antar siswa PKL.</li>
+                <li><strong>Menginspirasi Generasi Penerus:</strong> Memberikan gambaran transparan, edukatif, dan referensi nyata mengenai dinamika dunia PKL bagi adik-adik kelas atau siswa lainnya.</li>
+            </ul>
+        </div>
     </div>
 
     <div class="footer">&copy; 2026 HAFAR. Semua hak dilindungi.</div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("active");
+            document.getElementById("overlay").classList.toggle("active");
+        }
+    </script>
 </body>
 </html>

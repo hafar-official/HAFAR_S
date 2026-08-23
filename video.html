@@ -8,31 +8,46 @@
 </head>
 <body>
     <header>
+        <button class="menu-btn" onclick="toggleSidebar()">&#9776;</button>
         <h1>HAFAR</h1>
     </header>
 
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html">About Us</a>
-        <a href="gallery.html">Gallery</a>
-        <a href="video.html" class="active-page">Video</a>
-    </nav>
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h2>Menu HAFAR</h2>
+            <button class="close-sidebar-btn" onclick="toggleSidebar()">&times;</button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="video.html" class="active-page">Video</a>
+        </nav>
+    </div>
+    <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
 
     <div class="container">
         <h2>Galeri Video HAFAR</h2>
         <p>Koleksi dokumentasi video kegiatan HAFAR:</p>
         
         <div class="grid">
-            <div class="card card-portrait">
+            <div class="card">
                 <video controls preload="metadata">
                     <source src="Jagung Vid.mp4" type="video/mp4">
                     Browser Anda tidak mendukung pemutaran video.
                 </video>
-                <p>Dokumentasi 3 (Potret)</p>
+                <p>Dokumentasi Kegiatan</p>
             </div>
         </div>
     </div>
 
     <div class="footer">&copy; 2026 HAFAR. Semua hak dilindungi.</div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("active");
+            document.getElementById("overlay").classList.toggle("active");
+        }
+    </script>
 </body>
 </html>
