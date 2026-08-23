@@ -20,19 +20,36 @@
 
     <div class="container">
         <h2>Galeri Foto HAFAR</h2>
-        <p>Koleksi dokumentasi foto kegiatan HAFAR:</p>
+        <p>Klik foto untuk melihat tampilan penuh:</p>
         
         <div class="grid">
             <div class="card">
-                <img src="Ketindan.jpg" alt="Dokumentasi 1">
+                <img src="Ketindan.jpg" alt="Dokumentasi 1" onclick="openLightbox(this)">
                 <p>Dokumentasi 1</p>
             </div>
             <div class="card">
-                <img src="Jagung.jpeg" alt="Dokumentasi 2">
+                <img src="Jagung.jpeg" alt="Dokumentasi 2" onclick="openLightbox(this)">
                 <p>Dokumentasi 2</p>
             </div>
         </div>
     </div>
+
+    <!-- Modal Lightbox untuk Foto Penuh -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="close-btn">&times;</span>
+        <img class="lightbox-content" id="lightbox-img">
+    </div>
+
+    <script>
+        function openLightbox(element) {
+            document.getElementById("lightbox").style.display = "flex";
+            document.getElementById("lightbox-img").src = element.src;
+        }
+
+        function closeLightbox() {
+            document.getElementById("lightbox").style.display = "none";
+        }
+    </script>
 
     <div class="footer">&copy; 2026 HAFAR. Semua hak dilindungi.</div>
 </body>
