@@ -224,3 +224,9 @@ nav a:hover, nav a.active-page {
 .card img {
     cursor: pointer;
 }
+.container p {
+    color: var(--text-muted);
+    margin-bottom: 1.2rem;
+    text-align: justify; /* Membuat susunan teks rata kiri-kanan */
+    line-height: 1.8;     /* Jarak antar baris agar tidak rapat */
+}
