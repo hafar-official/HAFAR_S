@@ -76,7 +76,7 @@
             <span class="close-btn" onclick="closeLoginModal()" style="color: #333; top: 10px; right: 15px;">&times;</span>
             <h3 style="color: var(--primary); margin-bottom: 1rem;">Login Anggota HAFAR</h3>
             <input type="email" id="login-email" value="hafargroup@gmail.com" placeholder="Email Anggota" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px;">
-            <input type="password" id="login-password" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px;">
+            <input type="password" id="login-password" value="admin123" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px;">
             <button onclick="login()" style="width: 100%; padding: 10px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Masuk</button>
             <p id="login-error" style="color: red; font-size: 0.85rem; margin-top: 10px; text-align: center;"></p>
         </div>
@@ -92,12 +92,13 @@
 
     <script>
         const firebaseConfig = {
-            apiKey: "PASTE_API_KEY_ANDA_DI_SINI",
+            apiKey: "AIzaSyCFrS9L0YFDB29-n5OvC2EkVFKclW2wRTk",
             authDomain: "hafar-web.firebaseapp.com",
             projectId: "hafar-web",
-            storageBucket: "hafar-web.appspot.com",
+            storageBucket: "hafar-web.firebasestorage.app",
             messagingSenderId: "887471904367",
-            appId: "PASTE_APP_ID_ANDA_DI_SINI"
+            appId: "1:887471904367:web:c5bb4694916a522dbf9f9a",
+            measurementId: "G-Y5WWTJSFFK"
         };
 
         firebase.initializeApp(firebaseConfig);
@@ -120,7 +121,7 @@
             const pass = document.getElementById('login-password').value;
             auth.signInWithEmailAndPassword(email, pass)
                 .then(() => closeLoginModal())
-                .catch(err => document.getElementById('login-error').innerText = "Login Gagal! Password Salah.");
+                .catch(err => document.getElementById('login-error').innerText = "Login Gagal! Periksa kembali password Anda.");
         }
 
         function logout() { auth.signOut(); }
