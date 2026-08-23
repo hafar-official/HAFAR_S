@@ -5,10 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - HAFAR</title>
     <link rel="stylesheet" href="style.css">
-    <!-- SDK Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .about-card {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            margin-top: 1.5rem;
+            line-height: 1.7;
+            color: #334155;
+        }
+
+        .about-card h3 {
+            color: #1e293b;
+            margin-bottom: 0.75rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .about-list {
+            margin-left: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-list li {
+            margin-bottom: 0.5rem;
+        }
+
         .sidebar-user-box {
             margin-top: auto;
             padding: 15px;
@@ -52,7 +86,23 @@
 
     <div class="container">
         <h2>Tentang HAFAR</h2>
-        <p>HAFAR merupakan kelompok siswa PKL yang bergerak di bidang pengelolaan multimedia, pengarsipan, dan sistem web.</p>
+        <p>Profi singkat dan rekapitulasi kegiatan Praktik Kerja Lapangan (PKL) siswa HAFAR.</p>
+
+        <div class="about-card">
+            <h3>Siapa Kami?</h3>
+            <p><strong>HAFAR</strong> adalah tim siswa Praktik Kerja Lapangan (PKL) yang bertugas di Balai Besar Pelatihan Pertanian (BBPP) Ketindan. Tim kami fokus pada pengelolaan sistem informasi, dokumentasi multimedia, dan digitalisasi perpustakaan.</p>
+            
+            <h3 style="margin-top: 1.5rem;">Fokus Kegiatan PKL</h3>
+            <ul class="about-list">
+                <li><strong>Dokumentasi Multimedia:</strong> Perekaman dan penyuntingan video profil serta liputan kegiatan pelatihan institusi.</li>
+                <li><strong>Digitalisasi Perpustakaan:</strong> Penginputan katalog dan barcode buku menggunakan aplikasi INLISLite.</li>
+                <li><strong>Pengembangan Web:</strong> Merancang dan mengelola portal web terintegrasi untuk menyajikan dokumentasi kegiatan interaktif.</li>
+                <li><strong>Kegiatan Lapangan:</strong> Dokumentasi langsung lapangan dan interaksi bersama peserta pelatihan.</li>
+            </ul>
+
+            <h3>Tujuan Platform HAFAR</h3>
+            <p>Platform web ini dirancang sebagai sarana arsip digital transparan dan modern agar seluruh dokumentasi kegiatan, galeri foto, dan video produksi tim dapat diakses secara publik dan tersusun rapi.</p>
+        </div>
     </div>
 
     <div class="footer">&copy; 2026 HAFAR. Semua hak dilindungi.</div>
