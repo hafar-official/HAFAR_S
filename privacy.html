@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy & Policy - HAFAR'S</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDK (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -43,11 +44,35 @@
     <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
 
     <div class="container">
-        <h2>KEBIJAKAN PRIVASI</h2>
-        <p>Seluruh media dokumentasi (foto & video) yang diunggah ke platform ini digunakan khusus untuk kebutuhan internal dan arsip dokumentasi kegiatan HAFAR'S.</p>
+        <h2>KEBIJAKAN PRIVASI (PRIVACY & POLICY)</h2>
+        <p style="color: #94a3b8; margin-bottom: 25px;">Ketentuan Perlindungan Data, Hak Akses, dan Penggunaan Layanan Platform HAFAR'S</p>
+
+        <div style="background: rgba(30, 41, 59, 0.7); padding: 30px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); line-height: 1.8; color: #e2e8f0; text-align: justify;">
+            <p style="text-indent: 35px; margin-bottom: 20px;">
+                Halaman Kebijakan Privasi (<em>Privacy Policy</em>) ini menjelaskan bagaimana platform HAFAR'S mengelola, menjaga, dan melindungi informasi pengunjung serta kontributor situs web. Kami berkomitmen penuh untuk menjaga transparansi data dan memastikan bahwa setiap interaksi pengguna di platform ini berlangsung secara aman, relevan, serta menghormati hak privasi individu.
+            </p>
+            <p style="text-indent: 35px; margin-bottom: 20px;">
+                Bagi pengunjung umum yang menelusuri halaman utama, galeri, video, maupun tentang kami, situs web ini tidak mengumpulkan data pribadi secara paksa. Informasi standar yang terekam oleh server umumnya terbatas pada log teknis anonim (seperti jenis peramban, tipe perangkat, dan statistik kunjungan) yang semata-mata digunakan untuk analisis kinerja teknis serta optimalisasi antarmuka web.
+            </p>
+            <p style="text-indent: 35px; margin-bottom: 20px;">
+                Sistem autentikasi (<em>login</em>) pada situs web ini diperuntukkan secara terbatas bagi anggota atau kontributor resmi HAFAR'S. Informasi akun yang dikumpulkan—seperti alamat email dan identifikasi kredensial—diperoleh secara langsung saat pembuatan akun dan dikelola menggunakan layanan tepercaya Firebase Authentication. Data ini hanya digunakan untuk verifikasi hak akses pengunggahan serta pengelolaan konten media.
+            </p>
+            <p style="text-indent: 35px; margin-bottom: 20px;">
+                Seluruh berkas media (foto dan video) yang diunggah oleh kontributor disimpan dalam basis data Firestore / Storage yang terlindungi. Data dan media tersebut dimanfaatkan sepenuhnya untuk kebutuhan publikasi kegiatan, dokumentasi rekam jejak Praktik Kerja Lapangan (PKL), serta portofolio proyek HAFAR'S. Kami tidak memperjualbelikan atau mendistribusikan data pribadi anggota kepada pihak ketiga untuk kepentingan komersial.
+            </p>
+            <p style="text-indent: 35px; margin-bottom: 20px;">
+                Seluruh materi visual, karya dokumentasi, teks, dan aset digital yang dipublikasikan di platform ini merupakan hasil karya dan hak milik tim HAFAR'S atau instansi terkait (BBPP Ketindan) yang digunakan sesuai peruntukannya. Pengunjung dilarang menggandakan, mendistribusikan ulang, atau memanfaatkan aset media untuk kepentingan komersial tanpa izin tertulis dari pihak HAFAR'S.
+            </p>
+            <p style="text-indent: 35px; margin-bottom: 20px;">
+                Situs web HAFAR'S terintegrasi dengan layanan infrastruktur pihak ketiga yang andal, seperti Firebase (Google Cloud) untuk manajemen basis data dan autentikasi. Meskipun kami menerapkan standar keamanan untuk melindungi data dari akses tanpa izin, pengguna disarankan untuk tetap menjaga kerahasiaan kata sandi akun masing-masing dan melakukan <em>logout</em> setelah selesai mengelola konten.
+            </p>
+            <p style="text-indent: 35px; margin-bottom: 0;">
+                HAFAR'S berhak untuk memperbarui atau mengubah isi Kebijakan Privasi ini sewaktu-waktu sesuai dengan perkembangan fitur web atau regulasi teknis yang berlaku. Setiap perubahan akan langsung diperbarui pada halaman ini. Jika Anda memiliki pertanyaan lebih lanjut mengenai kebijakan atau pengelolaan data pada platform ini, Anda dapat menghubungi tim pengembang HAFAR'S melalui kontak yang tersedia.
+            </p>
+        </div>
     </div>
 
-    <!-- MODAL LOGIN BERANIMASI -->
+    <!-- MODAL LOGIN -->
     <div id="login-modal" class="modal-login-container">
         <div class="modal-content-animated" onclick="event.stopPropagation()">
             <span class="close-lightbox-btn" onclick="closeLoginModal()">&times;</span>
@@ -64,6 +89,7 @@
 
     <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html">Privacy & Policy</a></div>
 
+    <!-- SCRIPT AUTH & NAVIGASI -->
     <script src="auth.js"></script>
     <script>
         function toggleSidebar() {
