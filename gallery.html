@@ -18,12 +18,13 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
         }
 
         .card-wrapper:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.45);
+            border-color: rgba(56, 189, 248, 0.3);
             background: rgba(255, 255, 255, 0.08);
         }
 
@@ -40,6 +41,11 @@
             object-fit: cover;
             cursor: pointer;
             display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .card-wrapper:hover .card-img-container img {
+            transform: scale(1.08);
         }
 
         .card-caption {
@@ -64,6 +70,12 @@
             cursor: pointer;
             font-weight: bold;
             z-index: 10;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .delete-photo-btn:hover {
+            transform: scale(1.15);
+            background: rgba(220, 38, 38, 1);
         }
     </style>
 </head>
@@ -85,7 +97,6 @@
             <a href="video.html">Video</a>
             <a href="privacy.html">Privacy & Policy</a>
             
-            <!-- Box Login/Logout Anggota -->
             <div class="sidebar-user-box">
                 <div id="sidebar-logged-out">
                     <p style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 10px;">Akses Kontributor HAFAR'S</p>
@@ -105,7 +116,6 @@
         <h2>GALERI FOTO HAFAR'S</h2>
         <p>Dokumentasi foto kegiatan siswa Praktik Kerja Lapangan (PKL) HAFAR'S di BBPP Ketindan.</p>
 
-        <!-- Form Upload Foto (Khusus Anggota Login) -->
         <div id="upload-container" style="display: none; background: rgba(255, 255, 255, 0.05); padding: 1.2rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); margin-bottom: 25px; margin-top: 15px;">
             <h4 style="color: #38bdf8;">📷 UPLOAD FOTO KEGIATAN BARU:</h4>
             
@@ -270,12 +280,18 @@
         }
 
         function openLightbox(element) {
-            document.getElementById("lightbox").style.display = "flex";
+            const lightbox = document.getElementById("lightbox");
             document.getElementById("lightbox-img").src = element.src;
+            lightbox.style.display = "flex";
+            setTimeout(() => lightbox.classList.add("show"), 10);
         }
 
         function closeLightbox() {
-            document.getElementById("lightbox").style.display = "none";
+            const lightbox = document.getElementById("lightbox");
+            lightbox.classList.remove("show");
+            setTimeout(() => {
+                lightbox.style.display = "none";
+            }, 300);
         }
     </script>
 </body>

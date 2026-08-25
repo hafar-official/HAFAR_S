@@ -19,10 +19,33 @@ body {
     font-size: 1rem;
     color: var(--text-color);
     line-height: 1.6;
-    /* Gradasi Warna Latar Belakang Kembali */
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
     background-attachment: fixed;
     min-height: 100vh;
+    animation: fadeInPage 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Animasi Keyframes Global */
+@keyframes fadeInPage {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes popInModal {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 
 /* Header */
@@ -39,13 +62,17 @@ header {
     z-index: 100;
 }
 
-/* Judul HAFAR'S di Header (Font Piksel & Warna Putih) */
 header h1, .brand-title {
     font-family: var(--pixel-font);
     font-size: 1.1rem;
-    color: #ffffff; /* Mengubah warna HAFAR'S menjadi Putih */
+    color: #ffffff;
     text-transform: uppercase;
     letter-spacing: 1px;
+    transition: text-shadow 0.3s ease;
+}
+
+header h1:hover, .brand-title:hover {
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
 }
 
 .menu-btn {
@@ -55,9 +82,15 @@ header h1, .brand-title {
     color: white;
     cursor: pointer;
     margin-right: 15px;
+    transition: transform 0.2s ease, color 0.2s ease;
 }
 
-/* Sidebar */
+.menu-btn:hover {
+    transform: scale(1.15);
+    color: #38bdf8;
+}
+
+/* Sidebar & Transisi Smooth */
 .sidebar {
     position: fixed;
     top: 0;
@@ -66,7 +99,7 @@ header h1, .brand-title {
     height: 100%;
     background: #0f172a;
     color: white;
-    transition: left 0.3s ease;
+    transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1000;
     padding: 20px;
     display: flex;
@@ -75,6 +108,7 @@ header h1, .brand-title {
 
 .sidebar.active {
     left: 0;
+    box-shadow: 8px 0 25px rgba(0, 0, 0, 0.5);
 }
 
 .sidebar-header {
@@ -92,6 +126,12 @@ header h1, .brand-title {
     color: white;
     font-size: 1.5rem;
     cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.close-sidebar-btn:hover {
+    transform: rotate(90deg);
+    color: #ef4444;
 }
 
 .sidebar-nav {
@@ -108,24 +148,30 @@ header h1, .brand-title {
     margin-bottom: 5px;
     border-radius: 8px;
     font-weight: 500;
-    transition: 0.2s;
+    transition: all 0.25s ease;
     font-family: var(--body-font);
 }
 
 .sidebar-nav a:hover, .sidebar-nav a.active-page {
     background: #1e293b;
     color: #38bdf8;
+    transform: translateX(6px);
 }
 
-/* Box User Login/Logout di Sidebar */
 .sidebar-user-box {
     margin-top: auto;
     padding: 15px;
     background: rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: border-color 0.3s ease;
 }
 
+.sidebar-user-box:hover {
+    border-color: rgba(56, 189, 248, 0.4);
+}
+
+/* Overlay Transisi Fade */
 .overlay {
     position: fixed;
     top: 0;
@@ -133,12 +179,15 @@ header h1, .brand-title {
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.6);
-    display: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
     z-index: 999;
 }
 
 .overlay.active {
-    display: block;
+    opacity: 1;
+    visibility: visible;
 }
 
 /* Main Container */
@@ -149,7 +198,6 @@ header h1, .brand-title {
     color: #f8fafc;
 }
 
-/* SEMUA JUDUL menggunakan Font Piksel */
 h1, h2, h3, h4 {
     font-family: var(--pixel-font);
     line-height: 1.5;
@@ -188,7 +236,7 @@ h4 {
     margin-top: 20px;
 }
 
-/* Lightbox Modal / Login Modal */
+/* Lightbox & Modal Animasi */
 .lightbox {
     position: fixed;
     top: 0;
@@ -200,12 +248,24 @@ h4 {
     justify-content: center;
     align-items: center;
     z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.lightbox.show {
+    display: flex;
+    opacity: 1;
 }
 
 .lightbox-content {
     max-width: 90%;
     max-height: 80%;
     border-radius: 8px;
+    animation: popInModal 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.lightbox > div {
+    animation: popInModal 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .close-btn {
@@ -215,6 +275,26 @@ h4 {
     color: white;
     font-size: 2rem;
     cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.close-btn:hover {
+    transform: scale(1.2) rotate(90deg);
+    color: #ef4444;
+}
+
+/* Tombol Global Hover Effect */
+button {
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+button:active:not(:disabled) {
+    transform: translateY(0);
 }
 
 /* Footer */

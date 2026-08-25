@@ -42,7 +42,6 @@ auth.onAuthStateChanged(user => {
         if (uploadContainer) uploadContainer.style.display = 'none';
     }
 
-    // Jika di halaman galeri, muat ulang foto
     if (typeof loadPhotos === "function") {
         loadPhotos();
     }
@@ -95,11 +94,17 @@ function toggleSidebar() {
 
 function showLoginModal() {
     if (document.getElementById("sidebar").classList.contains("active")) toggleSidebar();
-    document.getElementById("login-modal").style.display = "flex";
+    const modal = document.getElementById("login-modal");
+    modal.style.display = "flex";
+    setTimeout(() => modal.classList.add("show"), 10);
 }
 
 function closeLoginModal() {
-    document.getElementById("login-modal").style.display = "none";
-    const errorMsg = document.getElementById('login-error');
-    if (errorMsg) errorMsg.innerText = "";
+    const modal = document.getElementById("login-modal");
+    modal.classList.remove("show");
+    setTimeout(() => {
+        modal.style.display = "none";
+        const errorMsg = document.getElementById('login-error');
+        if (errorMsg) errorMsg.innerText = "";
+    }, 300);
 }

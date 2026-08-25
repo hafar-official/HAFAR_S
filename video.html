@@ -1,104 +1,73 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video - HAFAR'S</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <style>
-        .video-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            margin-top: 20px;
+// Fungsi membaca file video berukuran besar (hingga 200 MB) menjadi Base64 secara efisien
+function convertLargeFileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const chunkSize = 2 * 1024 * 1024; // 2MB per bagian
+        let offset = 0;
+        let base64Result = "";
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+            base64Result += e.target.result.split(',')[1] || "";
+            offset += chunkSize;
+
+            if (offset < file.size) {
+                const percentage = Math.round((offset / file.size) * 100);
+                document.getElementById('upload-video-status').innerText = `Memproses video: ${percentage}%...`;
+                readNextChunk();
+            } else {
+                resolve(`data:${file.type};base64,` + base64Result);
+            }
+        };
+
+        reader.onerror = (error) => reject(error);
+
+        function readNextChunk() {
+            const slice = file.slice(offset, offset + chunkSize);
+            reader.readAsDataURL(slice);
         }
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 8px;
-            background: #0f172a;
-        }
-        .video-container video, .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <button class="menu-btn" onclick="toggleSidebar()">&#9776;</button>
-        <h1 class="brand-title">HAFAR'S</h1>
-    </header>
 
-    <div id="sidebar" class="sidebar">
-        <div class="sidebar-header">
-            <h2 class="brand-title">HAFAR'S</h2>
-            <button class="close-sidebar-btn" onclick="toggleSidebar()">&times;</button>
-        </div>
-        <nav class="sidebar-nav">
-            <a href="index.html">Home</a>
-            <a href="about.html">About Us</a>
-            <a href="gallery.html">Gallery</a>
-            <a href="video.html" class="active-page">Video</a>
-            <a href="privacy.html">Privacy & Policy</a>
-            
-            <div class="sidebar-user-box">
-                <div id="sidebar-logged-out">
-                    <p style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 10px;">Akses Kontributor HAFAR'S</p>
-                    <button onclick="showLoginModal()" style="width: 100%; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">🔑 Login Anggota</button>
-                </div>
-                <div id="sidebar-logged-in" style="display: none;">
-                    <p style="font-size: 0.75rem; color: #34d399; font-weight: bold;">✓ Akses Anggota Aktif</p>
-                    <p id="user-email-display" style="font-size: 0.85rem; color: #ffffff; font-weight: bold; word-break: break-all; margin-bottom: 12px;"></p>
-                    <button onclick="logout()" style="width: 100%; padding: 8px; background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid rgba(239,68,68,0.4); border-radius: 8px; cursor: pointer; font-weight: bold;">Logout</button>
-                </div>
-            </div>
-        </nav>
-    </div>
-    <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
+        readNextChunk();
+    });
+}
 
-    <div class="container">
-        <h2>DOKUMENTASI VIDEO</h2>
-        <p>Kumpulan video dokumentasi kegiatan PKL HAFAR'S di BBPP Ketindan.</p>
-        
-        <div class="video-card">
-            <h3>KEGIATAN UTAMA</h3>
-            <div class="video-container">
-                <video controls>
-                    <source src="video-kegiatan.mp4" type="video/mp4">
-                    Browser Anda tidak mendukung pemutar video.
-                </video>
-            </div>
-        </div>
-    </div>
+async function uploadVideo() {
+    const fileInput = document.getElementById('video-input');
+    const titleInput = document.getElementById('video-title-input').value.trim();
+    const file = fileInput.files[0];
+    const status = document.getElementById('upload-video-status');
+    const uploadBtn = document.getElementById('upload-video-btn');
 
-    <!-- Modal Login -->
-    <div id="login-modal" class="lightbox">
-        <div style="background: #1e293b; padding: 2rem; border-radius: 14px; width: 90%; max-width: 380px; position: relative; border: 1px solid rgba(255,255,255,0.15);">
-            <span class="close-btn" onclick="closeLoginModal()" style="color: #cbd5e1; top: 12px; right: 18px;">&times;</span>
-            <h3 style="color: #ffffff; text-align: center;">LOGIN ANGGOTA</h3>
-            <p style="font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bottom: 1.2rem;">Masuk untuk mengunggah & mengelola foto</p>
-            
-            <input type="email" id="login-email" placeholder="Email Anggota" style="width: 100%; padding: 11px; margin-bottom: 12px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px;">
-            <input type="password" id="login-password" placeholder="Password" style="width: 100%; padding: 11px; margin-bottom: 16px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px;">
-            
-            <button onclick="login()" id="login-btn" style="width: 100%; padding: 11px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
-            <p id="login-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; text-align: center;"></p>
-        </div>
-    </div>
+    if (!file) return alert("Pilih file video terlebih dahulu!");
 
-    <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html" style="color: inherit; text-decoration: underline;">Privacy & Policy</a></div>
+    // Batas maksimal diperbarui menjadi 200 MB
+    const maxSizeBytes = 200 * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+        return alert("Ukuran video terlalu besar! Maksimal 200 MB.");
+    }
 
-    <script src="auth.js"></script>
-</body>
-</html>
+    const videoTitle = titleInput || file.name;
+
+    status.innerText = "Memulai proses video...";
+    uploadBtn.disabled = true;
+
+    try {
+        const base64Data = await convertLargeFileToBase64(file);
+
+        status.innerText = "Mengirim data ke database...";
+
+        await db.collection('videos').add({
+            title: videoTitle,
+            url: base64Data,
+            createdAt: new Date()
+        });
+
+        status.innerText = "✓ Video berhasil di-upload!";
+        fileInput.value = "";
+        document.getElementById('video-title-input').value = "";
+        uploadBtn.disabled = false;
+        loadVideos();
+    } catch (err) {
+        uploadBtn.disabled = false;
+        status.innerText = "Gagal upload: " + err.message;
+    }
+}
