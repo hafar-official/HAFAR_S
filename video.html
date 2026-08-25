@@ -8,78 +8,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <style>
-        .video-card {
-            position: relative;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            margin-top: 20px;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
-        }
-
-        .video-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.45);
-            border-color: rgba(56, 189, 248, 0.3);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%; /* Rasio 16:9 */
-            height: 0;
-            overflow: hidden;
-            background: #000;
-        }
-
-        .video-wrapper video,
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .video-info {
-            padding: 16px;
-        }
-
-        .video-info h3 {
-            margin-bottom: 6px;
-            color: #f1f5f9;
-        }
-
-        .video-info p {
-            font-size: 0.9rem;
-            color: #cbd5e1;
-        }
-
-        .delete-video-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(239, 68, 68, 0.9);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            font-weight: bold;
-            z-index: 10;
-            transition: transform 0.2s ease;
-        }
-
-        .delete-video-btn:hover {
-            transform: scale(1.15);
-            background: rgba(220, 38, 38, 1);
-        }
-    </style>
 </head>
 <body>
     <header>
@@ -116,36 +44,24 @@
 
     <div class="container">
         <h2>DOKUMENTASI VIDEO</h2>
-        <p>Kumpulan video rekaman kegiatan Praktik Kerja Lapangan (PKL) HAFAR'S di BBPP Ketindan.</p>
+        <p>Koleksi rekaman video kegiatan PKL HAFAR'S selama berada di BBPP Ketindan.</p>
 
-        <!-- Form Tambah Link Drive (Hanya tampil saat login) -->
-        <div id="upload-container" style="display: none; background: rgba(255, 255, 255, 0.05); padding: 1.2rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); margin-bottom: 25px; margin-top: 15px;">
-            <h4 style="color: #38bdf8; margin-top: 0;">🎬 TAMBAH VIDEO GOOGLE DRIVE:</h4>
-            
-            <input type="text" id="video-title-input" placeholder="Judul Video..." style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 6px; box-sizing: border-box;">
-            
-            <input type="url" id="video-drive-url" placeholder="Paste Link Berbagi Google Drive (contoh: https://drive.google.com/file/d/.../view)" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 6px; box-sizing: border-box;">
-            
-            <button onclick="addDriveVideo()" id="upload-video-btn" style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Simpan Video</button>
-            <p id="upload-video-status" style="font-size: 0.85rem; margin-top: 8px; color: #38bdf8;"></p>
-        </div>
-
-        <!-- Container Daftar Video -->
-        <div id="video-list"></div>
+        <!-- Area Konten Video Dapat Ditambahkan Di Sini -->
+        <div id="video-grid" class="gallery-grid"></div>
     </div>
 
-    <!-- Modal Login -->
-    <div id="login-modal" class="lightbox">
-        <div style="background: #1e293b; padding: 2rem; border-radius: 14px; width: 90%; max-width: 380px; position: relative; border: 1px solid rgba(255,255,255,0.15);">
-            <span class="close-btn" onclick="closeLoginModal()" style="color: #cbd5e1; top: 12px; right: 18px;">&times;</span>
-            <h3 style="color: #ffffff; text-align: center;">LOGIN ANGGOTA</h3>
-            <p style="font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bottom: 1.2rem;">Masuk untuk mengunggah & mengelola video</p>
+    <!-- MODAL LOGIN BERSIH -->
+    <div id="login-modal" class="modal-login-container">
+        <div style="background: #1e293b; padding: 2rem; border-radius: 14px; width: 90%; max-width: 380px; position: relative; border: 1px solid rgba(255,255,255,0.15);" onclick="event.stopPropagation()">
+            <span class="close-lightbox-btn" onclick="closeLoginModal()" style="color: #cbd5e1; top: 12px; right: 18px; font-size: 28px;">&times;</span>
+            <h3 style="color: #ffffff; text-align: center; margin-top: 0;">LOGIN ANGGOTA</h3>
+            <p style="font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bottom: 1.2rem;">Masuk untuk mengunggah & mengelola media</p>
             
-            <input type="email" id="login-email" placeholder="Email Anggota" style="width: 100%; padding: 11px; margin-bottom: 12px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px;">
-            <input type="password" id="login-password" placeholder="Password" style="width: 100%; padding: 11px; margin-bottom: 16px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px;">
+            <input type="email" id="login-email" placeholder="Email Anggota" style="width: 100%; padding: 11px; margin-bottom: 12px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px; box-sizing: border-box;">
+            <input type="password" id="login-password" placeholder="Password" style="width: 100%; padding: 11px; margin-bottom: 16px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px; box-sizing: border-box;">
             
             <button onclick="login()" id="login-btn" style="width: 100%; padding: 11px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
-            <p id="login-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; text-align: center;"></p>
+            <p id="login-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; text-align: center; margin-bottom: 0;"></p>
         </div>
     </div>
 
@@ -153,96 +69,25 @@
 
     <script src="auth.js"></script>
     <script>
-        function convertDriveUrlToEmbed(url) {
-            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-            if (match && match[1]) {
-                return `https://drive.google.com/file/d/${match[1]}/preview`;
-            }
-            return url;
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
         }
 
-        async function addDriveVideo() {
-            const titleInput = document.getElementById('video-title-input').value.trim();
-            const urlInput = document.getElementById('video-drive-url').value.trim();
-            const status = document.getElementById('upload-video-status');
-            const uploadBtn = document.getElementById('upload-video-btn');
-
-            if (!urlInput) return alert("Masukkan link Google Drive video terlebih dahulu!");
-
-            const embedUrl = convertDriveUrlToEmbed(urlInput);
-            const videoTitle = titleInput || "Video Kegiatan";
-
-            status.innerText = "Menyimpan video...";
-            uploadBtn.disabled = true;
-
-            try {
-                await db.collection('videos').add({
-                    title: videoTitle,
-                    embedUrl: embedUrl,
-                    createdAt: new Date()
-                });
-
-                status.innerText = "✓ Video berhasil ditambahkan!";
-                document.getElementById('video-drive-url').value = "";
-                document.getElementById('video-title-input').value = "";
-                uploadBtn.disabled = false;
-                loadVideos();
-            } catch (err) {
-                uploadBtn.disabled = false;
-                status.innerText = "Gagal menyimpan: " + err.message;
-            }
+        function showLoginModal() {
+            const modal = document.getElementById('login-modal');
+            document.body.appendChild(modal);
+            modal.style.display = 'flex';
+            document.body.classList.add('no-scroll');
         }
 
-        function deleteVideo(docId) {
-            if (confirm("Apakah Anda yakin ingin menghapus video ini?")) {
-                db.collection('videos').doc(docId).delete().then(() => {
-                    loadVideos();
-                });
-            }
+        function closeLoginModal() {
+            const modal = document.getElementById('login-modal');
+            modal.style.display = 'none';
+            document.body.classList.remove('no-scroll');
         }
-
-        function loadVideos() {
-            db.collection('videos').orderBy('createdAt', 'desc').get().then(snapshot => {
-                const list = document.getElementById('video-list');
-                list.innerHTML = '';
-
-                if (snapshot.empty) {
-                    list.innerHTML = '<p style="color: #94a3b8; text-align: center; margin-top: 20px;">Belum ada video yang ditambahkan.</p>';
-                    return;
-                }
-
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    const docId = doc.id;
-
-                    if (!data.embedUrl) return;
-
-                    const card = document.createElement('div');
-                    card.className = 'video-card';
-
-                    let deleteBtnHtml = '';
-                    if (currentUser) {
-                        deleteBtnHtml = `<button class="delete-video-btn" onclick="deleteVideo('${docId}')" title="Hapus Video">✕</button>`;
-                    }
-
-                    card.innerHTML = `
-                        ${deleteBtnHtml}
-                        <div class="video-wrapper">
-                            <iframe src="${data.embedUrl}" allow="autoplay" allowfullscreen></iframe>
-                        </div>
-                        <div class="video-info">
-                            <h3>${data.title || 'Video Kegiatan'}</h3>
-                            <p>Ditambahkan pada: ${data.createdAt ? new Date(data.createdAt.toDate()).toLocaleDateString('id-ID') : '-'}</p>
-                        </div>
-                    `;
-                    list.appendChild(card);
-                });
-            });
-        }
-
-        auth.onAuthStateChanged(user => {
-            loadVideos();
-        });
     </script>
 </body>
 </html>

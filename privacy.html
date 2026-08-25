@@ -8,27 +8,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <style>
-        .policy-section {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            margin-top: 1.5rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-        }
-        .policy-section:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.35);
-            border-color: rgba(56, 189, 248, 0.3);
-        }
-        .policy-section p {
-            color: #cbd5e1;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-    </style>
 </head>
 <body>
     <header>
@@ -64,38 +43,48 @@
     <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
 
     <div class="container">
-        <h2>PRIVACY & POLICY</h2>
-        <p>Kebijakan Privasi Penggunaan Layanan Website HAFAR'S.</p>
-
-        <div class="policy-section">
-            <h3>1. PENGUMPULAN DATA</h3>
-            <p>Kami menghormati privasi Anda. Platform HAFAR'S hanya menyimpan data media (foto & video kegiatan) dan kredensial login akun kontributor yang terverifikasi untuk kepentingan dokumentasi kegiatan Praktik Kerja Lapangan (PKL).</p>
-
-            <h3>2. PENGGUNAAN FOTO & DOKUMENTASI</h3>
-            <p>Semua foto yang diunggah ke dalam galeri HAFAR'S merupakan aset dokumentasi kegiatan resmi dan hanya dapat diubah atau dihapus oleh kontributor/anggota yang memiliki hak akses login.</p>
-
-            <h3>3. KEAMANAN DATA</h3>
-            <p>Data dikelola menggunakan layanan Firebase Firestore dengan standar keamanan cloud untuk memastikan integritas dan keamanan media yang disimpan.</p>
-        </div>
+        <h2>KEBIJAKAN PRIVASI</h2>
+        <p>Seluruh media dokumentasi (foto & video) yang diunggah ke platform ini digunakan khusus untuk kebutuhan internal dan arsip dokumentasi kegiatan HAFAR'S.</p>
     </div>
 
-    <!-- Modal Login -->
-    <div id="login-modal" class="lightbox">
-        <div style="background: #1e293b; padding: 2rem; border-radius: 14px; width: 90%; max-width: 380px; position: relative; border: 1px solid rgba(255,255,255,0.15);">
-            <span class="close-btn" onclick="closeLoginModal()" style="color: #cbd5e1; top: 12px; right: 18px;">&times;</span>
-            <h3 style="color: #ffffff; text-align: center;">LOGIN ANGGOTA</h3>
-            <p style="font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bottom: 1.2rem;">Masuk untuk mengunggah & mengelola foto</p>
+    <!-- MODAL LOGIN BERSIH -->
+    <div id="login-modal" class="modal-login-container">
+        <div style="background: #1e293b; padding: 2rem; border-radius: 14px; width: 90%; max-width: 380px; position: relative; border: 1px solid rgba(255,255,255,0.15);" onclick="event.stopPropagation()">
+            <span class="close-lightbox-btn" onclick="closeLoginModal()" style="color: #cbd5e1; top: 12px; right: 18px; font-size: 28px;">&times;</span>
+            <h3 style="color: #ffffff; text-align: center; margin-top: 0;">LOGIN ANGGOTA</h3>
+            <p style="font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bottom: 1.2rem;">Masuk untuk mengunggah & mengelola media</p>
             
-            <input type="email" id="login-email" placeholder="Email Anggota" style="width: 100%; padding: 11px; margin-bottom: 12px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px;">
-            <input type="password" id="login-password" placeholder="Password" style="width: 100%; padding: 11px; margin-bottom: 16px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px;">
+            <input type="email" id="login-email" placeholder="Email Anggota" style="width: 100%; padding: 11px; margin-bottom: 12px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px; box-sizing: border-box;">
+            <input type="password" id="login-password" placeholder="Password" style="width: 100%; padding: 11px; margin-bottom: 16px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px; box-sizing: border-box;">
             
             <button onclick="login()" id="login-btn" style="width: 100%; padding: 11px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
-            <p id="login-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; text-align: center;"></p>
+            <p id="login-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; text-align: center; margin-bottom: 0;"></p>
         </div>
     </div>
 
-    <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi.</div>
+    <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html" style="color: inherit; text-decoration: underline;">Privacy & Policy</a></div>
 
     <script src="auth.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function showLoginModal() {
+            const modal = document.getElementById('login-modal');
+            document.body.appendChild(modal);
+            modal.style.display = 'flex';
+            document.body.classList.add('no-scroll');
+        }
+
+        function closeLoginModal() {
+            const modal = document.getElementById('login-modal');
+            modal.style.display = 'none';
+            document.body.classList.remove('no-scroll');
+        }
+    </script>
 </body>
 </html>

@@ -3,95 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HAFAR'S - PKL BBPP Ketindan</title>
+    <title>HAFAR'S - Home</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <style>
-        /* Keyframe Animasi Fade-In */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.98);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .hero-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 16px;
-            padding: 2.5rem;
-            max-width: 900px;
-            margin: 20px auto;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            /* Penerapan Animasi */
-            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-        }
-
-        .hero-card:hover {
-            border-color: rgba(56, 189, 248, 0.3);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .welcome-text {
-            color: #cbd5e1;
-            font-size: 1rem;
-            line-height: 1.85;
-            text-align: justify;
-            margin-bottom: 1.8rem; /* Jarak antar paragraf ditingkatkan */
-            text-indent: 2rem;    /* Spasi di awal setiap paragraf */
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 2.5rem;
-        }
-
-        .btn-primary, .btn-secondary {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 26px;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 0.95rem;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .btn-primary {
-            background: #2563eb;
-            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
-        }
-
-        .btn-primary:hover {
-            background: #1d4ed8;
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 22px rgba(37, 99, 235, 0.6);
-        }
-
-        .btn-secondary {
-            background: #10b981;
-            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-secondary:hover {
-            background: #059669;
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 22px rgba(16, 185, 129, 0.6);
-        }
-    </style>
 </head>
 <body>
     <header>
@@ -127,53 +43,53 @@
     <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
 
     <div class="container">
-        <div class="hero-card">
-            <h2>SELAMAT DATANG DI HAFAR'S</h2>
-            
-            <p class="welcome-text">
-                Selamat datang di portal dokumentasi resmi HAFAR'S! Platform digital ini dirancang secara khusus untuk mengabadikan setiap momen berharga, pengalaman belajar, serta perjuangan siswa-siswi jurusan Teknik Komputer dan Jaringan (TKJ) selama menempuh masa Praktik Kerja Lapangan (PKL) di Balai Besar Pelatihan Pertanian (BBPP) Ketindan. Melalui situs ini, seluruh kenangan dan karya yang telah tercipta dapat tersimpan secara rapi, terstruktur, dan diakses kembali kapan saja.
-            </p>
-
-            <p class="welcome-text">
-                Pelaksanaan PKL merupakan jembatan krusial yang menghubungkan teori di bangku sekolah dengan realitas dunia kerja profesional. Di instansi BBPP Ketindan, kami mendapat kesempatan berharga untuk mengasah keterampilan teknis kejuruan secara langsung. Berbagai tanggung jawab teknis telah kami jalankan, mulai dari pemeliharaan jaringan komputer, penataan infrastruktur IT, manajemen basis data, hingga pengelolaan arsip digital perpustakaan berbasis sistem informasi modern.
-            </p>
-
-            <p class="welcome-text">
-                Tidak hanya berfokus pada ranah jaringan dan teknologi informasi, pengalaman PKL ini juga melatih soft skill dan kedisiplinan kami. Kami belajar bertindak adaptif terhadap lingkungan kerja profesional, bekerja dalam tim secara efektif, memecahkan masalah (*problem solving*) di lapangan secara cepat, serta mengelola berbagai proyek media multimedia guna mendukung publikasi kegiatan instansi.
-            </p>
-
-            <p class="welcome-text">
-                Setiap foto dan tayangan video yang ada di dalam portal ini menyimpan cerita serta kerja keras kami selama beraktivitas. Platform HAFAR'S dibangun menggunakan teknologi web terintegrasi Firebase dan GitHub Pages agar proses pengelolaan arsip dokumentasi dapat dilakukan secara fleksibel dan real-time oleh seluruh anggota kelompok yang telah terverifikasi.
-            </p>
-
-            <p class="welcome-text">
-                Kami mengundang Anda untuk menjelajahi jejak langkah dan karya dokumentasi kami selama bertugas di BBPP Ketindan. Silakan klik tombol di bawah ini untuk mengakses galeri foto maupun koleksi video dokumentasi secara langsung.
-            </p>
-
-            <div class="action-buttons">
-                <a href="gallery.html" class="btn-primary">📸 Lihat & Upload Foto</a>
-                <a href="video.html" class="btn-secondary">🎬 Lihat & Upload Video</a>
-            </div>
+        <h2>SELAMAT DATANG DI HAFAR'S</h2>
+        <p>Kami mengundang Anda untuk menjelajahi jejak langkah dan karya dokumentasi kami selama bertugas di BBPP Ketindan. Silakan klik tombol di bawah ini untuk mengakses galeri foto maupun koleksi video dokumentasi secara langsung.</p>
+        
+        <div style="margin-top: 25px; display: flex; gap: 15px; flex-wrap: wrap;">
+            <a href="gallery.html" style="padding: 12px 24px; background: #2563eb; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">📸 Lihat & Upload Foto</a>
+            <a href="video.html" style="padding: 12px 24px; background: #10b981; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">🎬 Lihat & Upload Video</a>
         </div>
     </div>
 
-    <!-- Modal Login -->
-    <div id="login-modal" class="lightbox">
-        <div style="background: #1e293b; padding: 2rem; border-radius: 14px; width: 90%; max-width: 380px; position: relative; border: 1px solid rgba(255,255,255,0.15);">
-            <span class="close-btn" onclick="closeLoginModal()" style="color: #cbd5e1; top: 12px; right: 18px;">&times;</span>
-            <h3 style="color: #ffffff; text-align: center;">LOGIN ANGGOTA</h3>
+    <!-- MODAL LOGIN DENGAN WRAPPER CONTAINER LENGKAP -->
+    <div id="login-modal" class="modal-login-container">
+        <div style="background: #1e293b; padding: 2rem; border-radius: 14px; width: 90%; max-width: 380px; position: relative; border: 1px solid rgba(255,255,255,0.15);" onclick="event.stopPropagation()">
+            <span class="close-lightbox-btn" onclick="closeLoginModal()" style="color: #cbd5e1; top: 12px; right: 18px; font-size: 28px;">&times;</span>
+            <h3 style="color: #ffffff; text-align: center; margin-top: 0;">LOGIN ANGGOTA</h3>
             <p style="font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bottom: 1.2rem;">Masuk untuk mengunggah & mengelola media</p>
             
-            <input type="email" id="login-email" placeholder="Email Anggota" style="width: 100%; padding: 11px; margin-bottom: 12px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px;">
-            <input type="password" id="login-password" placeholder="Password" style="width: 100%; padding: 11px; margin-bottom: 16px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px;">
+            <input type="email" id="login-email" placeholder="Email Anggota" style="width: 100%; padding: 11px; margin-bottom: 12px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px; box-sizing: border-box;">
+            <input type="password" id="login-password" placeholder="Password" style="width: 100%; padding: 11px; margin-bottom: 16px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px; box-sizing: border-box;">
             
             <button onclick="login()" id="login-btn" style="width: 100%; padding: 11px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
-            <p id="login-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; text-align: center;"></p>
+            <p id="login-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; text-align: center; margin-bottom: 0;"></p>
         </div>
     </div>
 
     <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html" style="color: inherit; text-decoration: underline;">Privacy & Policy</a></div>
 
     <script src="auth.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function showLoginModal() {
+            const modal = document.getElementById('login-modal');
+            document.body.appendChild(modal);
+            modal.style.display = 'flex';
+            document.body.classList.add('no-scroll');
+        }
+
+        function closeLoginModal() {
+            const modal = document.getElementById('login-modal');
+            modal.style.display = 'none';
+            document.body.classList.remove('no-scroll');
+        }
+    </script>
 </body>
 </html>
