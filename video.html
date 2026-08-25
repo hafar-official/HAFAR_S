@@ -153,7 +153,6 @@
 
     <script src="auth.js"></script>
     <script>
-        // Konversi Link Google Drive biasa menjadi Embed Link (/preview)
         function convertDriveUrlToEmbed(url) {
             const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
             if (match && match[1]) {
@@ -207,21 +206,10 @@
                 const list = document.getElementById('video-list');
                 list.innerHTML = '';
 
-                // Video Lokal Bawaan
-                list.innerHTML += `
-                    <div class="video-card">
-                        <div class="video-wrapper">
-                            <video controls poster="Ketindan.jpg">
-                                <source src="video-kegiatan.mp4" type="video/mp4">
-                                Browser Anda tidak mendukung pemutar video HTML5.
-                            </video>
-                        </div>
-                        <div class="video-info">
-                            <h3>DOKUMENTASI KEGIATAN PKL</h3>
-                            <p>Kompilasi kegiatan harian siswa TKJ selama bertugas di BBPP Ketindan.</p>
-                        </div>
-                    </div>
-                `;
+                if (snapshot.empty) {
+                    list.innerHTML = '<p style="color: #94a3b8; text-align: center; margin-top: 20px;">Belum ada video yang ditambahkan.</p>';
+                    return;
+                }
 
                 snapshot.forEach(doc => {
                     const data = doc.data();
