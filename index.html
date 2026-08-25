@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HAFAR'S - Home</title>
+    <title>Home - HAFAR'S</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDK (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -44,15 +45,37 @@
 
     <div class="container">
         <h2>SELAMAT DATANG DI HAFAR'S</h2>
-        <p>Kami mengundang Anda untuk menjelajahi jejak langkah dan karya dokumentasi kami selama bertugas di BBPP Ketindan. Silakan klik tombol di bawah ini untuk mengakses galeri foto maupun koleksi video dokumentasi secara langsung.</p>
-        
-        <div style="margin-top: 25px; display: flex; gap: 15px; flex-wrap: wrap;">
-            <a href="gallery.html" class="btn-action btn-blue">📸 Lihat & Upload Foto</a>
-            <a href="video.html" class="btn-action btn-green">🎬 Lihat & Upload Video</a>
+        <p style="color: #94a3b8; margin-bottom: 25px;">Jurnal Digital & Rekam Jejak Perjalanan PKL BBPP Ketindan</p>
+
+        <div style="background: rgba(30, 41, 59, 0.7); padding: 30px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); line-height: 1.8; color: #e2e8f0; text-align: justify;">
+            <p style="text-indent: 35px; margin-bottom: 20px;">
+                Selamat datang di portal resmi HAFAR'S, sebuah ruang digital yang didedikasikan secara khusus untuk mengabadikan setiap jejak, karya, dan dinamika perjalanan kami selama menempuh pengalaman di lapangan. Situs web ini hadir bukan hanya sekadar sebagai wadah tempat menampung koleksi dokumentasi visual semata, melainkan juga dirancang sebagai jurnal terbuka yang mencatat dengan detail bagaimana kami belajar, beradaptasi, berkolaborasi, dan tumbuh bersama di tengah berbagai tantangan nyata.
+            </p>
+            <p style="text-indent: 35px; margin-bottom: 20px;">
+                Melalui program Praktik Kerja Lapangan (PKL) yang berlokasi di Balai Besar Pelatihan Pertanian (BBPP) Ketindan, kami mendapatkan kesempatan emas yang sangat berharga untuk terjun langsung memahami realitas dunia kerja kelembagaan. Di lingkungan ini, kami dituntut untuk tidak hanya memahami teori yang dipelajari di sekolah, tetapi juga menerapkan berbagai keterampilan teknis maupun administratif secara presisi untuk mendukung operasional harian instansi.
+            </p>
+            <p style="text-indent: 35px; margin-bottom: 20px;">
+                Ruang lingkup tugas yang kami hadapi di BBPP Ketindan mencakup berbagai bidang yang luas dan dinamis. Mulai dari administrasi perpustakaan seperti pengatalogan buku menggunakan sistem INLISLite, pencetakan barcode, dan penataan arsip fisik, hingga tugas-tugas berbasis pengembangan teknologi informasi serta pengelolaan konten media. Setiap instruksi kerja menjadi sarana pembuktian sekaligus tempat latihan langsung untuk mengasah keterampilan profesional kami.
+            </p>
+            <p style="text-indent: 35px; margin-bottom: 20px;">
+                Di lini produksi media dan sistem digital, tim kami aktif mengeksekusi proyek pembuatan video dokumentasi, proses pengambilan gambar kegiatan, editing rekaman visual, hingga pengelolaan serta pengunggahan aset ke dalam repositori web HAFAR'S. Proses ini memerlukan konsistensi tinggi dalam memilih tata letak, menjaga kerapian struktur basis data visual, serta memastikan seluruh informasi tersaji dengan jelas dan menarik bagi para pengunjung.
+            </p>
+            <p style="text-indent: 35px; margin-bottom: 20px;">
+                Tentu saja perjalanan di lapangan tidak pernah lepas dari berbagai dinamika dan tantangan teknis. Di balik setiap penyelesaian tugas yang tampak lancar, ada proses panjang yang diwarnai oleh diskusi tim yang intens, pemecahan masalah secara mandiri, hingga penyesuaian strategi saat menghadapi kendala perangkat keras maupun lunak. Setiap hambatan tersebut justru membentuk pola pikir kami menjadi lebih matang, adaptif, tangguh, serta makin menghargai pentingnya koordinasi tim yang solid.
+            </p>
+            <p style="text-indent: 35px; margin-bottom: 20px;">
+                Platform web HAFAR'S ini dibangun secara mandiri sebagai wujud nyata dari pemanfaatan teknologi web modern. Melalui integrasi antarmuka yang responsif, navigasi *sidebar* yang terstruktur, hingga sistem autentikasi anggota untuk tata kelola konten, kami berusaha menyajikan sebuah repositori digital yang rapi dan mudah diakses. Seluruh fitur ini dikembangkan agar setiap pengunjung dapat menikmati pengalaman menelusuri galeri karya dengan nyaman.
+            </p>
+            <p style="text-indent: 35px; margin-bottom: 20px;">
+                Setiap materi foto dan video yang dipublikasikan di halaman galeri bukan sekadar pajangan estetis, melainkan representasi dari komitmen kami terhadap kualitas karya dan transparansi rekam jejak. Pengunjung dapat melihat secara langsung gambaran suasana kerja, interaksi antaranggota, hingga hasil akhir dari berbagai penugasan yang berhasil di selesaikan selama periode Praktik Kerja Lapangan berlangsung.
+            </p>
+            <p style="text-indent: 35px; margin-bottom: 0;">
+                Pada akhirnya, apa yang tersaji di dalam situs web ini adalah fondasi awal dari langkah-langkah besar yang akan kami tempuh di masa depan. Pengalaman serta pelajaran berharga yang didapatkan dari BBPP Ketindan akan selalu menjadi bekal penting dalam melangkah lebih jauh ke dunia profesional maupun jenjang pendidikan berikutnya. Terima kasih telah menyempatkan waktu untuk menjelajahi jejak langkah HAFAR'S dan menjadi bagian dari perjalanan kami!
+            </p>
         </div>
     </div>
 
-    <!-- MODAL LOGIN BERANIMASI -->
+    <!-- MODAL LOGIN -->
     <div id="login-modal" class="modal-login-container">
         <div class="modal-content-animated" onclick="event.stopPropagation()">
             <span class="close-lightbox-btn" onclick="closeLoginModal()">&times;</span>
@@ -69,6 +92,7 @@
 
     <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html">Privacy & Policy</a></div>
 
+    <!-- SCRIPT AUTH & NAVIGASI -->
     <script src="auth.js"></script>
     <script>
         function toggleSidebar() {
