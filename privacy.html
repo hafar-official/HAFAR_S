@@ -30,7 +30,7 @@
             <div class="sidebar-user-box">
                 <div id="sidebar-logged-out">
                     <p style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 10px;">Akses Kontributor HAFAR'S</p>
-                    <button onclick="showLoginModal()" style="width: 100%; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">🔑 Login Anggota</button>
+                    <button onclick="showLoginModal()" style="width: 100%; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: background 0.25s ease, transform 0.2s ease;">🔑 Login Anggota</button>
                 </div>
                 <div id="sidebar-logged-in" style="display: none;">
                     <p style="font-size: 0.75rem; color: #34d399; font-weight: bold;">✓ Akses Anggota Aktif</p>
@@ -47,22 +47,22 @@
         <p>Seluruh media dokumentasi (foto & video) yang diunggah ke platform ini digunakan khusus untuk kebutuhan internal dan arsip dokumentasi kegiatan HAFAR'S.</p>
     </div>
 
-    <!-- MODAL LOGIN BERSIH -->
+    <!-- MODAL LOGIN BERANIMASI -->
     <div id="login-modal" class="modal-login-container">
-        <div style="background: #1e293b; padding: 2rem; border-radius: 14px; width: 90%; max-width: 380px; position: relative; border: 1px solid rgba(255,255,255,0.15);" onclick="event.stopPropagation()">
-            <span class="close-lightbox-btn" onclick="closeLoginModal()" style="color: #cbd5e1; top: 12px; right: 18px; font-size: 28px;">&times;</span>
+        <div class="modal-content-animated" onclick="event.stopPropagation()">
+            <span class="close-lightbox-btn" onclick="closeLoginModal()">&times;</span>
             <h3 style="color: #ffffff; text-align: center; margin-top: 0;">LOGIN ANGGOTA</h3>
             <p style="font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bottom: 1.2rem;">Masuk untuk mengunggah & mengelola media</p>
             
-            <input type="email" id="login-email" placeholder="Email Anggota" style="width: 100%; padding: 11px; margin-bottom: 12px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px; box-sizing: border-box;">
-            <input type="password" id="login-password" placeholder="Password" style="width: 100%; padding: 11px; margin-bottom: 16px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px; box-sizing: border-box;">
+            <input type="email" id="login-email" placeholder="Email Anggota">
+            <input type="password" id="login-password" placeholder="Password">
             
-            <button onclick="login()" id="login-btn" style="width: 100%; padding: 11px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
+            <button onclick="login()" id="login-btn" style="width: 100%; padding: 11px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.25s ease, transform 0.2s ease;">Masuk</button>
             <p id="login-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; text-align: center; margin-bottom: 0;"></p>
         </div>
     </div>
 
-    <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html" style="color: inherit; text-decoration: underline;">Privacy & Policy</a></div>
+    <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html">Privacy & Policy</a></div>
 
     <script src="auth.js"></script>
     <script>
