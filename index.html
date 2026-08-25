@@ -3,55 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HAFAR - Portal Dokumentasi & Showcase</title>
+    <title>HAFAR'S - Portal Dokumentasi PKL</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Navigasi Samping / Sidebar -->
+    <!-- Sidebar / Navigasi Kiri -->
     <aside class="sidebar">
-        <div class="menu-icon">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <div class="vertical-title">
-            <span>H</span>
-            <span>A</span>
-            <span>F</span>
-            <span>A</span>
-            <span>R</span>
-            <span>'</span>
-            <span>S</span>
-        </div>
+        <button class="menu-btn" aria-label="Menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <div class="sidebar-title">H A F A R - S</div>
     </aside>
 
-    <!-- Konten Utama (Disusun dari Atas ke Bawah) -->
-    <main class="main-content">
-
-        <!-- Section 1: Hero / Selamat Datang -->
-        <section class="hero-card">
-            <h1 class="glitch-title">HAFAR</h1>
-            <p class="subtitle">Interactive Cyber Experience & Showcase</p>
-            
-            <div class="welcome-box">
-                <h2>SELAMAT DATANG DI HAFAR'S</h2>
-                <p>Portal dokumentasi resmi kegiatan Praktik Kerja Lapangan (PKL) siswa TKJ di BBPP Ketindan.</p>
-                
-                <div class="btn-group">
-                    <a href="#galeri" class="btn btn-primary">Lihat Galeri Foto &rarr;</a>
-                    <a href="#fitur" class="btn btn-cyan">Jelajahi Fitur</a>
-                    <a href="#dokumentasi" class="btn btn-outline">Dokumentasi</a>
-                </div>
+    <!-- Pembungkus Konten Utama -->
+    <div class="main-wrapper">
+        
+        <!-- Kartu 1: Portal Dokumentasi (Kiri) -->
+        <div class="card card-left">
+            <div class="card-inner">
+                <h2 class="pixel-title">SELAMAT DATANG DI HAFAR'S</h2>
+                <p class="card-desc">
+                    Portal dokumentasi resmi kegiatan Praktik Kerja Lapangan (PKL) siswa TKJ di BBPP Ketindan.
+                </p>
+                <a href="#galeri" class="btn btn-blue">Lihat Galeri Foto &rarr;</a>
             </div>
-        </section>
+        </div>
 
-        <!-- Footer (Berada di Paling Bawah) -->
-        <footer class="footer">
-            <p>© 2026 HAFAR'S. Semua hak dilindungi. | <a href="#">Privacy & Policy</a></p>
-        </footer>
+        <!-- Kartu 2: Showcase Cyber Experience (Kanan) -->
+        <div class="card card-right">
+            <h1 class="logo-pixel">HAFAR</h1>
+            <p class="sub-text">Interactive Cyber Experience & Showcase</p>
 
-    </main>
+            <div class="btn-group">
+                <a href="#fitur" class="btn btn-cyan">Jelajahi Fitur</a>
+                <a href="#dokumentasi" class="btn btn-outline">Dokumentasi</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer Paling Bawah -->
+    <footer class="footer">
+        <p>© 2026 HAFAR'S. Semua hak dilindungi. | <a href="#privacy">Privacy & Policy</a></p>
+    </footer>
 
 </body>
 </html>
