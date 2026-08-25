@@ -3,12 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery Foto - HAFAR</title>
+    <title>Gallery Foto - HAFAR'S</title>
+    <!-- Google Fonts untuk font elegan -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="style.css">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Styling Judul Elegan */
+        header h1, .brand-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 1.8rem;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
@@ -99,12 +116,12 @@
 <body>
     <header>
         <button class="menu-btn" onclick="toggleSidebar()">&#9776;</button>
-        <h1>HAFAR</h1>
+        <h1 class="brand-title">HAFAR'S</h1>
     </header>
 
     <div id="sidebar" class="sidebar">
         <div class="sidebar-header">
-            <h2>Menu HAFAR</h2>
+            <h2 class="brand-title" style="color: white;">HAFAR'S</h2>
             <button class="close-sidebar-btn" onclick="toggleSidebar()">&times;</button>
         </div>
         <nav class="sidebar-nav" style="display: flex; flex-direction: column; min-height: calc(100% - 70px);">
@@ -112,10 +129,11 @@
             <a href="about.html">About Us</a>
             <a href="gallery.html" class="active-page">Gallery</a>
             <a href="video.html">Video</a>
+            <a href="privacy.html">Privacy & Policy</a>
             
             <div class="sidebar-user-box">
                 <div id="sidebar-logged-out">
-                    <p style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 10px;">Akses Kontributor HAFAR</p>
+                    <p style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 10px;">Akses Kontributor HAFAR'S</p>
                     <button onclick="showLoginModal()" style="width: 100%; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">🔑 Login Anggota</button>
                 </div>
                 <div id="sidebar-logged-in" style="display: none;">
@@ -129,10 +147,10 @@
     <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
 
     <div class="container">
-        <h2>Galeri Foto HAFAR</h2>
-        <p>Dokumentasi foto kegiatan siswa Praktik Kerja Lapangan (PKL) HAFAR di BBPP Ketindan, mencakup pengerjaan proyek multimedia, digitalisasi arsip perpustakaan, hingga dokumentasi lapangan.</p>
+        <h2>Galeri Foto HAFAR'S</h2>
+        <p>Dokumentasi foto kegiatan siswa Praktik Kerja Lapangan (PKL) HAFAR'S di BBPP Ketindan, mencakup pengerjaan proyek multimedia, digitalisasi arsip perpustakaan, hingga dokumentasi lapangan.</p>
 
-        <!-- Form Upload dengan Date Picker -->
+        <!-- Form Upload Tanggal Foto -->
         <div id="upload-container" style="display: none; background: #f8fafc; padding: 1.2rem; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px;">
             <h4 style="margin-bottom: 10px; color: var(--primary);">📷 Upload Foto Kegiatan Baru:</h4>
             
@@ -168,7 +186,7 @@
         <img class="lightbox-content" id="lightbox-img">
     </div>
 
-    <div class="footer">&copy; 2026 HAFAR. Semua hak dilindungi.</div>
+    <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html" style="color: inherit; text-decoration: underline;">Privacy & Policy</a></div>
 
     <script>
         const firebaseConfig = {
@@ -196,7 +214,6 @@
                 document.getElementById('sidebar-logged-in').style.display = 'block';
                 document.getElementById('user-email-display').innerText = user.email;
                 document.getElementById('upload-container').style.display = 'block';
-                // Set default tanggal input ke hari ini
                 document.getElementById('photo-date').valueAsDate = new Date();
             } else {
                 document.getElementById('sidebar-logged-out').style.display = 'block';
@@ -238,7 +255,6 @@
 
         function logout() { auth.signOut(); }
 
-        // MENGKOMPRES GAMBAR UTK HP & LAPTOP AGAR RINGAN (< 300KB)
         function compressAndConvertToBase64(file, maxWidth = 800, quality = 0.7) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -280,10 +296,9 @@
 
             if (!file) return alert("Pilih foto terlebih dahulu!");
 
-            // Format judul berdasarkan Tanggal
             let formattedTitle = "Kegiatan";
             if (dateInput) {
-                const parts = dateInput.split("-"); // yyyy-mm-dd
+                const parts = dateInput.split("-");
                 formattedTitle = `Kegiatan Tanggal: ${parts[2]}/${parts[1]}/${parts[0]}`;
             } else {
                 const today = new Date();
@@ -317,7 +332,6 @@
                 const grid = document.getElementById('gallery-grid');
                 grid.innerHTML = ''; 
 
-                // 1. Foto Bawaan
                 grid.innerHTML += `
                     <div class="card-wrapper">
                         <div class="card-img-container">
@@ -333,7 +347,6 @@
                     </div>
                 `;
 
-                // 2. Foto dari Firestore
                 snapshot.forEach(doc => {
                     const data = doc.data();
                     const docId = doc.id;
