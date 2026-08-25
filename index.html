@@ -3,86 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - HAFAR</title>
+    <title>Home - HAFAR'S</title>
     <link rel="stylesheet" href="style.css">
-    <!-- SDK Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <style>
-        .sidebar-user-box {
-            margin-top: auto;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.08);
+        .hero-banner {
+            background: #ffffff;
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 2.5rem;
+            margin-top: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .hero-banner p {
+            font-size: 1.05rem;
+            color: #475569;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .btn-primary:hover {
+            background: #1d4ed8;
         }
     </style>
 </head>
 <body>
     <header>
         <button class="menu-btn" onclick="toggleSidebar()">&#9776;</button>
-        <h1>HAFAR</h1>
+        <h1 class="brand-title">HAFAR'S</h1>
     </header>
 
     <div id="sidebar" class="sidebar">
         <div class="sidebar-header">
-            <h2>Menu HAFAR</h2>
+            <h2 class="brand-title" style="color: white;">HAFAR'S</h2>
             <button class="close-sidebar-btn" onclick="toggleSidebar()">&times;</button>
         </div>
-        <nav class="sidebar-nav" style="display: flex; flex-direction: column; min-height: calc(100% - 70px);">
+        <nav class="sidebar-nav">
             <a href="index.html" class="active-page">Home</a>
             <a href="about.html">About Us</a>
             <a href="gallery.html">Gallery</a>
             <a href="video.html">Video</a>
-            
-            <div class="sidebar-user-box">
-                <div id="sidebar-logged-out">
-                    <p style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 10px;">Akses Kontributor HAFAR</p>
-                    <a href="gallery.html" style="display: block; text-align: center; padding: 10px; background: #2563eb; color: white; border-radius: 8px; text-decoration: none; font-weight: bold;">🔑 Login di Galeri</a>
-                </div>
-                <div id="sidebar-logged-in" style="display: none;">
-                    <p style="font-size: 0.75rem; color: #a7f3d0; font-weight: bold; text-transform: uppercase;">✓ Akses Anggota Aktif</p>
-                    <p id="user-email-display" style="font-size: 0.85rem; color: #ffffff; font-weight: bold; word-break: break-all; margin-bottom: 12px;"></p>
-                    <button onclick="logout()" style="width: 100%; padding: 8px; background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid rgba(239,68,68,0.4); border-radius: 8px; cursor: pointer; font-weight: bold;">Logout</button>
-                </div>
-            </div>
+            <a href="privacy.html">Privacy & Policy</a>
         </nav>
     </div>
     <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
 
     <div class="container">
-        <h2>Selamat Datang di Web HAFAR</h2>
-        <p>Website resmi dokumentasi kegiatan siswa PKL HAFAR di BBPP Ketindan.</p>
+        <div class="hero-banner">
+            <h2>SELAMAT DATANG DI HAFAR'S</h2>
+            <p>Portal dokumentasi resmi kegiatan Praktik Kerja Lapangan (PKL) siswa TKJ di BBPP Ketindan.</p>
+            <a href="gallery.html" class="btn-primary">Lihat Galeri Foto &rarr;</a>
+        </div>
     </div>
 
-    <div class="footer">&copy; 2026 HAFAR. Semua hak dilindungi.</div>
+    <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html" style="color: inherit; text-decoration: underline;">Privacy & Policy</a></div>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCFrS9L0YFDB29-n5OvC2EkVFKclW2wRTk",
-            authDomain: "hafar-web.firebaseapp.com",
-            projectId: "hafar-web",
-            storageBucket: "hafar-web.firebasestorage.app",
-            messagingSenderId: "887471904367",
-            appId: "1:887471904367:web:c5bb4694916a522dbf9f9a",
-            measurementId: "G-Y5WWTJSFFK"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById('sidebar-logged-out').style.display = 'none';
-                document.getElementById('sidebar-logged-in').style.display = 'block';
-                document.getElementById('user-email-display').innerText = user.email;
-            } else {
-                document.getElementById('sidebar-logged-out').style.display = 'block';
-                document.getElementById('sidebar-logged-in').style.display = 'none';
-            }
-        });
-
-        function logout() { auth.signOut(); }
         function toggleSidebar() {
             document.getElementById("sidebar").classList.toggle("active");
             document.getElementById("overlay").classList.toggle("active");

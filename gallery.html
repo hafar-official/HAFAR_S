@@ -4,37 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gallery Foto - HAFAR'S</title>
-    <!-- Google Fonts untuk font elegan -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="style.css">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        /* Styling Judul Elegan */
-        header h1, .brand-title {
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-            letter-spacing: 1px;
-            font-size: 1.8rem;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .container {
-            animation: fadeIn 0.5s ease-out forwards;
-        }
-
         .card-wrapper {
             position: relative;
             background: #ffffff;
@@ -43,13 +17,12 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
-            animation: fadeIn 0.4s ease-out forwards;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .card-wrapper:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
         }
 
         .card-img-container {
@@ -57,7 +30,6 @@
             height: 220px;
             background: #f1f5f9;
             overflow: hidden;
-            position: relative;
         }
 
         .card-img-container img {
@@ -66,11 +38,6 @@
             object-fit: cover;
             cursor: pointer;
             display: block;
-            transition: transform 0.4s ease;
-        }
-
-        .card-wrapper:hover .card-img-container img {
-            transform: scale(1.06);
         }
 
         .card-caption {
@@ -95,13 +62,6 @@
             cursor: pointer;
             font-weight: bold;
             z-index: 10;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            transition: background 0.2s, transform 0.2s;
-        }
-
-        .delete-photo-btn:hover {
-            background: #dc2626;
-            transform: scale(1.1);
         }
 
         .sidebar-user-box {
@@ -124,7 +84,7 @@
             <h2 class="brand-title" style="color: white;">HAFAR'S</h2>
             <button class="close-sidebar-btn" onclick="toggleSidebar()">&times;</button>
         </div>
-        <nav class="sidebar-nav" style="display: flex; flex-direction: column; min-height: calc(100% - 70px);">
+        <nav class="sidebar-nav" style="display: flex; flex-direction: column; height: calc(100% - 70px);">
             <a href="index.html">Home</a>
             <a href="about.html">About Us</a>
             <a href="gallery.html" class="active-page">Gallery</a>
@@ -137,7 +97,7 @@
                     <button onclick="showLoginModal()" style="width: 100%; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">🔑 Login Anggota</button>
                 </div>
                 <div id="sidebar-logged-in" style="display: none;">
-                    <p style="font-size: 0.75rem; color: #a7f3d0; font-weight: bold; text-transform: uppercase;">✓ Akses Anggota Aktif</p>
+                    <p style="font-size: 0.75rem; color: #a7f3d0; font-weight: bold;">✓ Akses Anggota Aktif</p>
                     <p id="user-email-display" style="font-size: 0.85rem; color: #ffffff; font-weight: bold; word-break: break-all; margin-bottom: 12px;"></p>
                     <button onclick="logout()" style="width: 100%; padding: 8px; background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid rgba(239,68,68,0.4); border-radius: 8px; cursor: pointer; font-weight: bold;">Logout</button>
                 </div>
@@ -147,14 +107,14 @@
     <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
 
     <div class="container">
-        <h2>Galeri Foto HAFAR'S</h2>
+        <h2>GALERI FOTO HAFAR'S</h2>
         <p>Dokumentasi foto kegiatan siswa Praktik Kerja Lapangan (PKL) HAFAR'S di BBPP Ketindan, mencakup pengerjaan proyek multimedia, digitalisasi arsip perpustakaan, hingga dokumentasi lapangan.</p>
 
-        <!-- Form Upload Tanggal Foto -->
-        <div id="upload-container" style="display: none; background: #f8fafc; padding: 1.2rem; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px;">
-            <h4 style="margin-bottom: 10px; color: var(--primary);">📷 Upload Foto Kegiatan Baru:</h4>
+        <!-- Form Upload -->
+        <div id="upload-container" style="display: none; background: #ffffff; padding: 1.2rem; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px; margin-top: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <h4 style="color: var(--primary);">📷 UPLOAD FOTO KEGIATAN BARU:</h4>
             
-            <label style="font-size: 0.85rem; font-weight: bold; color: #475569; display: block; margin-bottom: 4px;">Pilih Tanggal Foto Diambil:</label>
+            <label style="font-size: 0.85rem; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;">Pilih Tanggal Foto Diambil:</label>
             <input type="date" id="photo-date" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 12px; width: 100%; max-width: 250px; display: block;">
 
             <input type="file" id="photo-input" accept="image/*" style="margin-bottom: 12px; display: block; width: 100%;">
@@ -169,7 +129,7 @@
     <div id="login-modal" class="lightbox">
         <div style="background: white; padding: 2rem; border-radius: 14px; width: 90%; max-width: 380px; position: relative;">
             <span class="close-btn" onclick="closeLoginModal()" style="color: #64748b; top: 12px; right: 18px;">&times;</span>
-            <h3 style="color: var(--primary); margin-bottom: 0.5rem; text-align: center;">Login Anggota</h3>
+            <h3 style="color: var(--primary); text-align: center;">LOGIN ANGGOTA</h3>
             <p style="font-size: 0.85rem; color: #64748b; text-align: center; margin-bottom: 1.2rem;">Masuk untuk mengunggah & mengelola foto</p>
             
             <input type="email" id="login-email" placeholder="Email Anggota" style="width: 100%; padding: 11px; margin-bottom: 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">

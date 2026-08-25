@@ -3,136 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - HAFAR</title>
+    <title>About Us - HAFAR'S</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .container {
-            animation: fadeIn 0.5s ease-out forwards;
-        }
-
         .about-card {
             background: #ffffff;
+            border-radius: 12px;
             padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-            margin-top: 1.5rem;
-            line-height: 1.7;
-            color: #334155;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-top: 20px;
         }
-
-        .about-card h3 {
-            color: #1e293b;
-            margin-bottom: 0.75rem;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 0.5rem;
-        }
-
-        .about-list {
-            margin-left: 1.2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .about-list li {
-            margin-bottom: 0.5rem;
-        }
-
-        .sidebar-user-box {
-            margin-top: auto;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+        .about-card p {
+            color: #475569;
+            margin-bottom: 1rem;
         }
     </style>
 </head>
 <body>
     <header>
         <button class="menu-btn" onclick="toggleSidebar()">&#9776;</button>
-        <h1>HAFAR</h1>
+        <h1 class="brand-title">HAFAR'S</h1>
     </header>
 
     <div id="sidebar" class="sidebar">
         <div class="sidebar-header">
-            <h2>Menu HAFAR</h2>
+            <h2 class="brand-title" style="color: white;">HAFAR'S</h2>
             <button class="close-sidebar-btn" onclick="toggleSidebar()">&times;</button>
         </div>
-        <nav class="sidebar-nav" style="display: flex; flex-direction: column; min-height: calc(100% - 70px);">
+        <nav class="sidebar-nav">
             <a href="index.html">Home</a>
             <a href="about.html" class="active-page">About Us</a>
             <a href="gallery.html">Gallery</a>
             <a href="video.html">Video</a>
-            
-            <div class="sidebar-user-box">
-                <div id="sidebar-logged-out">
-                    <p style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 10px;">Akses Kontributor HAFAR</p>
-                    <a href="gallery.html" style="display: block; text-align: center; padding: 10px; background: #2563eb; color: white; border-radius: 8px; text-decoration: none; font-weight: bold;">🔑 Login di Galeri</a>
-                </div>
-                <div id="sidebar-logged-in" style="display: none;">
-                    <p style="font-size: 0.75rem; color: #a7f3d0; font-weight: bold; text-transform: uppercase;">✓ Akses Anggota Aktif</p>
-                    <p id="user-email-display" style="font-size: 0.85rem; color: #ffffff; font-weight: bold; word-break: break-all; margin-bottom: 12px;"></p>
-                    <button onclick="logout()" style="width: 100%; padding: 8px; background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid rgba(239,68,68,0.4); border-radius: 8px; cursor: pointer; font-weight: bold;">Logout</button>
-                </div>
-            </div>
+            <a href="privacy.html">Privacy & Policy</a>
         </nav>
     </div>
     <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
 
     <div class="container">
-        <h2>Tentang HAFAR</h2>
-        <p>Profi singkat dan rekapitulasi kegiatan Praktik Kerja Lapangan (PKL) siswa HAFAR.</p>
-
+        <h2>TENTANG HAFAR'S</h2>
         <div class="about-card">
-            <h3>Siapa Kami?</h3>
-            <p><strong>HAFAR</strong> adalah tim siswa Praktik Kerja Lapangan (PKL) yang bertugas di Balai Besar Pelatihan Pertanian (BBPP) Ketindan. Tim kami fokus pada pengelolaan sistem informasi, dokumentasi multimedia, dan digitalisasi perpustakaan.</p>
-            
-            <h3 style="margin-top: 1.5rem;">Fokus Kegiatan PKL</h3>
-            <ul class="about-list">
-                <li><strong>Dokumentasi Multimedia:</strong> Perekaman dan penyuntingan video profil serta liputan kegiatan pelatihan institusi.</li>
-                <li><strong>Digitalisasi Perpustakaan:</strong> Penginputan katalog dan barcode buku menggunakan aplikasi INLISLite.</li>
-                <li><strong>Pengembangan Web:</strong> Merancang dan mengelola portal web terintegrasi untuk menyajikan dokumentasi kegiatan interaktif.</li>
-                <li><strong>Kegiatan Lapangan:</strong> Dokumentasi langsung lapangan dan interaksi bersama peserta pelatihan.</li>
-            </ul>
-
-            <h3>Tujuan Platform HAFAR</h3>
-            <p>Platform web ini dirancang sebagai sarana arsip digital transparan dan modern agar seluruh dokumentasi kegiatan, galeri foto, dan video produksi tim dapat diakses secara publik dan tersusun rapi.</p>
+            <h3>PROFIL KAMI</h3>
+            <p>HAFAR'S adalah media dokumentasi digital kegiatan siswa Praktik Kerja Lapangan (PKL) jurusan Teknik Komputer dan Jaringan (TKJ) yang bertugas di Balai Besar Pelatihan Pertanian (BBPP) Ketindan.</p>
+            <p>Proyek ini mencakup digitalisasi data perpustakaan, manajemen media, administrasi web, hingga pembuatan dokumentasi visual.</p>
         </div>
     </div>
 
-    <div class="footer">&copy; 2026 HAFAR. Semua hak dilindungi.</div>
+    <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html" style="color: inherit; text-decoration: underline;">Privacy & Policy</a></div>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCFrS9L0YFDB29-n5OvC2EkVFKclW2wRTk",
-            authDomain: "hafar-web.firebaseapp.com",
-            projectId: "hafar-web",
-            storageBucket: "hafar-web.firebasestorage.app",
-            messagingSenderId: "887471904367",
-            appId: "1:887471904367:web:c5bb4694916a522dbf9f9a",
-            measurementId: "G-Y5WWTJSFFK"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById('sidebar-logged-out').style.display = 'none';
-                document.getElementById('sidebar-logged-in').style.display = 'block';
-                document.getElementById('user-email-display').innerText = user.email;
-            } else {
-                document.getElementById('sidebar-logged-out').style.display = 'block';
-                document.getElementById('sidebar-logged-in').style.display = 'none';
-            }
-        });
-
-        function logout() { auth.signOut(); }
         function toggleSidebar() {
             document.getElementById("sidebar").classList.toggle("active");
             document.getElementById("overlay").classList.toggle("active");
