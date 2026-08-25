@@ -86,6 +86,12 @@
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
         }
+
+        /* Styling pemilih tanggal agar nyaman digunakan */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -129,10 +135,10 @@
         <div id="upload-container" style="display: none; background: rgba(255, 255, 255, 0.05); padding: 1.2rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); margin-bottom: 25px; margin-top: 15px;">
             <h4 style="color: #38bdf8; margin-top: 0;">📸 UNGGAH FOTO KE DOKUMENTASI:</h4>
             
-            <label style="color: #cbd5e1; font-size: 0.85rem; display: block; margin-bottom: 4px;">Pilih Tanggal Kegiatan (Opsional):</label>
-            <input type="date" id="photo-date-input" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 6px; box-sizing: border-box;">
+            <label for="photo-date-input" style="color: #cbd5e1; font-size: 0.85rem; display: block; margin-bottom: 6px;">Pilih Tanggal Kegiatan:</label>
+            <input type="date" id="photo-date-input" style="width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 6px; box-sizing: border-box; cursor: pointer;">
             
-            <input type="file" id="photo-file-input" accept="image/*" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 6px; box-sizing: border-box;">
+            <input type="file" id="photo-file-input" accept="image/*" style="width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 6px; box-sizing: border-box;">
             
             <button onclick="uploadPhoto()" id="upload-photo-btn" style="padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Upload Foto</button>
             <p id="upload-photo-status" style="font-size: 0.85rem; margin-top: 8px; color: #38bdf8;"></p>
@@ -178,7 +184,7 @@
             document.getElementById('lightbox').style.display = 'none';
         }
 
-        // Fungsi format tanggal ke format DD/MM/YYYY
+        // Mengonversi Date object ke format DD/MM/YYYY
         function formatDate(dateObj) {
             const d = String(dateObj.getDate()).padStart(2, '0');
             const m = String(dateObj.getMonth() + 1).padStart(2, '0');
@@ -187,7 +193,7 @@
         }
 
         async function uploadPhoto() {
-            const dateInput = document.getElementById('photo-date-input').value;
+            const dateValue = document.getElementById('photo-date-input').value;
             const fileInput = document.getElementById('photo-file-input').files[0];
             const status = document.getElementById('upload-photo-status');
             const uploadBtn = document.getElementById('upload-photo-btn');
@@ -200,16 +206,18 @@
             const reader = new FileReader();
             reader.onload = async function(e) {
                 const base64Image = e.target.result;
-                let eventDate = new Date();
                 
-                if (dateInput) {
-                    eventDate = new Date(dateInput);
+                // Jika tanggal dipilih dari kalender, gunakan tanggal tersebut. Jika kosong, pakai tanggal hari ini.
+                let selectedDate = new Date();
+                if (dateValue) {
+                    const parts = dateValue.split('-'); // format input date: YYYY-MM-DD
+                    selectedDate = new Date(parts[0], parts[1] - 1, parts[2]);
                 }
 
                 try {
                     await db.collection('photos').add({
                         url: base64Image,
-                        eventDate: eventDate,
+                        eventDate: selectedDate,
                         createdAt: new Date()
                     });
 
@@ -250,7 +258,7 @@
 
                     if (!data.url) return;
 
-                    // Mengambil tanggal kegiatan / pembuatan foto
+                    // Mengambil nilai tanggal kegiatan dari Firestore
                     let formattedDate = "";
                     if (data.eventDate && data.eventDate.toDate) {
                         formattedDate = formatDate(data.eventDate.toDate());
@@ -270,7 +278,7 @@
 
                     card.innerHTML = `
                         ${deleteBtnHtml}
-                        <img src="${data.url}" alt="Foto ${formattedDate}" onclick="openLightbox('${data.url}')">
+                        <img src="${data.url}" alt="Kegiatan Tanggal: ${formattedDate}" onclick="openLightbox('${data.url}')">
                         <div class="card-info">
                             <p>Kegiatan Tanggal: ${formattedDate}</p>
                         </div>
