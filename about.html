@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - HAFAR'S</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDK (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -44,10 +45,42 @@
 
     <div class="container">
         <h2>TENTANG HAFAR'S</h2>
-        <p>HAFAR'S merupakan platform dokumentasi resmi kegiatan Praktik Kerja Lapangan (PKL) peserta di Balai Besar Pelatihan Pertanian (BBPP) Ketindan.</p>
+        <p style="color: #94a3b8; margin-bottom: 30px;">Rekam Jejak, Idealisme, dan Kebersamaan Perjalanan Kami.</p>
+
+        <!-- CONTAINER CONTENT ABOUT US -->
+        <div style="background: rgba(30, 41, 59, 0.7); padding: 30px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); line-height: 1.7; color: #e2e8f0;">
+            
+            <h3 style="color: #38bdf8; margin-top: 0; font-size: 1.4rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 10px;">Mengenal HAFAR'S</h3>
+            <p style="margin-bottom: 25px;">
+                HAFAR'S bukan sekadar nama atau gabungan inisial biasa. HAFAR'S adalah identitas, wadah berkreasi, dan representasi dari perjalanan bersama yang penuh cerita. Berawal dari langkah-langkah kecil, kolaborasi ini tumbuh menjadi ruang tempat kami menyatukan ide, mengeksekusi karya, serta mendokumentasikan setiap momen berharga yang kami lewati.
+            </p>
+
+            <h3 style="color: #38bdf8; font-size: 1.3rem; margin-top: 30px; margin-bottom: 15px;">Siapa Kami?</h3>
+            <p style="margin-bottom: 15px;">
+                Kami adalah sekumpulan individu yang terhubung oleh semangat untuk terus berkembang, belajar, dan menciptakan sesuatu yang bermakna. Baik dalam ranah pengembangan proyek, eksplorasi teknologi, maupun pembuatan dokumentasi visual, HAFAR'S menjadi tempat di mana pemikiran kritis dan kreativitas saling berpadu.
+            </p>
+            <ul style="padding-left: 20px; margin-bottom: 25px; color: #cbd5e1;">
+                <li style="margin-bottom: 8px;"><strong style="color: #f8fafc;">Kolaboratif & Adaptif:</strong> Kami percaya bahwa ide terbaik lahir dari diskusi yang terbuka dan eksekusi yang konsisten.</li>
+                <li style="margin-bottom: 8px;"><strong style="color: #f8fafc;">Fokus pada Proses:</strong> Setiap tantangan dan kendala dalam perjalanan adalah bagian penting dari proses pendewasaan karya kami.</li>
+                <li style="margin-bottom: 8px;"><strong style="color: #f8fafc;">Satu Visi:</strong> Bergerak bersama untuk menghasilkan sesuatu yang tidak hanya selesai, tetapi juga meninggalkan kesan dan dampak positif.</li>
+            </ul>
+
+            <h3 style="color: #38bdf8; font-size: 1.3rem; margin-top: 30px; margin-bottom: 15px;">Nilai & Filosofi</h3>
+            <ul style="padding-left: 20px; margin-bottom: 25px; color: #cbd5e1;">
+                <li style="margin-bottom: 8px;"><strong style="color: #f8fafc;">Kreativitas Tanpa Batas:</strong> Membuka ruang seluas-luasnya untuk bereksperimen, baik dalam bentuk media visual, penulisan, maupun solusi teknis.</li>
+                <li style="margin-bottom: 8px;"><strong style="color: #f8fafc;">Dokumentasi & Kenangan:</strong> Kami percaya bahwa setiap fase perjalanan layak untuk dicatat dan diabadikan. Halaman galeri dan video kami adalah bukti nyata dari dedikasi tersebut.</li>
+                <li style="margin-bottom: 8px;"><strong style="color: #f8fafc;">Solidaritas:</strong> Di balik setiap proyek dan hasil karya, ada kebersamaan serta rasa saling mendukung yang menjadi fondasi utama kami.</li>
+            </ul>
+
+            <h3 style="color: #38bdf8; font-size: 1.3rem; margin-top: 30px; margin-bottom: 15px;">Harapan ke Depan</h3>
+            <p style="margin-bottom: 0;">
+                Perjalanan HAFAR'S masih sangat panjang. Ke depan, kami akan terus melangkah, menciptakan lebih banyak karya, memperluas wawasan, dan menjaga semangat kolaborasi ini agar tetap menyala. Terima kasih telah menjadi bagian dari perjalanan kami dan menyaksikan tumbuh kembangnya HAFAR'S!
+            </p>
+
+        </div>
     </div>
 
-    <!-- MODAL LOGIN BERANIMASI -->
+    <!-- MODAL LOGIN -->
     <div id="login-modal" class="modal-login-container">
         <div class="modal-content-animated" onclick="event.stopPropagation()">
             <span class="close-lightbox-btn" onclick="closeLoginModal()">&times;</span>
@@ -64,6 +97,7 @@
 
     <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html">Privacy & Policy</a></div>
 
+    <!-- SCRIPT AUTH & NAVIGASI -->
     <script src="auth.js"></script>
     <script>
         function toggleSidebar() {
