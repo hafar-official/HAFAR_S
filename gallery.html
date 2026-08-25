@@ -16,6 +16,7 @@
             margin-top: 20px;
         }
 
+        /* Perbaikan Animasi Kartu */
         .card {
             position: relative;
             background: rgba(255, 255, 255, 0.05);
@@ -81,6 +82,7 @@
             background: rgba(220, 38, 38, 1);
         }
 
+        /* Lightbox Preview */
         .lightbox-img-content {
             max-width: 90%;
             max-height: 80vh;
@@ -131,6 +133,7 @@
         <h2>GALERI DOKUMENTASI</h2>
         <p>Kumpulan foto kegiatan Praktik Kerja Lapangan (PKL) HAFAR'S di BBPP Ketindan.</p>
 
+        <!-- Form Upload (Tampil saat login) -->
         <div id="upload-container" style="display: none; background: rgba(255, 255, 255, 0.05); padding: 1.2rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); margin-bottom: 25px; margin-top: 15px;">
             <h4 style="color: #38bdf8; margin-top: 0;">📸 UNGGAH FOTO KE DOKUMENTASI:</h4>
             
@@ -143,14 +146,17 @@
             <p id="upload-photo-status" style="font-size: 0.85rem; margin-top: 8px; color: #38bdf8;"></p>
         </div>
 
+        <!-- Grid Galeri Foto -->
         <div id="gallery-grid" class="gallery-grid"></div>
     </div>
 
+    <!-- Modal Preview Gambar (Lightbox) -->
     <div id="lightbox" class="lightbox" onclick="closeLightbox()">
         <span class="close-btn">&times;</span>
         <img id="lightbox-img" class="lightbox-img-content" src="" alt="Preview">
     </div>
 
+    <!-- Modal Login -->
     <div id="login-modal" class="lightbox">
         <div style="background: #1e293b; padding: 2rem; border-radius: 14px; width: 90%; max-width: 380px; position: relative; border: 1px solid rgba(255,255,255,0.15);" onclick="event.stopPropagation()">
             <span class="close-btn" onclick="closeLoginModal()" style="color: #cbd5e1; top: 12px; right: 18px;">&times;</span>
@@ -177,7 +183,8 @@
         }
 
         function closeLightbox() {
-            document.getElementById('lightbox').style.display = 'none';
+            document.getElementById('lightbox');
+            lightbox.style.display = 'none';
         }
 
         function formatDate(dateObj) {
@@ -198,8 +205,8 @@
 
         document.addEventListener('DOMContentLoaded', setTodayDate);
 
-        // Fungsi Otomatis Kompres Foto ke Canvas (Resizing & Quality Reduction)
-        function compressImage(file, maxWidth = 1280, quality = 0.7) {
+        // Kompresi Rekursif: Memaksa format JPEG & looping mengecilkan gambar sampai < 800 KB
+        function compressImage(file, maxWidth = 1024, quality = 0.6) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
@@ -219,10 +226,33 @@
                         canvas.width = width;
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
+
+                        // Latar belakang putih untuk menangani PNG transparan
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.fillRect(0, 0, width, height);
                         ctx.drawImage(img, 0, 0, width, height);
 
-                        // Konversi ke format JPEG yang terkompresi
-                        const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+                        let compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+
+                        // Loop pengompresan ulang jika string Base64 melebihi 800 KB
+                        let currentQuality = quality;
+                        let currentWidth = width;
+                        let currentHeight = height;
+
+                        while (compressedBase64.length > 800000 && currentQuality > 0.2) {
+                            currentQuality -= 0.1;
+                            currentWidth = Math.round(currentWidth * 0.85);
+                            currentHeight = Math.round(currentHeight * 0.85);
+
+                            canvas.width = currentWidth;
+                            canvas.height = currentHeight;
+                            ctx.fillStyle = '#FFFFFF';
+                            ctx.fillRect(0, 0, currentWidth, currentHeight);
+                            ctx.drawImage(img, 0, 0, currentWidth, currentHeight);
+
+                            compressedBase64 = canvas.toDataURL('image/jpeg', currentQuality);
+                        }
+
                         resolve(compressedBase64);
                     };
                     img.onerror = (err) => reject(err);
@@ -243,7 +273,6 @@
             uploadBtn.disabled = true;
 
             try {
-                // Kompresi foto otomatis sebelum disimpan ke Firestore
                 const base64Image = await compressImage(fileInput);
 
                 let selectedDate = new Date();
