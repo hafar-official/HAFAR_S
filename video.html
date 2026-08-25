@@ -46,6 +46,14 @@
         <h2>DOKUMENTASI VIDEO</h2>
         <p>Koleksi rekaman video kegiatan PKL HAFAR'S selama berada di BBPP Ketindan.</p>
 
+        <!-- FORM INPUT VIA LINK (HANYA MUNCUL JIKA ANGGOTA LOGIN) -->
+        <div id="upload-video-section" style="display: none; background: rgba(30, 41, 59, 0.7); padding: 20px; border-radius: 12px; margin-top: 20px; margin-bottom: 30px; border: 1px solid rgba(255, 255, 255, 0.1);">
+            <h3 style="color: #38bdf8; margin-top: 0; margin-bottom: 15px; font-size: 1.1rem;">🔗 Tambah Video via Link</h3>
+            <input type="text" id="video-title" placeholder="Judul / Keterangan Video" style="width: 100%; padding: 11px; margin-bottom: 10px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px; box-sizing: border-box;">
+            <input type="url" id="video-url-input" placeholder="Tempelkan Link Google Drive atau YouTube di sini..." style="width: 100%; padding: 11px; margin-bottom: 15px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px; box-sizing: border-box;">
+            <button onclick="simpanLinkVideo()" class="btn-action btn-green" style="border: none; cursor: pointer;">Simpan Link Video</button>
+        </div>
+
         <div id="video-grid" class="gallery-grid"></div>
     </div>
 
@@ -87,6 +95,77 @@
             modal.style.display = 'none';
             document.body.classList.remove('no-scroll');
         }
+
+        // Fungsi mengubah URL biasa ke URL Embed Player
+        function dapatkanUrlEmbed(url) {
+            // Jika link Google Drive
+            if (url.includes('drive.google.com')) {
+                const match = url.match(/\/file\/d\/([^\/]+)/);
+                if (match && match[1]) {
+                    return `https://drive.google.com/file/d/${match[1]}/preview`;
+                }
+            }
+            // Jika link YouTube biasa
+            if (url.includes('youtube.com/watch')) {
+                const match = url.match(/v=([^&]+)/);
+                if (match && match[1]) {
+                    return `https://www.youtube.com/embed/${match[1]}`;
+                }
+            }
+            // Jika link YouTube Short Link (youtu.be)
+            if (url.includes('youtu.be/')) {
+                const match = url.match(/youtu\.be\/([^?]+)/);
+                if (match && match[1]) {
+                    return `https://www.youtube.com/embed/${match[1]}`;
+                }
+            }
+            return url;
+        }
+
+        // Fungsi Simpan Link ke Firestore
+        async function simpanLinkVideo() {
+            const title = document.getElementById('video-title').value;
+            const rawUrl = document.getElementById('video-url-input').value;
+            const user = firebase.auth().currentUser;
+
+            if (!user) {
+                alert("Anda harus login terlebih dahulu!");
+                return;
+            }
+
+            if (!rawUrl) {
+                alert("Masukkan link video terlebih dahulu!");
+                return;
+            }
+
+            const embedUrl = dapatkanUrlEmbed(rawUrl);
+
+            try {
+                await firebase.firestore().collection("videos").add({
+                    title: title || "Video Dokumentasi",
+                    embedUrl: embedUrl,
+                    uploader: user.email,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                document.getElementById('video-title').value = '';
+                document.getElementById('video-url-input').value = '';
+                alert("Link video berhasil disimpan!");
+            } catch (err) {
+                console.error(err);
+                alert("Gagal menyimpan link video.");
+            }
+        }
+
+        // Tampilkan Form Upload jika pengguna login
+        firebase.auth().onAuthStateChanged((user) => {
+            const uploadSection = document.getElementById('upload-video-section');
+            if (user) {
+                uploadSection.style.display = 'block';
+            } else {
+                uploadSection.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
