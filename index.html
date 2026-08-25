@@ -3,47 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - HAFAR'S</title>
+    <title>HAFAR'S - PKL BBPP Ketindan</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        .hero-banner {
+        .hero-card {
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
             padding: 2.5rem;
-            margin-top: 20px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            max-width: 850px;
+            margin: 20px auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
         }
-        .hero-banner:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            border-color: rgba(56, 189, 248, 0.3);
-        }
-        .hero-banner p {
-            font-size: 1.05rem;
+
+        .welcome-text {
             color: #cbd5e1;
-            margin-top: 15px;
-            margin-bottom: 25px;
+            font-size: 0.98rem;
+            line-height: 1.8;
+            text-align: justify;
+            margin-bottom: 1.5rem;
         }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
         .btn-primary {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             padding: 12px 24px;
             background: #2563eb;
             color: white;
             text-decoration: none;
             border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.25s ease;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
         }
+
         .btn-primary:hover {
             background: #1d4ed8;
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.6);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            background: #10b981;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
         }
     </style>
 </head>
@@ -81,10 +113,25 @@
     <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
 
     <div class="container">
-        <div class="hero-banner">
+        <div class="hero-card">
             <h2>SELAMAT DATANG DI HAFAR'S</h2>
-            <p>Portal dokumentasi resmi kegiatan Praktik Kerja Lapangan (PKL) siswa TKJ di BBPP Ketindan.</p>
-            <a href="gallery.html" class="btn-primary">Lihat Galeri Foto &rarr;</a>
+            
+            <p class="welcome-text">
+                Selamat datang di portal dokumentasi resmi HAFAR'S! Platform digital ini dirancang secara khusus untuk mengabadikan setiap momen berharga, pengalaman belajar, serta perjuangan siswa-siswi jurusan Teknik Komputer dan Jaringan (TKJ) selama menempuh masa Praktik Kerja Lapangan (PKL) di Balai Besar Pelatihan Pertanian (BBPP) Ketindan. Melalui situs ini, seluruh kenangan dan karya yang telah tercipta akan tersimpan secara rapi, terstruktur, dan dapat diakses kapan saja.
+            </p>
+
+            <p class="welcome-text">
+                Selama masa pelaksanaan PKL, kami tidak hanya belajar mengenai kedisiplinan dan dunia kerja profesional, tetapi juga menerapkan berbagai ilmu kejuruan secara langsung. Mulai dari pengelolaan jaringan komputer, konfigurasi server, pemeliharaan perangkat keras, administrasi perpustakaan, hingga pembuatan dan penataan konten digital. Setiap tantangan harian yang dihadapi menjadi sarana pembelajaran yang berharga untuk membentuk mental dan keahlian teknis kami di lapangan.
+            </p>
+
+            <p class="welcome-text">
+                Melalui portal interaktif ini, kami menyajikan seluruh rangkuman kegiatan dalam bentuk galeri foto dokumentasi dan tayangan video arsip. Bagi para anggota terdaftar, platform ini juga dilengkapi dengan fitur pengunggahan media secara langsung agar setiap rekaman momen terbaru dapat terus diperbarui. Silakan jelajahi berbagai koleksi media yang telah kami kumpulkan melalui tombol navigasi di bawah ini.
+            </p>
+
+            <div class="action-buttons">
+                <a href="gallery.html" class="btn-primary">📸 Lihat & Upload Foto</a>
+                <a href="video.html" class="btn-secondary">🎬 Lihat & Upload Video</a>
+            </div>
         </div>
     </div>
 
@@ -93,7 +140,7 @@
         <div style="background: #1e293b; padding: 2rem; border-radius: 14px; width: 90%; max-width: 380px; position: relative; border: 1px solid rgba(255,255,255,0.15);">
             <span class="close-btn" onclick="closeLoginModal()" style="color: #cbd5e1; top: 12px; right: 18px;">&times;</span>
             <h3 style="color: #ffffff; text-align: center;">LOGIN ANGGOTA</h3>
-            <p style="font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bottom: 1.2rem;">Masuk untuk mengunggah & mengelola foto</p>
+            <p style="font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bottom: 1.2rem;">Masuk untuk mengunggah & mengelola media</p>
             
             <input type="email" id="login-email" placeholder="Email Anggota" style="width: 100%; padding: 11px; margin-bottom: 12px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px;">
             <input type="password" id="login-password" placeholder="Password" style="width: 100%; padding: 11px; margin-bottom: 16px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px;">
