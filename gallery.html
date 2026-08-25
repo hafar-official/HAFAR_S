@@ -9,6 +9,11 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
+        /* Mengunci scroll latar belakang */
+        body.no-scroll {
+            overflow: hidden !important;
+        }
+
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -81,7 +86,7 @@
             background: rgba(220, 38, 38, 1);
         }
 
-        /* --- STYLING MODAL FULLSCREEN LIGHTBOX GALERI --- */
+        /* --- LIGHTBOX STYLING --- */
         #lightbox {
             display: none;
             position: fixed;
@@ -94,6 +99,7 @@
             z-index: 99999 !important;
             justify-content: center;
             align-items: center;
+            touch-action: none; /* Mencegah geser/touch scroll di HP */
         }
 
         #lightbox.active {
@@ -126,7 +132,6 @@
             color: #ef4444;
         }
 
-        /* Modal Login */
         .modal-login-container {
             display: none;
             position: fixed;
@@ -189,7 +194,7 @@
         <h2>GALERI DOKUMENTASI</h2>
         <p>Kumpulan foto kegiatan Praktik Kerja Lapangan (PKL) HAFAR'S di BBPP Ketindan.</p>
 
-        <!-- Form Upload (Tampil saat login) -->
+        <!-- Form Upload -->
         <div id="upload-container" style="display: none; background: rgba(255, 255, 255, 0.05); padding: 1.2rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); margin-bottom: 25px; margin-top: 15px;">
             <h4 style="color: #38bdf8; margin-top: 0;">📸 UNGGAH FOTO KE DOKUMENTASI:</h4>
             
@@ -206,13 +211,13 @@
         <div id="gallery-grid" class="gallery-grid"></div>
     </div>
 
-    <!-- Modal Preview Gambar Fullscreen (Lightbox) -->
+    <!-- Modal Preview Lightbox -->
     <div id="lightbox" onclick="closeLightbox()">
         <span class="close-lightbox-btn" onclick="closeLightbox()">&times;</span>
         <img id="lightbox-img" class="lightbox-img-content" src="" alt="Preview Fullscreen" onclick="event.stopPropagation()">
     </div>
 
-    <!-- Modal Login (Memakai class sendiri agar tidak bentrok) -->
+    <!-- Modal Login -->
     <div id="login-modal" class="modal-login-container">
         <div style="background: #1e293b; padding: 2rem; border-radius: 14px; width: 90%; max-width: 380px; position: relative; border: 1px solid rgba(255,255,255,0.15);" onclick="event.stopPropagation()">
             <span class="close-lightbox-btn" onclick="closeLoginModal()" style="color: #cbd5e1; top: 12px; right: 18px; font-size: 28px;">&times;</span>
@@ -236,19 +241,23 @@
             const lightboxImg = document.getElementById('lightbox-img');
             lightboxImg.src = src;
             lightbox.classList.add('active');
+            document.body.classList.add('no-scroll');
         }
 
         function closeLightbox() {
             const lightbox = document.getElementById('lightbox');
             lightbox.classList.remove('active');
+            document.body.classList.remove('no-scroll');
         }
 
         function showLoginModal() {
             document.getElementById('login-modal').style.display = 'flex';
+            document.body.classList.add('no-scroll');
         }
 
         function closeLoginModal() {
             document.getElementById('login-modal').style.display = 'none';
+            document.body.classList.remove('no-scroll');
         }
 
         function formatDate(dateObj) {
