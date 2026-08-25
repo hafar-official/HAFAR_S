@@ -9,23 +9,44 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
+        /* Keyframe Animasi Fade-In */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
         .hero-card {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 16px;
             padding: 2.5rem;
-            max-width: 850px;
+            max-width: 900px;
             margin: 20px auto;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(10px);
+            /* Penerapan Animasi */
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .hero-card:hover {
+            border-color: rgba(56, 189, 248, 0.3);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
         }
 
         .welcome-text {
             color: #cbd5e1;
-            font-size: 0.98rem;
-            line-height: 1.8;
+            font-size: 1rem;
+            line-height: 1.85;
             text-align: justify;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem; /* Jarak antar paragraf ditingkatkan */
+            text-indent: 2rem;    /* Spasi di awal setiap paragraf */
         }
 
         .action-buttons {
@@ -33,49 +54,42 @@
             gap: 15px;
             justify-content: center;
             flex-wrap: wrap;
-            margin-top: 2rem;
+            margin-top: 2.5rem;
         }
 
-        .btn-primary {
+        .btn-primary, .btn-secondary {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 12px 24px;
-            background: #2563eb;
+            padding: 12px 26px;
             color: white;
             text-decoration: none;
             border-radius: 8px;
             font-weight: bold;
             font-size: 0.95rem;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-primary {
+            background: #2563eb;
             box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
         }
 
         .btn-primary:hover {
             background: #1d4ed8;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.6);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 22px rgba(37, 99, 235, 0.6);
         }
 
         .btn-secondary {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 24px;
             background: #10b981;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
             box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
         }
 
         .btn-secondary:hover {
             background: #059669;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 22px rgba(16, 185, 129, 0.6);
         }
     </style>
 </head>
@@ -117,15 +131,23 @@
             <h2>SELAMAT DATANG DI HAFAR'S</h2>
             
             <p class="welcome-text">
-                Selamat datang di portal dokumentasi resmi HAFAR'S! Platform digital ini dirancang secara khusus untuk mengabadikan setiap momen berharga, pengalaman belajar, serta perjuangan siswa-siswi jurusan Teknik Komputer dan Jaringan (TKJ) selama menempuh masa Praktik Kerja Lapangan (PKL) di Balai Besar Pelatihan Pertanian (BBPP) Ketindan. Melalui situs ini, seluruh kenangan dan karya yang telah tercipta akan tersimpan secara rapi, terstruktur, dan dapat diakses kapan saja.
+                Selamat datang di portal dokumentasi resmi HAFAR'S! Platform digital ini dirancang secara khusus untuk mengabadikan setiap momen berharga, pengalaman belajar, serta perjuangan siswa-siswi jurusan Teknik Komputer dan Jaringan (TKJ) selama menempuh masa Praktik Kerja Lapangan (PKL) di Balai Besar Pelatihan Pertanian (BBPP) Ketindan. Melalui situs ini, seluruh kenangan dan karya yang telah tercipta dapat tersimpan secara rapi, terstruktur, dan diakses kembali kapan saja.
             </p>
 
             <p class="welcome-text">
-                Selama masa pelaksanaan PKL, kami tidak hanya belajar mengenai kedisiplinan dan dunia kerja profesional, tetapi juga menerapkan berbagai ilmu kejuruan secara langsung. Mulai dari pengelolaan jaringan komputer, konfigurasi server, pemeliharaan perangkat keras, administrasi perpustakaan, hingga pembuatan dan penataan konten digital. Setiap tantangan harian yang dihadapi menjadi sarana pembelajaran yang berharga untuk membentuk mental dan keahlian teknis kami di lapangan.
+                Pelaksanaan PKL merupakan jembatan krusial yang menghubungkan teori di bangku sekolah dengan realitas dunia kerja profesional. Di instansi BBPP Ketindan, kami mendapat kesempatan berharga untuk mengasah keterampilan teknis kejuruan secara langsung. Berbagai tanggung jawab teknis telah kami jalankan, mulai dari pemeliharaan jaringan komputer, penataan infrastruktur IT, manajemen basis data, hingga pengelolaan arsip digital perpustakaan berbasis sistem informasi modern.
             </p>
 
             <p class="welcome-text">
-                Melalui portal interaktif ini, kami menyajikan seluruh rangkuman kegiatan dalam bentuk galeri foto dokumentasi dan tayangan video arsip. Bagi para anggota terdaftar, platform ini juga dilengkapi dengan fitur pengunggahan media secara langsung agar setiap rekaman momen terbaru dapat terus diperbarui. Silakan jelajahi berbagai koleksi media yang telah kami kumpulkan melalui tombol navigasi di bawah ini.
+                Tidak hanya berfokus pada ranah jaringan dan teknologi informasi, pengalaman PKL ini juga melatih soft skill dan kedisiplinan kami. Kami belajar bertindak adaptif terhadap lingkungan kerja profesional, bekerja dalam tim secara efektif, memecahkan masalah (*problem solving*) di lapangan secara cepat, serta mengelola berbagai proyek media multimedia guna mendukung publikasi kegiatan instansi.
+            </p>
+
+            <p class="welcome-text">
+                Setiap foto dan tayangan video yang ada di dalam portal ini menyimpan cerita serta kerja keras kami selama beraktivitas. Platform HAFAR'S dibangun menggunakan teknologi web terintegrasi Firebase dan GitHub Pages agar proses pengelolaan arsip dokumentasi dapat dilakukan secara fleksibel dan real-time oleh seluruh anggota kelompok yang telah terverifikasi.
+            </p>
+
+            <p class="welcome-text">
+                Kami mengundang Anda untuk menjelajahi jejak langkah dan karya dokumentasi kami selama bertugas di BBPP Ketindan. Silakan klik tombol di bawah ini untuk mengakses galeri foto maupun koleksi video dokumentasi secara langsung.
             </p>
 
             <div class="action-buttons">
