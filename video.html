@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video - HAFAR'S</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDK (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -46,18 +47,19 @@
         <h2>DOKUMENTASI VIDEO</h2>
         <p>Koleksi rekaman video kegiatan PKL HAFAR'S selama berada di BBPP Ketindan.</p>
 
-        <!-- FORM INPUT VIA LINK (HANYA MUNCUL JIKA ANGGOTA LOGIN) -->
+        <!-- FORM INPUT LINK VIDEO (TAMPIL JIKA LOGIN) -->
         <div id="upload-video-section" style="display: none; background: rgba(30, 41, 59, 0.7); padding: 20px; border-radius: 12px; margin-top: 20px; margin-bottom: 30px; border: 1px solid rgba(255, 255, 255, 0.1);">
-            <h3 style="color: #38bdf8; margin-top: 0; margin-bottom: 15px; font-size: 1.1rem;">🔗 Tambah Video via Link</h3>
+            <h3 style="color: #38bdf8; margin-top: 0; margin-bottom: 15px; font-size: 1.1rem;">🔗 Tambah Video via Link (Google Drive / YouTube)</h3>
             <input type="text" id="video-title" placeholder="Judul / Keterangan Video" style="width: 100%; padding: 11px; margin-bottom: 10px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px; box-sizing: border-box;">
             <input type="url" id="video-url-input" placeholder="Tempelkan Link Google Drive atau YouTube di sini..." style="width: 100%; padding: 11px; margin-bottom: 15px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px; box-sizing: border-box;">
-            <button onclick="simpanLinkVideo()" class="btn-action btn-green" style="border: none; cursor: pointer;">Simpan Link Video</button>
+            <button onclick="simpanLinkVideo()" class="btn-action btn-green" style="border: none; cursor: pointer;">Simpan & Tampilkan Video</button>
         </div>
 
+        <!-- GRID PEMUTAR VIDEO -->
         <div id="video-grid" class="gallery-grid"></div>
     </div>
 
-    <!-- MODAL LOGIN BERANIMASI -->
+    <!-- MODAL LOGIN -->
     <div id="login-modal" class="modal-login-container">
         <div class="modal-content-animated" onclick="event.stopPropagation()">
             <span class="close-lightbox-btn" onclick="closeLoginModal()">&times;</span>
@@ -74,6 +76,7 @@
 
     <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html">Privacy & Policy</a></div>
 
+    <!-- SCRIPT AUTH & SISTEM PEMUTAR VIDEO -->
     <script src="auth.js"></script>
     <script>
         function toggleSidebar() {
@@ -96,36 +99,41 @@
             document.body.classList.remove('no-scroll');
         }
 
-        // Fungsi mengubah URL biasa ke URL Embed Player
+        // FUNGSI KONVERSI URL OTOMATIS KE FORMAT PLAYER EMBED
         function dapatkanUrlEmbed(url) {
-            // Jika link Google Drive
+            if (!url) return '';
+            
+            // 1. Google Drive Link Parser
             if (url.includes('drive.google.com')) {
-                const match = url.match(/\/file\/d\/([^\/]+)/);
+                const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
                 if (match && match[1]) {
                     return `https://drive.google.com/file/d/${match[1]}/preview`;
                 }
             }
-            // Jika link YouTube biasa
+            
+            // 2. YouTube Standard Link (youtube.com/watch?v=...)
             if (url.includes('youtube.com/watch')) {
-                const match = url.match(/v=([^&]+)/);
+                const match = url.match(/v=([a-zA-Z0-9_-]+)/);
                 if (match && match[1]) {
                     return `https://www.youtube.com/embed/${match[1]}`;
                 }
             }
-            // Jika link YouTube Short Link (youtu.be)
+
+            // 3. YouTube Short Link (youtu.be/...)
             if (url.includes('youtu.be/')) {
-                const match = url.match(/youtu\.be\/([^?]+)/);
+                const match = url.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
                 if (match && match[1]) {
                     return `https://www.youtube.com/embed/${match[1]}`;
                 }
             }
+
             return url;
         }
 
-        // Fungsi Simpan Link ke Firestore
+        // FUNGSI SIMPAN LINK KE FIRESTORE
         async function simpanLinkVideo() {
-            const title = document.getElementById('video-title').value;
-            const rawUrl = document.getElementById('video-url-input').value;
+            const titleInput = document.getElementById('video-title');
+            const urlInput = document.getElementById('video-url-input');
             const user = firebase.auth().currentUser;
 
             if (!user) {
@@ -133,31 +141,89 @@
                 return;
             }
 
-            if (!rawUrl) {
+            if (!urlInput.value.trim()) {
                 alert("Masukkan link video terlebih dahulu!");
                 return;
             }
 
-            const embedUrl = dapatkanUrlEmbed(rawUrl);
+            const embedUrl = dapatkanUrlEmbed(urlInput.value.trim());
 
             try {
                 await firebase.firestore().collection("videos").add({
-                    title: title || "Video Dokumentasi",
+                    title: titleInput.value.trim() || "Video Dokumentasi HAFAR'S",
                     embedUrl: embedUrl,
                     uploader: user.email,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                document.getElementById('video-title').value = '';
-                document.getElementById('video-url-input').value = '';
-                alert("Link video berhasil disimpan!");
+                titleInput.value = '';
+                urlInput.value = '';
+                alert("Video berhasil ditambahkan dan langsung dapat diputar!");
             } catch (err) {
-                console.error(err);
-                alert("Gagal menyimpan link video.");
+                console.error("Gagal menyimpan video:", err);
+                alert("Terjadi kesalahan saat menyimpan video.");
             }
         }
 
-        // Tampilkan Form Upload jika pengguna login
+        // FUNGSI MEMUAT DAN MENAMPILKAN VIDEO DI GRID
+        function loadVideos() {
+            const videoGrid = document.getElementById('video-grid');
+            if (!videoGrid) return;
+
+            firebase.firestore().collection("videos").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+                videoGrid.innerHTML = "";
+
+                if (snapshot.empty) {
+                    videoGrid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #94a3b8;">Belum ada video yang diunggah.</p>`;
+                    return;
+                }
+
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const videoId = doc.id;
+                    const currentUser = firebase.auth().currentUser;
+
+                    const card = document.createElement('div');
+                    card.className = 'card';
+
+                    let deleteBtnHtml = '';
+                    if (currentUser && currentUser.email === data.uploader) {
+                        deleteBtnHtml = `<button class="delete-btn" onclick="hapusVideo('${videoId}')">&times;</button>`;
+                    }
+
+                    card.innerHTML = `
+                        ${deleteBtnHtml}
+                        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px 12px 0 0;">
+                            <iframe src="${data.embedUrl}" 
+                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" 
+                                    allow="autoplay; encrypted-media" 
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+                        <div class="card-info">
+                            <p style="font-weight: bold; margin-bottom: 4px;">${data.title}</p>
+                            <small style="color: #64748b; font-size: 0.75rem;">Oleh: ${data.uploader || 'Anggota'}</small>
+                        </div>
+                    `;
+
+                    videoGrid.appendChild(card);
+                });
+            });
+        }
+
+        // FUNGSI HAPUS VIDEO
+        async function hapusVideo(id) {
+            if (!confirm("Yakin ingin menghapus video ini?")) return;
+            try {
+                await firebase.firestore().collection("videos").doc(id).delete();
+                alert("Video berhasil dihapus.");
+            } catch (err) {
+                console.error("Gagal menghapus:", err);
+                alert("Gagal menghapus video.");
+            }
+        }
+
+        // PANTAU STATUS LOGIN PENGGUNA DA SINKRONKAN TAMPILAN
         firebase.auth().onAuthStateChanged((user) => {
             const uploadSection = document.getElementById('upload-video-section');
             if (user) {
@@ -165,6 +231,8 @@
             } else {
                 uploadSection.style.display = 'none';
             }
+            // Muat ulang video saat status auth siap
+            loadVideos();
         });
     </script>
 </body>
