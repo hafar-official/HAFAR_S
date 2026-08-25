@@ -16,6 +16,7 @@
             margin-top: 20px;
         }
 
+        /* Perbaikan Animasi Kartu */
         .card {
             position: relative;
             background: rgba(255, 255, 255, 0.05);
@@ -23,13 +24,14 @@
             border-radius: 14px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+            /* Transisi diperhalus */
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, border-color 0.3s ease-out;
         }
 
         .card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
-            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateY(-8px); /* Kartu naik ke atas saat di-hover */
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+            border-color: rgba(56, 189, 248, 0.5);
         }
 
         .card img {
@@ -38,17 +40,20 @@
             object-fit: cover;
             display: block;
             cursor: pointer;
-            transition: transform 0.5s ease;
+            /* Transisi zoom gambar diperhalus */
+            transition: transform 0.4s ease-in-out;
         }
 
         .card:hover img {
-            transform: scale(1.04);
+            transform: scale(1.06); /* Gambar sedikit membesar saat di-hover */
         }
 
         .card-info {
             padding: 14px;
             text-align: center;
             background: rgba(15, 23, 42, 0.8);
+            position: relative;
+            z-index: 2; /* Menghindari tertutup animasi zoom gambar */
         }
 
         .card-info p {
@@ -135,7 +140,7 @@
         <div id="upload-container" style="display: none; background: rgba(255, 255, 255, 0.05); padding: 1.2rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); margin-bottom: 25px; margin-top: 15px;">
             <h4 style="color: #38bdf8; margin-top: 0;">📸 UNGGAH FOTO KE DOKUMENTASI:</h4>
             
-            <label for="photo-date-input" style="color: #cbd5e1; font-size: 0.85rem; display: block; margin-bottom: 6px;">Pilih Tanggal Kegiatan:</label>
+            <label for="photo-date-input" style="color: #cbd5e1; font-size: 0.85rem; display: block; margin-bottom: 6px;">Pilih Tanggal Kegiatan (Otomatis hari ini jika dibiarkan):</label>
             <input type="date" id="photo-date-input" style="width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 6px; box-sizing: border-box; cursor: pointer;">
             
             <input type="file" id="photo-file-input" accept="image/*" style="width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 6px; box-sizing: border-box;">
@@ -192,6 +197,19 @@
             return `${d}/${m}/${y}`;
         }
 
+        // Fungsi agar input tanggal otomatis berisi hari ini
+        function setTodayDate() {
+            const dateInput = document.getElementById('photo-date-input');
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            dateInput.value = `${yyyy}-${mm}-${dd}`;
+        }
+
+        // Panggil saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', setTodayDate);
+
         async function uploadPhoto() {
             const dateValue = document.getElementById('photo-date-input').value;
             const fileInput = document.getElementById('photo-file-input').files[0];
@@ -207,7 +225,7 @@
             reader.onload = async function(e) {
                 const base64Image = e.target.result;
                 
-                // Jika tanggal dipilih dari kalender, gunakan tanggal tersebut. Jika kosong, pakai tanggal hari ini.
+                // Gunakan tanggal dari input
                 let selectedDate = new Date();
                 if (dateValue) {
                     const parts = dateValue.split('-'); // format input date: YYYY-MM-DD
@@ -222,8 +240,11 @@
                     });
 
                     status.innerText = "✓ Foto berhasil diunggah!";
-                    document.getElementById('photo-date-input').value = "";
+                    
+                    // Reset inputan setelah berhasil
+                    setTodayDate(); 
                     document.getElementById('photo-file-input').value = "";
+                    
                     uploadBtn.disabled = false;
                     loadPhotos();
                 } catch (err) {
@@ -290,6 +311,8 @@
 
         auth.onAuthStateChanged(user => {
             loadPhotos();
+            // Tetap setel tanggal saat auth berubah untuk memastikan nilainya tidak hilang
+            setTodayDate(); 
         });
     </script>
 </body>
