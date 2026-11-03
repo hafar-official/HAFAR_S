@@ -408,7 +408,7 @@
                     { t: "Pesan moral (amanat) yang ingin disampaikan pengarang umumnya terletak pada...", o: ["A. Kerapian cara tokoh mengatasi masalah di akhir cerita", "B. Judul buku", "C. Sampul depan", "D. Daftar isi", "E. Hak cipta"], a: 0, f: "Amanat cerita.", d: "Pesan moral tersirat atau tersurat dari penyelesaian konflik cerita." },
                     { t: "Tujuan utama dari penulisan teks Laporan Hasil Observasi (LHO) adalah...", o: ["A. Menyajikan informasi objektif berdasarkan pengamatan", "B. Menghibur pembaca dengan dongeng", "C. Memengaruhi pembaca agar memilih partai tertentu", "D. Mengritik kebijakan pemerintah secara emosional", "E. Menjual barang elektronik"], a: 0, f: "Tujuan Teks LHO.", d: "LHO ditulis untuk melaporkan hasil pengamatan secara ilmiah dan objektif." }
                 ];
-                return { id: idx + 1, ...list[idx] };
+                return { id: i + 1, ...list[i] };
             }),
 
             inggris: Array.from({length: 25}, (_, i) => {
@@ -439,7 +439,7 @@
                     { t: "The word 'DOWNLOAD' means...", o: ["A. Transferring data from a remote server to a local device", "B. Sending data to another satellite", "C. Deleting files permanently", "D. Printing documents on paper", "E. Turning off the screen"], a: 0, f: "IT Terminology.", d: "Download means receiving data from internet/server to local." },
                     { t: "Client: 'Thank you for your technical support.' Support: '...'", o: ["A. You're welcome!", "B. No, thanks.", "C. Don't touch it.", "D. I am busy.", "E. Goodbye."], a: 0, f: "Responding to Thanks.", d: "'You're welcome!' is standard polite response." }
                 ];
-                return { id: idx + 1, ...list[idx] };
+                return { id: i + 1, ...list[i] };
             })
         };
 
@@ -464,32 +464,35 @@
             if (savedState) {
                 try {
                     const data = JSON.parse(savedState);
-                    dbSoal = data.dbSoal;
-                    userAnswers = data.userAnswers || {};
-                    currentSubject = data.currentSubject || 'matematika';
-                    currentIdx = data.currentIdx || 0;
-                    timeLeft = data.timeLeft !== undefined ? data.timeLeft : 75 * 60;
-                    isStarted = data.isStarted || false;
+                    // Validasi ketat: pastikan dbSoal lengkap dan valid formatnya
+                    if (data.dbSoal && data.dbSoal.matematika && data.dbSoal.indo && data.dbSoal.inggris) {
+                        dbSoal = data.dbSoal;
+                        userAnswers = data.userAnswers || {};
+                        currentSubject = data.currentSubject || 'matematika';
+                        currentIdx = data.currentIdx || 0;
+                        timeLeft = data.timeLeft !== undefined ? data.timeLeft : 75 * 60;
+                        isStarted = data.isStarted || false;
 
-                    if (isStarted) {
-                        document.getElementById('startOverlay').style.display = 'none';
-                        document.getElementById('quizArea').style.display = 'block';
-                        lockOtherTabs(currentSubject);
-                        
-                        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
-                        const activeBtnId = 'tab' + currentSubject.charAt(0).toUpperCase() + currentSubject.slice(1);
-                        document.getElementById(activeBtnId).classList.add('active-tab');
+                        if (isStarted) {
+                            document.getElementById('startOverlay').style.display = 'none';
+                            document.getElementById('quizArea').style.display = 'block';
+                            lockOtherTabs(currentSubject);
+                            
+                            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
+                            const activeBtnId = 'tab' + currentSubject.charAt(0).toUpperCase() + currentSubject.slice(1);
+                            document.getElementById(activeBtnId).classList.add('active-tab');
 
-                        initTimer();
-                        loadQuestion();
+                            initTimer();
+                            loadQuestion();
+                            return;
+                        }
                     }
                 } catch (e) {
-                    console.error("Gagal memuat penyimpanan lokal:", e);
-                    initRandomizedQuestions();
+                    console.error("Gagal memuat penyimpanan lokal, mereset data...", e);
                 }
-            } else {
-                initRandomizedQuestions();
             }
+            // Jika data kosong atau rusak, buat baru secara aman
+            initRandomizedQuestions();
         }
 
         function saveToStorage() {
@@ -560,7 +563,6 @@
         }
 
         function changeSubject(subject, btnElem) {
-            // CEK ANTI-RESET: Jika mapel yang diklik sama dengan mapel aktif saat ujian berjalan, abaikan klik!
             if (currentSubject === subject && isStarted) {
                 return;
             }
@@ -583,6 +585,10 @@
         function initNav() {
             const nav = document.getElementById('navQuestions');
             nav.innerHTML = '';
+            
+            // Safety check: Pastikan dbSoal dan currentSubject terdefinisi
+            if (!dbSoal || !dbSoal[currentSubject]) return;
+
             const activeData = dbSoal[currentSubject];
             
             activeData.forEach((q, index) => {
@@ -595,6 +601,10 @@
         }
 
         function loadQuestion() {
+            if (!dbSoal || !dbSoal[currentSubject]) {
+                initRandomizedQuestions();
+            }
+
             const activeData = dbSoal[currentSubject];
             const q = activeData[currentIdx];
             
@@ -607,7 +617,9 @@
                 const btn = document.createElement('button');
                 btn.className = `option-btn ${userAnswers[currentIdx] === optIdx ? 'selected' : ''}`;
                 btn.innerHTML = opt;
-                btn.onclick = () => selectOption(optIdx);
+                btn.onclick = function() {
+                    selectOption(optIdx);
+                };
                 optionsContainer.appendChild(btn);
             });
 
@@ -703,6 +715,7 @@
             overlay.classList.toggle('active');
         }
 
+        // Inisialisasi awal saat halaman dimuat
         loadFromStorage();
     </script>
 </body>
