@@ -332,7 +332,7 @@
             <div id="startOverlay" class="start-overlay">
                 <h3 style="color: #ffffff; margin-bottom: 10px; font-size: 1.3rem;">Mulai Latihan Soal</h3>
                 <p style="color: #94a3b8; font-size: 0.9rem; max-width: 550px; margin: 0 auto 20px auto; line-height: 1.6;">
-                    Setiap paket berisi 25 soal dengan tingkat kesulitan (Level 1-3) serta pengacakan posisi opsi jawaban (A, B, C, D, E) secara unik. Waktu 75 menit akan otomatis berjalan saat Anda mengklik tombol di bawah ini.
+                    Setiap paket berisi 25 soal dengan tingkat kesulitan (Level 1-3). Format urutan huruf A, B, C, D, E tetap rapi, namun isi teks jawabannya diacak otomatis. Waktu 75 menit otomatis berjalan setelah tombol diklik.
                 </p>
                 <button class="btn-start" onclick="startQuiz()">▶️ Mulai Latihan Sekarang</button>
             </div>
@@ -376,7 +376,7 @@
                 <div class="result-box" id="resultBox">
                     <h2 style="color: #34d399; margin: 0 0 10px 0;">Latihan Selesai!</h2>
                     <p id="scoreText" style="font-size: 1.2rem; margin: 15px 0; font-weight: bold; color: #ffffff;"></p>
-                    <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;">Kunci jawaban dan hasil visual benar (hijau) / salah (merah) kini dapat dilihat pada setiap nomor soal.</p>
+                    <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;">Evaluasi visual: Pilihan benar ditandai warna <span style="color:#34d399; font-weight:bold;">Hijau</span> dan pilihan salah ditandai warna <span style="color:#fca5a5; font-weight:bold;">Merah</span>.</p>
                     <button class="btn-action" onclick="resetQuiz()">🔄 Pilih Mapel Lain / Ulangi</button>
                 </div>
 
@@ -391,93 +391,93 @@
         const masterSoal = {
             matematika: Array.from({length: 25}, (_, i) => {
                 const list = [
-                    { t: "Sebuah drone mendeteksi titik target P(4, 6). Dilatasi dengan k = 3 pusat A(2, 1), dilanjutkan rotasi 90° berlawanan arah jarum jam pusat (0,0). Koordinat akhir P'' adalah...", o: ["A. (16, -8)", "B. (-16, 8)", "C. (8, 16)", "D. (-8, 16)", "E. (-16, -8)"], correctText: "B. (-16, 8)", f: "x' = a + k(x-a), y' = b + k(y-b). Rotasi 90° CCW: (-y, x)", d: "Dilatasi: (8, 16). Rotasi 90°: (-16, 8).", level: 3 },
-                    { t: "Titik A(3, 4) direfleksikan terhadap y = x, kemudian ditranslasikan oleh T(-2, 5). Bayangan akhir A' adalah...", o: ["A. (2, 8)", "B. (1, 9)", "C. (4, 1)", "D. (2, 1)", "E. (8, 2)"], correctText: "A. (2, 8)", f: "Refleksi y=x: (y,x). Translasi: tambah titik koordinat.", d: "Refleksi: (4,3). Translasi: (4-2, 3+5) = (2,8).", level: 1 },
-                    { t: "Populasi awal bakteri 500 sel. Setiap 15 menit membelah 2 kali lipat. Populasi pada menit ke-90 adalah...", o: ["A. 16.000 sel", "B. 32.000 sel", "C. 64.000 sel", "D. 128.000 sel", "E. 256.000 sel"], correctText: "B. 32.000 sel", f: "N(t) = N0 · 2^(t/Td)", d: "n = 90/15 = 6. N = 500 × 64 = 32.000 sel.", level: 2 },
-                    { t: "Massa radioaktif M(t) = 240 · 2^(-t/3). Sisa zat setelah 12 jam adalah...", o: ["A. 30 gram", "B. 15 gram", "C. 60 gram", "D. 7,5 gram", "E. 120 gram"], correctText: "B. 15 gram", f: "Peluruhan eksponensial.", d: "M(12) = 240 × 2^(-4) = 240 / 16 = 15 gram.", level: 2 },
-                    { t: "Kode 4 karakter: Ke-1 & 2 vokal berbeda dari {A,E,I,O,U}, Ke-3 & 4 angka genap berbeda dari {2,4,6,8}. Banyak variasi kode adalah...", o: ["A. 120", "B. 240", "C. 400", "D. 480", "E. 600"], correctText: "B. 240", f: "Aturan perkalian: n1 × n2 × n3 × n4", d: "5 × 4 × 4 × 3 = 240 variasi.", level: 2 },
-                    { t: "Tangki tabung + kerucut. r = 6 m, tinggi tabung 10 m, tinggi kerucut 8 m. Garis pelukis kerucut adalah...", o: ["A. 10 m", "B. 12 m", "C. 14 m", "D. 15 m", "E. 16 m"], correctText: "A. 10 m", f: "s = √(r² + t²)", d: "s = √(6² + 8²) = 10 m.", level: 1 },
-                    { t: "Petugas 15 m dari gedung mengamati puncak dengan elevasi 45°. Tinggi pengamat 1,6 m. Tinggi gedung adalah...", o: ["A. 15 m", "B. 16,6 m", "C. 13,4 m", "D. 18,6 m", "E. 20 m"], correctText: "B. 16,6 m", f: "tan 45° = h / 15 + tinggi pengamat", d: "h = 15 + 1.6 = 16.6 m.", level: 2 },
-                    { t: "Rata-rata 20 siswa 80. Masuk 2 siswa susulan, rata-rata jadi 81. Selisih nilai kedua susulan 4. Nilai terendah susulan adalah...", o: ["A. 89", "B. 91", "C. 87", "D. 93", "E. 85"], correctText: "A. 89", f: "Total nilai baru - Total lama.", d: "(22×81) - (20×80) = 182. Nilai: 89 dan 93.", level: 3 },
-                    { t: "Produksi bulan ke-3 100 potong, bulan ke-6 190 potong. Total produksi 12 bulan pertama adalah...", o: ["A. 2.460 potong", "B. 2.520 potong", "C. 2.300 potong", "D. 2.400 potong", "E. 2.600 potong"], correctText: "A. 2.460 potong", f: "S_n = n/2 (2a + (n-1)b)", d: "b = 30, a = 40. S12 = 6 × (80 + 330) = 2.460.", level: 3 },
-                    { t: "Harga 2 sedan + 3 van Rp1.200.000. Harga 3 sedan + 1 van Rp1.100.000. Harga 1 sedan + 2 van adalah...", o: ["A. Rp700.000", "B. Rp650.000", "C. Rp800.000", "D. Rp750.000", "E. Rp600.000"], correctText: "A. Rp700.000", f: "SPLDV Eliminasi.", d: "Sedan = 300rb, Van = 200rb. 1(300)+2(200) = 700rb.", level: 2 },
-                    { t: "8 orang mengelilingi meja bundar. Ketua & Sekretaris wajib berdampingan. Banyak variasi duduk adalah...", o: ["A. 5.040", "B. 1.440", "C. 720", "D. 2.880", "E. 360"], correctText: "B. 1.440", f: "(n-1)! × k!", d: "(7-1)! × 2! = 720 × 2 = 1.440.", level: 3 },
-                    { t: "Peluang mesin A cacat 0,04 dan B 0,05. Peluang paling sedikit satu TIDAK cacat adalah...", o: ["A. 0,998", "B. 0,002", "C. 0,950", "D. 0,912", "E. 0,980"], correctText: "A. 0,998", f: "1 - P(kedua cacat)", d: "1 - (0,04 × 0,05) = 0,998.", level: 2 },
-                    { t: "Kubus ABCD.EFGH rusuk 10 cm. Panjang diagonal ruang HB adalah...", o: ["A. 10√2 cm", "B. 10√3 cm", "C. 5√3 cm", "D. 20 cm", "E. 10√6 cm"], correctText: "B. 10√3 cm", f: "d = r√3", d: "HB = 10√3 cm.", level: 1 },
-                    { t: "Fungsi f(x) = (4x + 20) / 3. Invers f^(-1)(x) adalah...", o: ["A. (3x - 20) / 4", "B. (4x - 20) / 3", "C. (3x + 20) / 4", "D. (20x - 3) / 4", "E. (3x - 4) / 20"], correctText: "A. (3x - 20) / 4", f: "y = (4x+20)/3 → 4x = 3y-20", d: "f^(-1)(x) = (3x-20)/4.", level: 1 },
-                    { t: "Tim 4 orang dibentuk dari 5 teknisi & 3 analis. Wajib minimal 2 teknisi. Banyak variasi adalah...", o: ["A. 65", "B. 70", "C. 55", "D. 60", "E. 45"], correctText: "A. 65", f: "C(5,2)C(3,2) + C(5,3)C(3,1) + C(5,4)C(3,0)", d: "30 + 30 + 5 = 65 cara.", level: 3 },
-                    { t: "Diskon 10% f(x)=0,9x dan potongan g(x)=x-20.000. Jika harga akhir Rp160.000, harga awal x adalah...", o: ["A. Rp200.000", "B. Rp180.000", "C. Rp220.000", "D. Rp190.000", "E. Rp210.000"], correctText: "A. Rp200.000", f: "g(f(x)) = 160.000", d: "(160rb+20rb)/0.9 = 200.000.", level: 2 },
-                    { t: "Interval kelas 11-15. Titik tengahnya adalah...", o: ["A. 13", "B. 12,5", "C. 13,5", "D. 14", "E. 11,5"], correctText: "A. 13", f: "xi = (bb + ba)/2", d: "(11 + 15)/2 = 13.", level: 1 },
-                    { t: "1 meja butuh 3 jam mesin, 1 kursi 1 jam. Kapasitas 30 jam. Model yang tepat adalah...", o: ["A. 3x + y ≤ 30", "B. x + 3y ≤ 30", "C. 3x + y ≥ 30", "D. 3x + 3y ≤ 30", "E. x + y ≤ 30"], correctText: "A. 3x + y ≤ 30", f: "Program linear pertidaksamaan.", d: "3x + y ≤ 30.", level: 1 },
-                    { t: "Kubah setengah bola diameter 28 m. Biaya Rp100.000/m². Biaya total pelapisan adalah...", o: ["A. Rp123.200.000", "B. Rp246.400.000", "C. Rp61.600.000", "D. Rp184.800.000", "E. Rp150.000.000"], correctText: "A. Rp123.200.000", f: "L = 2πr²", d: "L = 2 × 22/7 × 14² = 1.232 m². Biaya = Rp123.200.000.", level: 2 },
-                    { t: "Peluang A = 0,35. Peluang komplemen P(A^c) adalah...", o: ["A. 0,65", "B. 0,35", "C. 0,55", "D. 0,75", "E. 1,00"], correctText: "A. 0,65", f: "1 - P(A)", d: "1 - 0.35 = 0.65.", level: 1 },
-                    { t: "Matriks A = [[2, 3], [1, 4]]. Determinan A adalah...", o: ["A. 5", "B. 7", "C. 8", "D. 10", "E. 11"], correctText: "A. 5", f: "det(A) = ad - bc", d: "(2×4) - (3×1) = 8 - 3 = 5.", level: 1 },
-                    { t: "Deret geometri tak hingga dengan a = 12 dan r = 1/3. Jumlah deret S_inf adalah...", o: ["A. 18", "B. 16", "C. 24", "D. 36", "E. 15"], correctText: "A. 18", f: "S_inf = a / (1 - r)", d: "12 / (1 - 1/3) = 12 / (2/3) = 18.", level: 2 },
-                    { t: "Persamaan garis melalui (2, 3) bergradien m = 4 adalah...", o: ["A. y = 4x - 5", "B. y = 4x + 5", "C. y = 2x - 3", "D. y = 4x - 11", "E. y = 3x + 2"], correctText: "A. y = 4x - 5", f: "y - y1 = m(x - x1)", d: "y - 3 = 4(x - 2) ⇒ y = 4x - 5.", level: 1 },
-                    { t: "Turunan pertama f(x) = 3x² - 5x + 8 adalah f'(x) = ...", o: ["A. 6x - 5", "B. 3x - 5", "C. 6x + 8", "D. 6x² - 5", "E. 5x - 3"], correctText: "A. 6x - 5", f: "f'(x) = n·a·x^(n-1)", d: "f'(x) = 6x - 5.", level: 2 },
-                    { t: "Integral tak tentu ∫ (6x + 4) dx adalah...", o: ["A. 3x² + 4x + C", "B. 6x² + 4x + C", "C. 3x² + C", "D. 6x² + C", "E. 2x² + 4x + C"], correctText: "A. 3x² + 4x + C", f: "∫ ax^n dx = (a/(n+1)) x^(n+1) + C", d: "(6/2)x² + 4x + C = 3x² + 4x + C.", level: 2 }
+                    { t: "Sebuah drone mendeteksi titik target P(4, 6). Dilatasi dengan k = 3 pusat A(2, 1), dilanjutkan rotasi 90° berlawanan arah jarum jam pusat (0,0). Koordinat akhir P'' adalah...", o: ["A. (16, -8)", "B. (-16, 8)", "C. (8, 16)", "D. (-8, 16)", "E. (-16, -8)"], correctRaw: "B. (-16, 8)", f: "x' = a + k(x-a), y' = b + k(y-b). Rotasi 90° CCW: (-y, x)", d: "Dilatasi: (8, 16). Rotasi 90°: (-16, 8).", level: 3 },
+                    { t: "Titik A(3, 4) direfleksikan terhadap y = x, kemudian ditranslasikan oleh T(-2, 5). Bayangan akhir A' adalah...", o: ["A. (2, 8)", "B. (1, 9)", "C. (4, 1)", "D. (2, 1)", "E. (8, 2)"], correctRaw: "A. (2, 8)", f: "Refleksi y=x: (y,x). Translasi: tambah titik koordinat.", d: "Refleksi: (4,3). Translasi: (4-2, 3+5) = (2,8).", level: 1 },
+                    { t: "Populasi awal bakteri 500 sel. Setiap 15 menit membelah 2 kali lipat. Populasi pada menit ke-90 adalah...", o: ["A. 16.000 sel", "B. 32.000 sel", "C. 64.000 sel", "D. 128.000 sel", "E. 256.000 sel"], correctRaw: "B. 32.000 sel", f: "N(t) = N0 · 2^(t/Td)", d: "n = 90/15 = 6. N = 500 × 64 = 32.000 sel.", level: 2 },
+                    { t: "Massa radioaktif M(t) = 240 · 2^(-t/3). Sisa zat setelah 12 jam adalah...", o: ["A. 30 gram", "B. 15 gram", "C. 60 gram", "D. 7,5 gram", "E. 120 gram"], correctRaw: "B. 15 gram", f: "Peluruhan eksponensial.", d: "M(12) = 240 × 2^(-4) = 240 / 16 = 15 gram.", level: 2 },
+                    { t: "Kode 4 karakter: Ke-1 & 2 vokal berbeda dari {A,E,I,O,U}, Ke-3 & 4 angka genap berbeda dari {2,4,6,8}. Banyak variasi kode adalah...", o: ["A. 120", "B. 240", "C. 400", "D. 480", "E. 600"], correctRaw: "B. 240", f: "Aturan perkalian: n1 × n2 × n3 × n4", d: "5 × 4 × 4 × 3 = 240 variasi.", level: 2 },
+                    { t: "Tangki tabung + kerucut. r = 6 m, tinggi tabung 10 m, tinggi kerucut 8 m. Garis pelukis kerucut adalah...", o: ["A. 10 m", "B. 12 m", "C. 14 m", "D. 15 m", "E. 16 m"], correctRaw: "A. 10 m", f: "s = √(r² + t²)", d: "s = √(6² + 8²) = 10 m.", level: 1 },
+                    { t: "Petugas 15 m dari gedung mengamati puncak dengan elevasi 45°. Tinggi pengamat 1,6 m. Tinggi gedung adalah...", o: ["A. 15 m", "B. 16,6 m", "C. 13,4 m", "D. 18,6 m", "E. 20 m"], correctRaw: "B. 16,6 m", f: "tan 45° = h / 15 + tinggi pengamat", d: "h = 15 + 1.6 = 16.6 m.", level: 2 },
+                    { t: "Rata-rata 20 siswa 80. Masuk 2 siswa susulan, rata-rata jadi 81. Selisih nilai kedua susulan 4. Nilai terendah susulan adalah...", o: ["A. 89", "B. 91", "C. 87", "D. 93", "E. 85"], correctRaw: "A. 89", f: "Total nilai baru - Total lama.", d: "(22×81) - (20×80) = 182. Nilai: 89 dan 93.", level: 3 },
+                    { t: "Produksi bulan ke-3 100 potong, bulan ke-6 190 potong. Total produksi 12 bulan pertama adalah...", o: ["A. 2.460 potong", "B. 2.520 potong", "C. 2.300 potong", "D. 2.400 potong", "E. 2.600 potong"], correctRaw: "A. 2.460 potong", f: "S_n = n/2 (2a + (n-1)b)", d: "b = 30, a = 40. S12 = 6 × (80 + 330) = 2.460.", level: 3 },
+                    { t: "Harga 2 sedan + 3 van Rp1.200.000. Harga 3 sedan + 1 van Rp1.100.000. Harga 1 sedan + 2 van adalah...", o: ["A. Rp700.000", "B. Rp650.000", "C. Rp800.000", "D. Rp750.000", "E. Rp600.000"], correctRaw: "A. Rp700.000", f: "SPLDV Eliminasi.", d: "Sedan = 300rb, Van = 200rb. 1(300)+2(200) = 700rb.", level: 2 },
+                    { t: "8 orang mengelilingi meja bundar. Ketua & Sekretaris wajib berdampingan. Banyak variasi duduk adalah...", o: ["A. 5.040", "B. 1.440", "C. 720", "D. 2.880", "E. 360"], correctRaw: "B. 1.440", f: "(n-1)! × k!", d: "(7-1)! × 2! = 720 × 2 = 1.440.", level: 3 },
+                    { t: "Peluang mesin A cacat 0,04 dan B 0,05. Peluang paling sedikit satu TIDAK cacat adalah...", o: ["A. 0,998", "B. 0,002", "C. 0,950", "D. 0,912", "E. 0,980"], correctRaw: "A. 0,998", f: "1 - P(kedua cacat)", d: "1 - (0,04 × 0,05) = 0,998.", level: 2 },
+                    { t: "Kubus ABCD.EFGH rusuk 10 cm. Panjang diagonal ruang HB adalah...", o: ["A. 10√2 cm", "B. 10√3 cm", "C. 5√3 cm", "D. 20 cm", "E. 10√6 cm"], correctRaw: "B. 10√3 cm", f: "d = r√3", d: "HB = 10√3 cm.", level: 1 },
+                    { t: "Fungsi f(x) = (4x + 20) / 3. Invers f^(-1)(x) adalah...", o: ["A. (3x - 20) / 4", "B. (4x - 20) / 3", "C. (3x + 20) / 4", "D. (20x - 3) / 4", "E. (3x - 4) / 20"], correctRaw: "A. (3x - 20) / 4", f: "y = (4x+20)/3 → 4x = 3y-20", d: "f^(-1)(x) = (3x-20)/4.", level: 1 },
+                    { t: "Tim 4 orang dibentuk dari 5 teknisi & 3 analis. Wajib minimal 2 teknisi. Banyak variasi adalah...", o: ["A. 65", "B. 70", "C. 55", "D. 60", "E. 45"], correctRaw: "A. 65", f: "C(5,2)C(3,2) + C(5,3)C(3,1) + C(5,4)C(3,0)", d: "30 + 30 + 5 = 65 cara.", level: 3 },
+                    { t: "Diskon 10% f(x)=0,9x dan potongan g(x)=x-20.000. Jika harga akhir Rp160.000, harga awal x adalah...", o: ["A. Rp200.000", "B. Rp180.000", "C. Rp220.000", "D. Rp190.000", "E. Rp210.000"], correctRaw: "A. Rp200.000", f: "g(f(x)) = 160.000", d: "(160rb+20rb)/0.9 = 200.000.", level: 2 },
+                    { t: "Interval kelas 11-15. Titik tengahnya adalah...", o: ["A. 13", "B. 12,5", "C. 13,5", "D. 14", "E. 11,5"], correctRaw: "A. 13", f: "xi = (bb + ba)/2", d: "(11 + 15)/2 = 13.", level: 1 },
+                    { t: "1 meja butuh 3 jam mesin, 1 kursi 1 jam. Kapasitas 30 jam. Model yang tepat adalah...", o: ["A. 3x + y ≤ 30", "B. x + 3y ≤ 30", "C. 3x + y ≥ 30", "D. 3x + 3y ≤ 30", "E. x + y ≤ 30"], correctRaw: "A. 3x + y ≤ 30", f: "Program linear pertidaksamaan.", d: "3x + y ≤ 30.", level: 1 },
+                    { t: "Kubah setengah bola diameter 28 m. Biaya Rp100.000/m². Biaya total pelapisan adalah...", o: ["A. Rp123.200.000", "B. Rp246.400.000", "C. Rp61.600.000", "D. Rp184.800.000", "E. Rp150.000.000"], correctRaw: "A. Rp123.200.000", f: "L = 2πr²", d: "L = 2 × 22/7 × 14² = 1.232 m². Biaya = Rp123.200.000.", level: 2 },
+                    { t: "Peluang A = 0,35. Peluang komplemen P(A^c) adalah...", o: ["A. 0,65", "B. 0,35", "C. 0,55", "D. 0,75", "E. 1,00"], correctRaw: "A. 0,65", f: "1 - P(A)", d: "1 - 0.35 = 0.65.", level: 1 },
+                    { t: "Matriks A = [[2, 3], [1, 4]]. Determinan A adalah...", o: ["A. 5", "B. 7", "C. 8", "D. 10", "E. 11"], correctRaw: "A. 5", f: "det(A) = ad - bc", d: "(2×4) - (3×1) = 8 - 3 = 5.", level: 1 },
+                    { t: "Deret geometri tak hingga dengan a = 12 dan r = 1/3. Jumlah deret S_inf adalah...", o: ["A. 18", "B. 16", "C. 24", "D. 36", "E. 15"], correctRaw: "A. 18", f: "S_inf = a / (1 - r)", d: "12 / (1 - 1/3) = 12 / (2/3) = 18.", level: 2 },
+                    { t: "Persamaan garis melalui (2, 3) bergradien m = 4 adalah...", o: ["A. y = 4x - 5", "B. y = 4x + 5", "C. y = 2x - 3", "D. y = 4x - 11", "E. y = 3x + 2"], correctRaw: "A. y = 4x - 5", f: "y - y1 = m(x - x1)", d: "y - 3 = 4(x - 2) ⇒ y = 4x - 5.", level: 1 },
+                    { t: "Turunan pertama f(x) = 3x² - 5x + 8 adalah f'(x) = ...", o: ["A. 6x - 5", "B. 3x - 5", "C. 6x + 8", "D. 6x² - 5", "E. 5x - 3"], correctRaw: "A. 6x - 5", f: "f'(x) = n·a·x^(n-1)", d: "f'(x) = 6x - 5.", level: 2 },
+                    { t: "Integral tak tentu ∫ (6x + 4) dx adalah...", o: ["A. 3x² + 4x + C", "B. 6x² + 4x + C", "C. 3x² + C", "D. 6x² + C", "E. 2x² + 4x + C"], correctRaw: "A. 3x² + 4x + C", f: "∫ ax^n dx = (a/(n+1)) x^(n+1) + C", d: "(6/2)x² + 4x + C = 3x² + 4x + C.", level: 2 }
                 ];
                 return { id: i + 1, ...list[i] };
             }),
 
             indo: Array.from({length: 25}, (_, i) => {
                 const list = [
-                    { t: "Inti kalimat 'Pembangunan jaringan serat optik di wilayah pelosok menuai apresiasi dari masyarakat setempat.' adalah...", o: ["A. Jaringan serat optik di pelosok", "B. Pembangunan jaringan menuai apresiasi", "C. Masyarakat setempat mengapresiasi", "D. Wilayah pelosok membangun jaringan", "E. Apresiasi masyarakat terhadap serat optik"], correctText: "B. Pembangunan jaringan menuai apresiasi", f: "Subjek Utama + Predikat Utama.", d: "Subjek: Pembangunan jaringan, Predikat: menuai apresiasi.", level: 2 },
-                    { t: "Kalimat yang memuat kata tidak baku adalah...", o: ["A. Perangkat lunak tersebut diinstal kemarin.", "B. Jadwal analisa laboratorium telah diterbitkan.", "C. Tim melakukan uji kualitas jaringan.", "D. Pengelolaan kearsipan dilakukan secara sistematis.", "E. Sistem autentikasi berjalan dengan aman."], correctText: "B. Jadwal analisa laboratorium telah diterbitkan.", f: "Bentuk baku: analisis (bukan analisa).", d: "Kata 'analisa' merupakan bentuk tidak baku. Yang baku adalah 'analisis'.", level: 1 },
-                    { t: "Gagasan utama paragraf tentang pentingnya pemeliharaan perangkat server secara berkala adalah...", o: ["A. Jenis-jenis kerusakan server", "B. Perawatan berkala menjaga stabilitas server", "C. Biaya pengadaan perangkat server", "D. Prosedur perakitan jaringan LAN", "E. Daftar spesifikasi sistem operasi"], correctText: "B. Perawatan berkala menjaga stabilitas server", f: "Gagasan utama mencakup ide inti paragraf.", d: "Pemeliharaan berkala bertujuan menjaga stabilitas server.", level: 1 },
-                    { t: "Penulisan gelar akademis yang sesuai PUEBI / SAKABA adalah...", o: ["A. Muhammad Farchan, S.Kom.", "B. Muhammad Farchan S,Kom", "C. Muhammad Farchan. S.Kom", "D. Muhammad Farchan, SKom.", "E. Muhammad Farchan S.Kom."], correctText: "A. Muhammad Farchan, S.Kom.", f: "Nama, koma, spasi, singkatan gelar berpenitik.", d: "Nama, S.Kom.", level: 1 },
-                    { t: "Makna istilah 'konfigurasi' dalam bidang teknik jaringan adalah...", o: ["A. Penghentian saluran data", "B. Pengaturan dan penyusunan komponen sistem", "C. Pengiriman berkas antarperangkat", "D. Pembersihan direktori penyimpanan", "E. Pembuatan tampilan antarmuka"], correctText: "B. Pengaturan dan penyusunan komponen sistem", f: "Glosarium istilah teknologi informasi.", d: "Konfigurasi adalah pengaturan/penyusunan perangkat keras atau lunak.", level: 1 },
-                    { t: "Kalimat berikut yang menggunakan konjungsi kausalitas secara tepat adalah...", o: ["A. Kabel terputus karena tertimpa tiang.", "B. Ia belajar lalu ia ujian.", "C. Meskipun hujan ia tetap berangkat.", "D. Jika sistem diisi maka data tersimpan.", "E. Supaya rapi kabel diikat."], correctText: "A. Kabel terputus karena tertimpa tiang.", f: "Konjungsi kausalitas: sebab, karena, oleh karena itu.", d: "Kata 'karena' menyatakan hubungan sebab-akibat.", level: 2 },
-                    { t: "Kalimat efektif yang tidak bermakna ganda (ambigu) adalah...", o: ["A. Pengungsi yang berasal dari daerah bencana itu memerlukan obat-obatan.", "B. Ibu membawa makanan adik di meja.", "C. Pengusaha yang sukses itu memberikan bantuan.", "D. Mahasiswa perguruan tinggi yang terkenal itu meraih penghargaan.", "E. Sepeda motor guru baru itu berwarna hitam."], correctText: "C. Pengusaha yang sukses itu memberikan bantuan.", f: "Kalimat efektif memiliki kelogisan dan kejelasan struktur.", d: "Kalimat C jelas dan tidak menimbulkan penafsiran ganda.", level: 3 },
-                    { t: "Penggunaan tanda baca titik dua (:) yang tepat terdapat pada kalimat...", o: ["A. Kami memerlukan alat kantor: kertas, tinta, dan pena.", "B. Ibu membeli: sayur, buah, dan daging.", "C. Ia membawa: tas, buku, dan pensil.", "D. Peserta ujian terdiri atas: siswa dan siswi.", "E. Anggota tim: Farchan, Azzux, dan Lux' Hela."], correctText: "A. Kami memerlukan alat kantor: kertas, tinta, dan pena.", f: "Titik dua digunakan di akhir pernyataan lengkap diikuti pemerincian.", d: "Pernyataan 'Kami memerlukan alat kantor' sudah lengkap sebelum perincian.", level: 2 },
-                    { t: "Ungkapan 'gulung tikar' dalam konteks ekonomi/bisnis bermakna...", o: ["A. Mengalami kebangkrutan", "B. Merapikan ruangan kerja", "C. Mengembangkan cabang baru", "D. Mengabaikan laporan keuangan", "E. Membuka usaha perhotelan"], correctText: "A. Mengalami kebangkrutan", f: "Idiom / ungkapan Bahasa Indonesia.", d: "Gulung tikar berarti bangkrut.", level: 1 },
-                    { t: "Ringkasan yang paling tepat untuk teks prosedur keselamatan kerja bengkel adalah...", o: ["A. Penggunaan APD dan pematuhan SOP mencegah kecelakaan kerja.", "B. Bengkel harus memiliki peralatan modern.", "C. Setiap teknisi wajib datang tepat waktu.", "D. Kerusakan alat dipertanggungjawabkan oleh ketua.", "E. Jam kerja bengkel diatur secara fleksibel."], correctText: "A. Penggunaan APD dan pematuhan SOP mencegah kecelakaan kerja.", f: "Ringkasan memuat poin-poin penting secara padat.", d: "APD dan SOP merupakan inti dari keselamatan kerja bengkel.", level: 2 },
-                    { t: "Imbuhan me-kan pada kata 'membuatkan' dalam kalimat 'Ia membuatkan temannya jaringan LAN' bermakna...", o: ["A. Melakukan pekerjaan untuk orang lain (benefaktif)", "B. Menyebabkan sesuatu terjadi (kausatif)", "C. Menuju ke suatu tempat", "D. Melakukan tindakan berulang", "E. Menganggap sebagai"], correctText: "A. Melakukan pekerjaan untuk orang lain (benefaktif)", f: "Makna reduplikasi dan afiksasi.", d: "Membuatkan berarti melakukan tindakan membuat untuk orang lain.", level: 2 },
-                    { t: "Peribahasa 'Bagai air di atas daun talas' artinya...", o: ["A. Orang yang tidak teguh pendiriannya", "B. Orang yang selalu beruntung", "C. Hubungan yang sangat rukun", "D. Pekerjaan yang sangat mudah", "E. Kehidupan yang penuh penderitaan"], correctText: "A. Orang yang tidak teguh pendiriannya", f: "Peribahasa tradisional.", d: "Air di daun talas mudah goyah dan tidak tetap.", level: 1 },
-                    { t: "Kalimat opini dalam laporan teknis ditunjukkan oleh nomor...", o: ["A. Menurut saya, kapasitas server ini masih perlu ditingkatkan.", "B. Server menggunakan RAM sebesar 16 GB.", "C. Pengujian dilakukan pada pukul 09.00 WIB.", "D. Kecepatan transfer data mencapai 100 Mbps.", "E. Sistem beroperasi menggunakan Linux Debian."], correctText: "A. Menurut saya, kapasitas server ini masih perlu ditingkatkan.", f: "Opini memuat pandangan subjektif / tanggapan pribadi.", d: "Kata 'Menurut saya' menunjukkan ungkapan pendapat/opini.", level: 1 },
-                    { t: "Kalimat fakta dalam berita teknologi ditunjukkan oleh...", o: ["A. Google didirikan oleh Larry Page dan Sergey Brin pada tahun 1998.", "B. Google merupakan situs web paling menarik di dunia.", "C. Semua orang pasti menyukai tampilan Google.", "D. Di masa depan Google akan menguasai seluruh antariksa.", "E. Mungkin Google akan mengganti namanya."], correctText: "A. Google didirikan oleh Larry Page dan Sergey Brin pada tahun 1998.", f: "Fakta dapat dibuktikan kebenarannya secara objektif.", d: "Tahun pendirian dan pendiri Google adalah data sejarah objektif.", level: 1 },
-                    { t: "Kata serapan dari bahasa asing yang ejaannya benar adalah...", o: ["A. Kualitas", "B. Kwalitas", "C. Kwalitet", "D. Qualitas", "E. Kvalitas"], correctText: "A. Kualitas", f: "Pedoman Kata Serapan KBBI.", d: "Kata baku yang diserap dari 'quality' adalah 'kualitas'.", level: 1 },
-                    { t: "Penulisan kata berimbuhan gabung (awalan dan akhiran sekaligus) yang benar adalah...", o: ["A. Menindaklanjuti", "B. Menindak lanjuti", "C. Me nindaklanjuti", "D. Menindak-lanjuti", "E. Menindak Lanjuti"], correctText: "A. Menindaklanjuti", f: "Kata majemuk yang mendapat awalan dan akhiran sekaligus ditulis serangkai.", d: "Menindaklanjuti ditulis menyatu.", level: 2 },
-                    { t: "Ciri utama dari teks eksposisi adalah...", o: ["A. Menyampaikan argumen untuk menambah wawasan pembaca", "B. Menceritakan kisah rekaan berurutan", "C. Menggambarkan objek secara mendetail", "D. Mengajak pembaca membeli produk", "E. Berisi puisi indah"], correctText: "A. Menyampaikan argumen untuk menambah wawasan pembaca", f: "Struktur teks eksposisi.", d: "Eksposisi bertujuan menjelaskan informasi/argumen secara faktual.", level: 1 },
-                    { t: "Sinonim dari kata 'relevan' adalah...", o: ["A. Sesuai / Kait-mengait", "B. Berlawanan", "C. Terpisah", "D. Rumit", "E. Berulang"], correctText: "A. Sesuai / Kait-mengait", f: "Tes Sinonim Kata.", d: "Relevan berarti bersangkut-paut atau sesuai.", level: 1 },
-                    { t: "Antonim dari kata 'transparan' adalah...", o: ["A. Buram / Tertutup", "B. Jelas", "C. Bening", "D. Terbuka", "E. Nyata"], correctText: "A. Buram / Tertutup", f: "Tes Antonim Kata.", d: "Lawan kata transparan (terbuka/jelas) adalah buram atau tertutup.", level: 1 },
-                    { t: "Kalimat perintah (imperatif) dalam teks prosedur adalah...", o: ["A. Tekan tombol power untuk menyalakan perangkat!", "B. Perangkat telah dinyalakan.", "C. Apakah tombol power sudah ditekan?", "D. Ia menekan tombol power.", "E. Tombol power berwarna biru."], correctText: "A. Tekan tombol power untuk menyalakan perangkat!", f: "Ciri kalimat imperatif.", d: "Menggunakan kata kerja tindakan dan diakhiri tanda seru/perintah.", level: 1 },
-                    { t: "Tema utama dari teks cerpen yang mengisahkan perjuangan siswa PKL adalah...", o: ["A. Ketekunan dan tanggung jawab kerja", "B. Keindahan alam pegunungan", "C. Dongeng legenda masa lalu", "D. Persaingan antarbisnis besar", "E. Wisata kuliner daerah"], correctText: "A. Ketekunan dan tanggung jawab kerja", f: "Menentukan tema cerita.", d: "Perjuangan PKL berkaitan erat dengan ketekunan dan tanggung jawab.", level: 2 },
-                    { t: "Watak tokoh yang pantang menyerah dalam cerita dapat diketahui dari...", o: ["A. Tindakannya terus berusaha meski menghadapi kesulitan", "B. Pakaian yang dikenakannya", "C. Tempat tinggalnya", "D. Judul cerita", "E. Nama tokoh"], correctText: "A. Tindakannya terus berusaha meski menghadapi kesulitan", f: "Penokohan / Perwatakan dalam sastra.", d: "Tindakan dan perilaku menunjukkan karakter watak tokoh.", level: 2 },
-                    { t: "Latar tempat yang tergambar dari kalimat 'Farchan merakit kabel UTP di laboratorium jaringan' adalah...", o: ["A. Laboratorium jaringan", "B. Lapangan olahraga", "C. Perpustakaan", "D. Kantin sekolah", "E. Stasiun kereta"], correctText: "A. Laboratorium jaringan", f: "Unsur intrinsik latar tempat.", d: "Disebutkan secara eksplisit di laboratorium jaringan.", level: 1 },
-                    { t: "Pesan moral (amanat) yang ingin disampaikan pengarang umumnya terletak pada...", o: ["A. Kerapian cara tokoh mengatasi masalah di akhir cerita", "B. Judul buku", "C. Sampul depan", "D. Daftar isi", "E. Hak cipta"], correctText: "A. Kerapian cara tokoh mengatasi masalah di akhir cerita", f: "Amanat cerita.", d: "Pesan moral tersirat atau tersurat dari penyelesaian konflik cerita.", level: 2 },
-                    { t: "Tujuan utama dari penulisan teks Laporan Hasil Observasi (LHO) adalah...", o: ["A. Menyajikan informasi objektif berdasarkan pengamatan", "B. Menghibur pembaca dengan dongeng", "C. Memengaruhi pembaca agar memilih partai tertentu", "D. Mengritik kebijakan pemerintah secara emosional", "E. Menjual barang elektronik"], correctText: "A. Menyajikan informasi objektif berdasarkan pengamatan", f: "Tujuan Teks LHO.", d: "LHO ditulis untuk melaporkan hasil pengamatan secara ilmiah dan objektif.", level: 1 }
+                    { t: "Inti kalimat 'Pembangunan jaringan serat optik di wilayah pelosok menuai apresiasi dari masyarakat setempat.' adalah...", o: ["A. Jaringan serat optik di pelosok", "B. Pembangunan jaringan menuai apresiasi", "C. Masyarakat setempat mengapresiasi", "D. Wilayah pelosok membangun jaringan", "E. Apresiasi masyarakat terhadap serat optik"], correctRaw: "B. Pembangunan jaringan menuai apresiasi", f: "Subjek Utama + Predikat Utama.", d: "Subjek: Pembangunan jaringan, Predikat: menuai apresiasi.", level: 2 },
+                    { t: "Kalimat yang memuat kata tidak baku adalah...", o: ["A. Perangkat lunak tersebut diinstal kemarin.", "B. Jadwal analisa laboratorium telah diterbitkan.", "C. Tim melakukan uji kualitas jaringan.", "D. Pengelolaan kearsipan dilakukan secara sistematis.", "E. Sistem autentikasi berjalan dengan aman."], correctRaw: "B. Jadwal analisa laboratorium telah diterbitkan.", f: "Bentuk baku: analisis (bukan analisa).", d: "Kata 'analisa' merupakan bentuk tidak baku. Yang baku adalah 'analisis'.", level: 1 },
+                    { t: "Gagasan utama paragraf tentang pentingnya pemeliharaan perangkat server secara berkala adalah...", o: ["A. Jenis-jenis kerusakan server", "B. Perawatan berkala menjaga stabilitas server", "C. Biaya pengadaan perangkat server", "D. Prosedur perakitan jaringan LAN", "E. Daftar spesifikasi sistem operasi"], correctRaw: "B. Perawatan berkala menjaga stabilitas server", f: "Gagasan utama mencakup ide inti paragraf.", d: "Pemeliharaan berkala bertujuan menjaga stabilitas server.", level: 1 },
+                    { t: "Penulisan gelar akademis yang sesuai PUEBI / SAKABA adalah...", o: ["A. Muhammad Farchan, S.Kom.", "B. Muhammad Farchan S,Kom", "C. Muhammad Farchan. S.Kom", "D. Muhammad Farchan, SKom.", "E. Muhammad Farchan S.Kom."], correctRaw: "A. Muhammad Farchan, S.Kom.", f: "Nama, koma, spasi, singkatan gelar berpenitik.", d: "Nama, S.Kom.", level: 1 },
+                    { t: "Makna istilah 'konfigurasi' dalam bidang teknik jaringan adalah...", o: ["A. Penghentian saluran data", "B. Pengaturan dan penyusunan komponen sistem", "C. Pengiriman berkas antarperangkat", "D. Pembersihan direktori penyimpanan", "E. Pembuatan tampilan antarmuka"], correctRaw: "B. Pengaturan dan penyusunan komponen sistem", f: "Glosarium istilah teknologi informasi.", d: "Konfigurasi adalah pengaturan/penyusunan perangkat keras atau lunak.", level: 1 },
+                    { t: "Kalimat berikut yang menggunakan konjungsi kausalitas secara tepat adalah...", o: ["A. Kabel terputus karena tertimpa tiang.", "B. Ia belajar lalu ia ujian.", "C. Meskipun hujan ia tetap berangkat.", "D. Jika sistem diisi maka data tersimpan.", "E. Supaya rapi kabel diikat."], correctRaw: "A. Kabel terputus karena tertimpa tiang.", f: "Konjungsi kausalitas: sebab, karena, oleh karena itu.", d: "Kata 'karena' menyatakan hubungan sebab-akibat.", level: 2 },
+                    { t: "Kalimat efektif yang tidak bermakna ganda (ambigu) adalah...", o: ["A. Pengungsi yang berasal dari daerah bencana itu memerlukan obat-obatan.", "B. Ibu membawa makanan adik di meja.", "C. Pengusaha yang sukses itu memberikan bantuan.", "D. Mahasiswa perguruan tinggi yang terkenal itu meraih penghargaan.", "E. Sepeda motor guru baru itu berwarna hitam."], correctRaw: "C. Pengusaha yang sukses itu memberikan bantuan.", f: "Kalimat efektif memiliki kelogisan dan kejelasan struktur.", d: "Kalimat C jelas dan tidak menimbulkan penafsiran ganda.", level: 3 },
+                    { t: "Penggunaan tanda baca titik dua (:) yang tepat terdapat pada kalimat...", o: ["A. Kami memerlukan alat kantor: kertas, tinta, dan pena.", "B. Ibu membeli: sayur, buah, dan daging.", "C. Ia membawa: tas, buku, dan pensil.", "D. Peserta ujian terdiri atas: siswa dan siswi.", "E. Anggota tim: Farchan, Azzux, dan Lux' Hela."], correctRaw: "A. Kami memerlukan alat kantor: kertas, tinta, dan pena.", f: "Titik dua digunakan di akhir pernyataan lengkap diikuti pemerincian.", d: "Pernyataan 'Kami memerlukan alat kantor' sudah lengkap sebelum perincian.", level: 2 },
+                    { t: "Ungkapan 'gulung tikar' dalam konteks ekonomi/bisnis bermakna...", o: ["A. Mengalami kebangkrutan", "B. Merapikan ruangan kerja", "C. Mengembangkan cabang baru", "D. Mengabaikan laporan keuangan", "E. Membuka usaha perhotelan"], correctRaw: "A. Mengalami kebangkrutan", f: "Idiom / ungkapan Bahasa Indonesia.", d: "Gulung tikar berarti bangkrut.", level: 1 },
+                    { t: "Ringkasan yang paling tepat untuk teks prosedur keselamatan kerja bengkel adalah...", o: ["A. Penggunaan APD dan pematuhan SOP mencegah kecelakaan kerja.", "B. Bengkel harus memiliki peralatan modern.", "C. Setiap teknisi wajib datang tepat waktu.", "D. Kerusakan alat dipertanggungjawabkan oleh ketua.", "E. Jam kerja bengkel diatur secara fleksibel."], correctRaw: "A. Penggunaan APD dan pematuhan SOP mencegah kecelakaan kerja.", f: "Ringkasan memuat poin-poin penting secara padat.", d: "APD dan SOP merupakan inti dari keselamatan kerja bengkel.", level: 2 },
+                    { t: "Imbuhan me-kan pada kata 'membuatkan' dalam kalimat 'Ia membuatkan temannya jaringan LAN' bermakna...", o: ["A. Melakukan pekerjaan untuk orang lain (benefaktif)", "B. Menyebabkan sesuatu terjadi (kausatif)", "C. Menuju ke suatu tempat", "D. Melakukan tindakan berulang", "E. Menganggap sebagai"], correctRaw: "A. Melakukan pekerjaan untuk orang lain (benefaktif)", f: "Makna reduplikasi dan afiksasi.", d: "Membuatkan berarti melakukan tindakan membuat untuk orang lain.", level: 2 },
+                    { t: "Peribahasa 'Bagai air di atas daun talas' artinya...", o: ["A. Orang yang tidak teguh pendiriannya", "B. Orang yang selalu beruntung", "C. Hubungan yang sangat rukun", "D. Pekerjaan yang sangat mudah", "E. Kehidupan yang penuh penderitaan"], correctRaw: "A. Orang yang tidak teguh pendiriannya", f: "Peribahasa tradisional.", d: "Air di daun talas mudah goyah dan tidak tetap.", level: 1 },
+                    { t: "Kalimat opini dalam laporan teknis ditunjukkan oleh nomor...", o: ["A. Menurut saya, kapasitas server ini masih perlu ditingkatkan.", "B. Server menggunakan RAM sebesar 16 GB.", "C. Pengujian dilakukan pada pukul 09.00 WIB.", "D. Kecepatan transfer data mencapai 100 Mbps.", "E. Sistem beroperasi menggunakan Linux Debian."], correctRaw: "A. Menurut saya, kapasitas server ini masih perlu ditingkatkan.", f: "Opini memuat pandangan subjektif / tanggapan pribadi.", d: "Kata 'Menurut saya' menunjukkan ungkapan pendapat/opini.", level: 1 },
+                    { t: "Kalimat fakta dalam berita teknologi ditunjukkan oleh...", o: ["A. Google didirikan oleh Larry Page dan Sergey Brin pada tahun 1998.", "B. Google merupakan situs web paling menarik di dunia.", "C. Semua orang pasti menyukai tampilan Google.", "D. Di masa depan Google akan menguasai seluruh antariksa.", "E. Mungkin Google akan mengganti namanya."], correctRaw: "A. Google didirikan oleh Larry Page dan Sergey Brin pada tahun 1998.", f: "Fakta dapat dibuktikan kebenarannya secara objektif.", d: "Tahun pendirian dan pendiri Google adalah data sejarah objektif.", level: 1 },
+                    { t: "Kata serapan dari bahasa asing yang ejaannya benar adalah...", o: ["A. Kualitas", "B. Kwalitas", "C. Kwalitet", "D. Qualitas", "E. Kvalitas"], correctRaw: "A. Kualitas", f: "Pedoman Kata Serapan KBBI.", d: "Kata baku yang diserap dari 'quality' adalah 'kualitas'.", level: 1 },
+                    { t: "Penulisan kata berimbuhan gabung (awalan dan akhiran sekaligus) yang benar adalah...", o: ["A. Menindaklanjuti", "B. Menindak lanjuti", "C. Me nindaklanjuti", "D. Menindak-lanjuti", "E. Menindak Lanjuti"], correctRaw: "A. Menindaklanjuti", f: "Kata majemuk yang mendapat awalan dan akhiran sekaligus ditulis serangkai.", d: "Menindaklanjuti ditulis menyatu.", level: 2 },
+                    { t: "Ciri utama dari teks eksposisi adalah...", o: ["A. Menyampaikan argumen untuk menambah wawasan pembaca", "B. Menceritakan kisah rekaan berurutan", "C. Menggambarkan objek secara mendetail", "D. Mengajak pembaca membeli produk", "E. Berisi puisi indah"], correctRaw: "A. Menyampaikan argumen untuk menambah wawasan pembaca", f: "Struktur teks eksposisi.", d: "Eksposisi bertujuan menjelaskan informasi/argumen secara faktual.", level: 1 },
+                    { t: "Sinonim dari kata 'relevan' adalah...", o: ["A. Sesuai / Kait-mengait", "B. Berlawanan", "C. Terpisah", "D. Rumit", "E. Berulang"], correctRaw: "A. Sesuai / Kait-mengait", f: "Tes Sinonim Kata.", d: "Relevan berarti bersangkut-paut atau sesuai.", level: 1 },
+                    { t: "Antonim dari kata 'transparan' adalah...", o: ["A. Buram / Tertutup", "B. Jelas", "C. Bening", "D. Terbuka", "E. Nyata"], correctRaw: "A. Buram / Tertutup", f: "Tes Antonim Kata.", d: "Lawan kata transparan (terbuka/jelas) adalah buram atau tertutup.", level: 1 },
+                    { t: "Kalimat perintah (imperatif) dalam teks prosedur adalah...", o: ["A. Tekan tombol power untuk menyalakan perangkat!", "B. Perangkat telah dinyalakan.", "C. Apakah tombol power sudah ditekan?", "D. Ia menekan tombol power.", "E. Tombol power berwarna biru."], correctRaw: "A. Tekan tombol power untuk menyalakan perangkat!", f: "Ciri kalimat imperatif.", d: "Menggunakan kata kerja tindakan dan diakhiri tanda seru/perintah.", level: 1 },
+                    { t: "Tema utama dari teks cerpen yang mengisahkan perjuangan siswa PKL adalah...", o: ["A. Ketekunan dan tanggung jawab kerja", "B. Keindahan alam pegunungan", "C. Dongeng legenda masa lalu", "D. Persaingan antarbisnis besar", "E. Wisata kuliner daerah"], correctRaw: "A. Ketekunan dan tanggung jawab kerja", f: "Menentukan tema cerita.", d: "Perjuangan PKL berkaitan erat dengan ketekunan dan tanggung jawab.", level: 2 },
+                    { t: "Watak tokoh yang pantang menyerah dalam cerita dapat diketahui dari...", o: ["A. Tindakannya terus berusaha meski menghadapi kesulitan", "B. Pakaian yang dikenakannya", "C. Tempat tinggalnya", "D. Judul cerita", "E. Nama tokoh"], correctRaw: "A. Tindakannya terus berusaha meski menghadapi kesulitan", f: "Penokohan / Perwatakan dalam sastra.", d: "Tindakan dan perilaku menunjukkan karakter watak tokoh.", level: 2 },
+                    { t: "Latar tempat yang tergambar dari kalimat 'Farchan merakit kabel UTP di laboratorium jaringan' adalah...", o: ["A. Laboratorium jaringan", "B. Lapangan olahraga", "C. Perpustakaan", "D. Kantin sekolah", "E. Stasiun kereta"], correctRaw: "A. Laboratorium jaringan", f: "Unsur intrinsik latar tempat.", d: "Disebutkan secara eksplisit di laboratorium jaringan.", level: 1 },
+                    { t: "Pesan moral (amanat) yang ingin disampaikan pengarang umumnya terletak pada...", o: ["A. Kerapian cara tokoh mengatasi masalah di akhir cerita", "B. Judul buku", "C. Sampul depan", "D. Daftar isi", "E. Hak cipta"], correctRaw: "A. Kerapian cara tokoh mengatasi masalah di akhir cerita", f: "Amanat cerita.", d: "Pesan moral tersirat atau tersurat dari penyelesaian konflik cerita.", level: 2 },
+                    { t: "Tujuan utama dari penulisan teks Laporan Hasil Observasi (LHO) adalah...", o: ["A. Menyajikan informasi objektif berdasarkan pengamatan", "B. Menghibur pembaca dengan dongeng", "C. Memengaruhi pembaca agar memilih partai tertentu", "D. Mengritik kebijakan pemerintah secara emosional", "E. Menjual barang elektronik"], correctRaw: "A. Menyajikan informasi objektif berdasarkan pengamatan", f: "Tujuan Teks LHO.", d: "LHO ditulis untuk melaporkan hasil pengamatan secara ilmiah dan objektif.", level: 1 }
                 ];
                 return { id: i + 1, ...list[i] };
             }),
 
             inggris: Array.from({length: 25}, (_, i) => {
                 const list = [
-                    { t: "Manager: 'Could you please submit the network log report by 3 PM?' Staff: '...' What is the best response?", o: ["A. Sure, I will finish it before 3 PM.", "B. I don't care about the report.", "C. No, I am sleeping now.", "D. What is a network log?", "E. Yesterday was rainy."], correctText: "A. Sure, I will finish it before 3 PM.", f: "Accepting a request politely.", d: "'Sure, I will finish it...' shows agreement to complete the task on time.", level: 1 },
-                    { t: "If the server grid down, we ... access the global database.", o: ["A. will not be able to", "B. would not have", "C. did not", "D. are not", "E. have not"], correctText: "A. will not be able to", f: "Conditional Sentence Type 1: If + Present, Will + Verb1", d: "Future condition matching simple present.", level: 2 },
-                    { t: "The new fiber optic cable ... by the technicians yesterday.", o: ["A. was installed", "B. is installing", "C. installs", "D. will install", "E. has installed"], correctText: "A. was installed", f: "Passive Voice Past Tense: Was/Were + V3", d: "'was installed' fits singular subject in the past.", level: 2 },
-                    { t: "Technician: 'I think we should upgrade our router band.' Client: '... It will boost our speed.'", o: ["A. I completely agree with you.", "B. I disagree with that.", "C. I don't think so.", "D. That is a bad idea.", "E. You are wrong."], correctText: "A. I completely agree with you.", f: "Expression of Agreement.", d: "The supporting reason indicates total agreement.", level: 1 },
-                    { t: "What is the synonym of the word 'Maintenance' in technical context?", o: ["A. Upkeep / Servicing", "B. Destruction", "C. Neglect", "D. Purchase", "E. Delay"], correctText: "A. Upkeep / Servicing", f: "Technical Vocabulary.", d: "Maintenance means keeping equipment in good working order (upkeep).", level: 1 },
-                    { t: "Choose the correct form: 'The IT team ... the system configuration right now.'", o: ["A. is testing", "B. tested", "C. test", "D. was tested", "E. will test"], correctText: "A. is testing", f: "Present Continuous Tense (is/are + V-ing).", d: "'right now' indicates present continuous action.", level: 1 },
-                    { t: "Receptionist: 'Good morning, HAFAR'S Tech. ...?' Caller: 'Hello, I'd like to speak to Mr. Farchan.'", o: ["A. How may I help you?", "B. Who are you?", "C. What do you want?", "D. Where is your office?", "E. Why are you calling?'"], correctText: "A. How may I help you?", f: "Professional Telephoning Expressions.", d: "'How may I help you?' is standard formal greeting.", level: 1 },
-                    { t: "If I ... more free time, I would learn Python programming.", o: ["A. had", "B. have", "C. will have", "D. having", "E. have had"], correctText: "A. had", f: "Conditional Sentence Type 2: If + Past Simple, Would + V1", d: "Unreal present condition uses past simple 'had'.", level: 2 },
-                    { t: "The server room is ... than the main office hall.", o: ["A. cooler", "B. cool", "C. coolest", "D. more cool", "E. most cool"], correctText: "A. cooler", f: "Comparative Degree (-er for short adjectives).", d: "Comparing two rooms: cooler than.", level: 1 },
-                    { t: "You ... wear a ESD wrist strap when handling sensitive microchip components.", o: ["A. must", "B. might", "C. would", "D. could", "E. shall not"], correctText: "A. must", f: "Modal of Obligation (must).", d: "Safety rules require mandatory compliance (must).", level: 2 },
-                    { t: "She has been working as a network administrator ... 2024.", o: ["A. since", "B. for", "C. during", "D. until", "E. by"], correctText: "A. since", f: "Present Perfect Tense (Since + starting point of time).", d: "'since 2024' indicates starting point.", level: 2 },
-                    { t: "What is the antonym of 'Secure' in data networking?", o: ["A. Vulnerable / Unsafe", "B. Safe", "C. Protected", "D. Encrypted", "E. Strong"], correctText: "A. Vulnerable / Unsafe", f: "Vocabulary Antonyms.", d: "Opposite of secure is vulnerable or unsafe.", level: 1 },
-                    { t: "Please ... off the switch before unplugging the power supply unit.", o: ["A. turn", "B. turning", "C. turned", "D. turns", "E. to turn"], correctText: "A. turn", f: "Imperative Sentence (Base Verb 1).", d: "Instructions start with bare infinitive 'turn'.", level: 1 },
-                    { t: "The document ... sent to the regional office two hours ago.", o: ["A. was", "B. is", "C. were", "D. will be", "E. has been"], correctText: "A. was", f: "Simple Past Passive.", d: "'two hours ago' singular subject takes 'was'.", level: 2 },
-                    { t: "Visitor: 'Excuse me, where is the computer lab?' Student: 'Go straight ahead and turn left. It's ... the library.'", o: ["A. next to", "B. inside of", "C. far away", "D. behind of", "E. under"], correctText: "A. next to", f: "Preposition of Place.", d: "'next to' indicates adjacent location.", level: 1 },
-                    { t: "He speaks English ... during international tech conferences.", o: ["A. fluently", "B. fluent", "C. fluency", "D. more fluent", "E. most fluent"], correctText: "A. fluently", f: "Adverb of Manner modifying verb 'speaks'.", d: "'fluently' modifies the verb speaks.", level: 2 },
-                    { t: "Neither Farchan nor his teammates ... absent from the training today.", o: ["A. are", "B. is", "C. was", "D. be", "E. being"], correctText: "A. are", f: "Subject-Verb Agreement with Neither... Nor...", d: "Verb agrees with closest subject 'teammates' (plural -> are).", level: 3 },
-                    { t: "Which sentence expresses a future plan?", o: ["A. We are going to deploy the website tomorrow.", "B. We deployed the website yesterday.", "C. We deploy websites every week.", "D. We were deploying the website.", "E. We have deployed the website."], correctText: "A. We are going to deploy the website tomorrow.", f: "Be going to for planned future intention.", d: "'are going to deploy' indicates intention.", level: 2 },
-                    { t: "The hardware manual is very ... to understand.", o: ["A. easy", "B. easily", "C. easiness", "D. ease", "E. easier"], correctText: "A. easy", f: "Adjective after linking verb 'is very'.", d: "Adjective 'easy' modifies manual.", level: 1 },
-                    { t: "They succeeded in fixing the bug ... they worked overnight.", o: ["A. because", "B. although", "C. despite", "D. but", "E. unless"], correctText: "A. because", f: "Conjunction of Cause.", d: "'because' connects result with cause.", level: 2 },
-                    { t: "A person who designs and builds websites is called a...", o: ["A. Web Developer", "B. Civil Engineer", "C. Accountant", "D. Chef", "E. Pilot"], correctText: "A. Web Developer", f: "Occupational Vocabulary.", d: "Web developer builds websites.", level: 1 },
-                    { t: "What is the past tense (Verb 2) of 'write'?", o: ["A. wrote", "B. written", "C. writing", "D. writes", "E. writed"], correctText: "A. wrote", f: "Irregular Verbs List.", d: "Write -> Wrote -> Written.", level: 1 },
-                    { t: "Choose the correct sentence:", o: ["A. Farchan has finished his project.", "B. Farchan have finish his project.", "C. Farchan finishing his project.", "D. Farchan finished has his project.", "E. Farchan are finish his project."], correctText: "A. Farchan has finished his project.", f: "Present Perfect Structure (Has + V3 for singular).", d: "Farchan (he) + has + finished.", level: 2 },
-                    { t: "The word 'DOWNLOAD' means...", o: ["A. Transferring data from a remote server to a local device", "B. Sending data to another satellite", "C. Deleting files permanently", "D. Printing documents on paper", "E. Turning off the screen"], correctText: "A. Transferring data from a remote server to a local device", f: "IT Terminology.", d: "Download means receiving data from internet/server to local.", level: 1 },
-                    { t: "Client: 'Thank you for your technical support.' Support: '...'", o: ["A. You're welcome!", "B. No, thanks.", "C. Don't touch it.", "D. I am busy.", "E. Goodbye."], correctText: "A. You're welcome!", f: "Responding to Thanks.", d: "'You're welcome!' is standard polite response.", level: 1 }
+                    { t: "Manager: 'Could you please submit the network log report by 3 PM?' Staff: '...' What is the best response?", o: ["A. Sure, I will finish it before 3 PM.", "B. I don't care about the report.", "C. No, I am sleeping now.", "D. What is a network log?", "E. Yesterday was rainy."], correctRaw: "A. Sure, I will finish it before 3 PM.", f: "Accepting a request politely.", d: "'Sure, I will finish it...' shows agreement to complete the task on time.", level: 1 },
+                    { t: "If the server grid down, we ... access the global database.", o: ["A. will not be able to", "B. would not have", "C. did not", "D. are not", "E. have not"], correctRaw: "A. will not be able to", f: "Conditional Sentence Type 1: If + Present, Will + Verb1", d: "Future condition matching simple present.", level: 2 },
+                    { t: "The new fiber optic cable ... by the technicians yesterday.", o: ["A. was installed", "B. is installing", "C. installs", "D. will install", "E. has installed"], correctRaw: "A. was installed", f: "Passive Voice Past Tense: Was/Were + V3", d: "'was installed' fits singular subject in the past.", level: 2 },
+                    { t: "Technician: 'I think we should upgrade our router band.' Client: '... It will boost our speed.'", o: ["A. I completely agree with you.", "B. I disagree with that.", "C. I don't think so.", "D. That is a bad idea.", "E. You are wrong."], correctRaw: "A. I completely agree with you.", f: "Expression of Agreement.", d: "The supporting reason indicates total agreement.", level: 1 },
+                    { t: "What is the synonym of the word 'Maintenance' in technical context?", o: ["A. Upkeep / Servicing", "B. Destruction", "C. Neglect", "D. Purchase", "E. Delay"], correctRaw: "A. Upkeep / Servicing", f: "Technical Vocabulary.", d: "Maintenance means keeping equipment in good working order (upkeep).", level: 1 },
+                    { t: "Choose the correct form: 'The IT team ... the system configuration right now.'", o: ["A. is testing", "B. tested", "C. test", "D. was tested", "E. will test"], correctRaw: "A. is testing", f: "Present Continuous Tense (is/are + V-ing).", d: "'right now' indicates present continuous action.", level: 1 },
+                    { t: "Receptionist: 'Good morning, HAFAR'S Tech. ...?' Caller: 'Hello, I'd like to speak to Mr. Farchan.'", o: ["A. How may I help you?", "B. Who are you?", "C. What do you want?", "D. Where is your office?", "E. Why are you calling?'"], correctRaw: "A. How may I help you?", f: "Professional Telephoning Expressions.", d: "'How may I help you?' is standard formal greeting.", level: 1 },
+                    { t: "If I ... more free time, I would learn Python programming.", o: ["A. had", "B. have", "C. will have", "D. having", "E. have had"], correctRaw: "A. had", f: "Conditional Sentence Type 2: If + Past Simple, Would + V1", d: "Unreal present condition uses past simple 'had'.", level: 2 },
+                    { t: "The server room is ... than the main office hall.", o: ["A. cooler", "B. cool", "C. coolest", "D. more cool", "E. most cool"], correctRaw: "A. cooler", f: "Comparative Degree (-er for short adjectives).", d: "Comparing two rooms: cooler than.", level: 1 },
+                    { t: "You ... wear a ESD wrist strap when handling sensitive microchip components.", o: ["A. must", "B. might", "C. would", "D. could", "E. shall not"], correctRaw: "A. must", f: "Modal of Obligation (must).", d: "Safety rules require mandatory compliance (must).", level: 2 },
+                    { t: "She has been working as a network administrator ... 2024.", o: ["A. since", "B. for", "C. during", "D. until", "E. by"], correctRaw: "A. since", f: "Present Perfect Tense (Since + starting point of time).", d: "'since 2024' indicates starting point.", level: 2 },
+                    { t: "What is the antonym of 'Secure' in data networking?", o: ["A. Vulnerable / Unsafe", "B. Safe", "C. Protected", "D. Encrypted", "E. Strong"], correctRaw: "A. Vulnerable / Unsafe", f: "Vocabulary Antonyms.", d: "Opposite of secure is vulnerable or unsafe.", level: 1 },
+                    { t: "Please ... off the switch before unplugging the power supply unit.", o: ["A. turn", "B. turning", "C. turned", "D. turns", "E. to turn"], correctRaw: "A. turn", f: "Imperative Sentence (Base Verb 1).", d: "Instructions start with bare infinitive 'turn'.", level: 1 },
+                    { t: "The document ... sent to the regional office two hours ago.", o: ["A. was", "B. is", "C. were", "D. will be", "E. has been"], correctRaw: "A. was", f: "Simple Past Passive.", d: "'two hours ago' singular subject takes 'was'.", level: 2 },
+                    { t: "Visitor: 'Excuse me, where is the computer lab?' Student: 'Go straight ahead and turn left. It's ... the library.'", o: ["A. next to", "B. inside of", "C. far away", "D. behind of", "E. under"], correctRaw: "A. next to", f: "Preposition of Place.", d: "'next to' indicates adjacent location.", level: 1 },
+                    { t: "He speaks English ... during international tech conferences.", o: ["A. fluently", "B. fluent", "C. fluency", "D. more fluent", "E. most fluent"], correctRaw: "A. fluently", f: "Adverb of Manner modifying verb 'speaks'.", d: "'fluently' modifies the verb speaks.", level: 2 },
+                    { t: "Neither Farchan nor his teammates ... absent from the training today.", o: ["A. are", "B. is", "C. was", "D. be", "E. being"], correctRaw: "A. are", f: "Subject-Verb Agreement with Neither... Nor...", d: "Verb agrees with closest subject 'teammates' (plural -> are).", level: 3 },
+                    { t: "Which sentence expresses a future plan?", o: ["A. We are going to deploy the website tomorrow.", "B. We deployed the website yesterday.", "C. We deploy websites every week.", "D. We were deploying the website.", "E. We have deployed the website."], correctRaw: "A. We are going to deploy the website tomorrow.", f: "Be going to for planned future intention.", d: "'are going to deploy' indicates intention.", level: 2 },
+                    { t: "The hardware manual is very ... to understand.", o: ["A. easy", "B. easily", "C. easiness", "D. ease", "E. easier"], correctRaw: "A. easy", f: "Adjective after linking verb 'is very'.", d: "Adjective 'easy' modifies manual.", level: 1 },
+                    { t: "They succeeded in fixing the bug ... they worked overnight.", o: ["A. because", "B. although", "C. despite", "D. but", "E. unless"], correctRaw: "A. because", f: "Conjunction of Cause.", d: "'because' connects result with cause.", level: 2 },
+                    { t: "A person who designs and builds websites is called a...", o: ["A. Web Developer", "B. Civil Engineer", "C. Accountant", "D. Chef", "E. Pilot"], correctRaw: "A. Web Developer", f: "Occupational Vocabulary.", d: "Web developer builds websites.", level: 1 },
+                    { t: "What is the past tense (Verb 2) of 'write'?", o: ["A. wrote", "B. written", "C. writing", "D. writes", "E. writed"], correctRaw: "A. wrote", f: "Irregular Verbs List.", d: "Write -> Wrote -> Written.", level: 1 },
+                    { t: "Choose the correct sentence:", o: ["A. Farchan has finished his project.", "B. Farchan have finish his project.", "C. Farchan finishing his project.", "D. Farchan finished has his project.", "E. Farchan are finish his project."], correctRaw: "A. Farchan has finished his project.", f: "Present Perfect Structure (Has + V3 for singular).", d: "Farchan (he) + has + finished.", level: 2 },
+                    { t: "The word 'DOWNLOAD' means...", o: ["A. Transferring data from a remote server to a local device", "B. Sending data to another satellite", "C. Deleting files permanently", "D. Printing documents on paper", "E. Turning off the screen"], correctRaw: "A. Transferring data from a remote server to a local device", f: "IT Terminology.", d: "Download means receiving data from internet/server to local.", level: 1 },
+                    { t: "Client: 'Thank you for your technical support.' Support: '...'", o: ["A. You're welcome!", "B. No, thanks.", "C. Don't touch it.", "D. I am busy.", "E. Goodbye."], correctRaw: "A. You're welcome!", f: "Responding to Thanks.", d: "'You're welcome!' is standard polite response.", level: 1 }
                 ];
                 return { id: i + 1, ...list[i] };
             })
@@ -490,20 +490,24 @@
         let timeLeft = 75 * 60;
         let timerInterval = null;
         let isStarted = false;
-        let isSubmitted = false; // Status apakah ujian sudah diselesaikan
+        let isSubmitted = false;
+
+        const prefixLabels = ["A. ", "B. ", "C. ", "D. ", "E. "];
 
         function initRandomizedQuestions() {
             dbSoal = {};
             for (let sub in masterSoal) {
-                // Acak urutan soal
                 let shuffledSoal = [...masterSoal[sub]].sort(() => 0.5 - Math.random());
                 let selected25 = shuffledSoal.slice(0, 25).map((q, idx) => {
-                    // Acak urutan pilihan jawaban (o) secara acak unik setiap sesi
-                    let shuffledOpts = [...q.o].sort(() => 0.5 - Math.random());
+                    // Bersihkan teks opsi asli dari awalan "A. ", "B. ", dll agar bersih saat diacak
+                    let cleanOptions = q.o.map(opt => opt.replace(/^[A-E]\.\s*/, ''));
+                    // Acak posisi isi teks jawaban
+                    let shuffledTexts = [...cleanOptions].sort(() => 0.5 - Math.random());
+                    
                     return {
                         ...q,
                         id: idx + 1,
-                        optionsShuffled: shuffledOpts
+                        shuffledTexts: shuffledTexts // Berisi teks jawaban yang posisinya sudah berpindah-pindah
                     };
                 });
                 dbSoal[sub] = selected25;
@@ -653,15 +657,16 @@
                 btn.className = `btn-no ${index === currentIdx ? 'active' : ''} ${userAnswers[index] !== undefined ? 'answered' : ''}`;
                 btn.innerText = index + 1;
                 
-                // Visual warna pada tombol navigasi setelah submit
                 if (isSubmitted) {
-                    const chosenOpt = userAnswers[index];
-                    const chosenText = chosenOpt !== undefined ? q.optionsShuffled[chosenOpt] : null;
-                    if (chosenText === q.correctText) {
-                        btn.style.backgroundColor = '#10b981'; // Hijau benar
+                    const chosenOptIdx = userAnswers[index];
+                    const chosenTextClean = chosenOptIdx !== undefined ? q.shuffledTexts[chosenOptIdx] : null;
+                    const correctClean = q.correctRaw.replace(/^[A-E]\.\s*/, '');
+                    
+                    if (chosenTextClean === correctClean) {
+                        btn.style.backgroundColor = '#10b981';
                         btn.style.color = '#ffffff';
                     } else {
-                        btn.style.backgroundColor = '#ef4444'; // Merah salah
+                        btn.style.backgroundColor = '#ef4444';
                         btn.style.color = '#ffffff';
                     }
                 }
@@ -698,7 +703,9 @@
             const optionsContainer = document.getElementById('optionsContainer');
             optionsContainer.innerHTML = '';
             
-            q.optionsShuffled.forEach((optText, optIdx) => {
+            const correctClean = q.correctRaw.replace(/^[A-E]\.\s*/, '');
+
+            q.shuffledTexts.forEach((textItem, optIdx) => {
                 const btn = document.createElement('button');
                 let btnClass = 'option-btn';
 
@@ -706,24 +713,24 @@
                     btnClass += ' selected';
                 }
 
-                // Jika sudah submit, tampilkan visual warna benar (hijau) dan salah (merah)
                 if (isSubmitted) {
-                    if (optText === q.correctText) {
-                        btnClass += ' correct-ans'; // Hijau untuk kunci jawaban benar
-                    } else if (userAnswers[currentIdx] === optIdx && optText !== q.correctText) {
-                        btnClass += ' wrong-ans'; // Merah untuk jawaban user yang salah
+                    if (textItem === correctClean) {
+                        btnClass += ' correct-ans';
+                    } else if (userAnswers[currentIdx] === optIdx && textItem !== correctClean) {
+                        btnClass += ' wrong-ans';
                     }
                 }
 
                 btn.className = btnClass;
-                btn.innerHTML = optText;
+                // Urutan huruf tetap A, B, C, D, E tetapi isinya diacak
+                btn.innerHTML = prefixLabels[optIdx] + textItem;
                 
                 if (!isSubmitted) {
                     btn.onclick = function() {
                         selectOption(optIdx);
                     };
                 } else {
-                    btn.disabled = true; // Nonaktifkan klik setelah ujian selesai
+                    btn.disabled = true;
                 }
 
                 optionsContainer.appendChild(btn);
@@ -732,7 +739,6 @@
             document.getElementById('formulaContent').innerHTML = q.f;
             document.getElementById('discussionContent').innerHTML = q.d;
             
-            // Otomatis buka pembahasan setelah disubmit
             if (isSubmitted) {
                 document.getElementById('discussionBox').style.display = 'block';
             } else {
@@ -785,16 +791,18 @@
             let score = 0;
             
             activeData.forEach((q, idx) => {
-                const chosenOpt = userAnswers[idx];
-                const chosenText = chosenOpt !== undefined ? q.optionsShuffled[chosenOpt] : null;
-                if (chosenText === q.correctText) {
+                const chosenOptIdx = userAnswers[idx];
+                const chosenTextClean = chosenOptIdx !== undefined ? q.shuffledTexts[chosenOptIdx] : null;
+                const correctClean = q.correctRaw.replace(/^[A-E]\.\s*/, '');
+                
+                if (chosenTextClean === correctClean) {
                     score++;
                 }
             });
 
             showResultView(score, activeData.length);
             saveToStorage();
-            loadQuestion(); // Muat ulang soal untuk menampilkan warna visual benar/salah
+            loadQuestion();
         }
 
         function showResultView(customScore, customTotal) {
@@ -803,9 +811,11 @@
             
             if (customScore === undefined) {
                 activeData.forEach((q, idx) => {
-                    const chosenOpt = userAnswers[idx];
-                    const chosenText = chosenOpt !== undefined ? q.optionsShuffled[chosenOpt] : null;
-                    if (chosenText === q.correctText) {
+                    const chosenOptIdx = userAnswers[idx];
+                    const chosenTextClean = chosenOptIdx !== undefined ? q.shuffledTexts[chosenOptIdx] : null;
+                    const correctClean = q.correctRaw.replace(/^[A-E]\.\s*/, '');
+                    
+                    if (chosenTextClean === correctClean) {
                         score++;
                     }
                 });
@@ -820,7 +830,7 @@
             resultBox.style.display = 'block';
 
             unlockAllTabs();
-            document.getElementById('btnSubmit').style.display = 'none'; // Sembunyikan tombol selesai
+            document.getElementById('btnSubmit').style.display = 'none';
 
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
