@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulator TKA (Matematika, B. Indonesia, B. Inggris) - HAFAR'S</title>
+    <!-- Hubungkan dengan style.css utama agar tema gelap / konsisten terjaga -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Gaya tambahan khusus modul simulator TKA */
+        .tka-container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: rgba(30, 41, 59, 0.85);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f8fafc;
+        }
+        .timer-box {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .subject-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 8px 16px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: #1e293b;
+            color: #cbd5e1;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .tab-btn.active-tab {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+        .nav-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .btn-no {
+            width: 38px;
+            height: 38px;
+            border: 1px solid #475569;
+            background-color: #1e293b;
+            color: #cbd5e1;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .btn-no:hover {
+            background-color: #334155;
+        }
+        .btn-no.active {
+            background-color: #38bdf8;
+            color: #0f172a;
+            border-color: #38bdf8;
+        }
+        .btn-no.answered {
+            border-bottom: 3px solid #34d399;
+        }
+        .card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .question-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            color: #f8fafc;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option-btn {
+            text-align: left;
+            padding: 12px 15px;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            background: rgba(30, 41, 59, 0.9);
+            color: #e2e8f0;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+        .option-btn:hover {
+            background-color: rgba(56, 189, 248, 0.1);
+            border-color: #38bdf8;
+        }
+        .option-btn.selected {
+            background-color: rgba(56, 189, 248, 0.2);
+            border-color: #38bdf8;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .btn-action {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            background-color: #2563eb;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-action:hover {
+            background-color: #1d4ed8;
+        }
+        .discussion-box {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(16, 185, 129, 0.1);
+            border-left: 5px solid #34d399;
+            border-radius: 4px;
+            color: #e2e8f0;
+        }
+        .formula-box {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-left: 5px solid #fbbf24;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            color: #e2e8f0;
+        }
+        .formula-box h4, .discussion-box h4 {
+            margin-bottom: 8px;
+            color: #f8fafc;
+        }
+        .result-box {
+            display: none;
+            text-align: center;
+            padding: 25px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header & Sidebar standar HAFAR'S -->
+    <header>
+        <button class="menu-btn" onclick="toggleSidebar()">&#9776;</button>
+        <h1 class="brand-title">HAFAR'S</h1>
+    </header>
+
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h2 class="brand-title">HAFAR'S</h2>
+            <button class="close-sidebar-btn" onclick="toggleSidebar()">&times;</button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="video.html">Video</a>
+            <a href="TKA_Matematika_Wajib.html" class="active-page">Simulasi TKA</a>
+            <a href="privacy.html">Privacy & Policy</a>
+        </nav>
+    </div>
+    <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Konten Utama Simulasi TKA -->
+    <div class="tka-container">
+        <header style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 20px; text-align: left;">
+            <h2 style="color: #38bdf8; font-size: 1.5rem;">Simulasi Ujian TKA SMK</h2>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 5px;">Pilih mata uji dan selesaikan seluruh soal dalam batas waktu 75 menit.</p>
+        </header>
+
+        <!-- Pilihan Mata Pelajaran -->
+        <div class="subject-tabs">
+            <button class="tab-btn active-tab" onclick="changeSubject('matematika')">📐 Matematika Wajib</button>
+            <button class="tab-btn" onclick="changeSubject('indo')">📖 Bahasa Indonesia</button>
+            <button class="tab-btn" onclick="changeSubject('inggris')">🌐 Bahasa Inggris</button>
+        </div>
+
+        <!-- Timer Sesi Ujian -->
+        <div class="timer-box">
+            <span>⏱️ Sisa Waktu Ujian:</span>
+            <span id="timerDisplay" style="font-size: 1.2rem; font-family: monospace;">75:00</span>
+        </div>
+
+        <!-- Navigasi Nomor Soal -->
+        <div class="nav-questions" id="navQuestions"></div>
+
+        <!-- Area Kartu Soal -->
+        <div class="card">
+            <div class="question-title" id="questionTitle">Soal dimuat...</div>
+            <div class="options" id="optionsContainer"></div>
+        </div>
+
+        <!-- Kotak Konsep / Rumus / Catatan -->
+        <div class="formula-box" id="formulaBox">
+            <h4>📌 Konsep / Petunjuk Kunci:</h4>
+            <div id="formulaContent"></div>
+        </div>
+
+        <!-- Tombol Aksi Navigasi -->
+        <div class="actions">
+            <div>
+                <button class="btn-action" onclick="prevQuestion()">⬅️ Sebelumnya</button>
+                <button class="btn-action" onclick="nextQuestion()">Berikutnya ➡️</button>
+            </div>
+            <div>
+                <button class="btn-action" style="background-color: #0ea5e9;" onclick="toggleDiscussion()">💡 Lihat Pembahasan</button>
+                <button class="btn-action" style="background-color: #10b981;" onclick="submitQuiz()">🏆 Selesai & Skor</button>
+            </div>
+        </div>
+
+        <!-- Kotak Pembahasan -->
+        <div class="discussion-box" id="discussionBox">
+            <h4>📝 Pembahasan Lengkap:</h4>
+            <div id="discussionContent"></div>
+        </div>
+
+        <!-- Kotak Hasil Akhir -->
+        <div class="result-box" id="resultBox">
+            <h2 style="color: #34d399; margin-bottom: 10px;">Evaluasi Selesai!</h2>
+            <p id="scoreText" style="font-size: 1.2rem; margin: 15px 0; font-weight: bold;"></p>
+            <button class="btn-action" onclick="resetQuiz()">🔄 Ulangi Latihan</button>
+        </div>
+    </div>
+
+    <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html">Privacy & Policy</a></div>
+
+    <!-- Script Logika Simulasi & Timer 75 Menit -->
+    <script>
+        // Database Soal (Matematika, B. Indonesia SMK, B. Inggris SMK)
+        const dbSoal = {
+            matematika: [
+                {
+                    id: 1,
+                    title: "Sebuah drone mendeteksi titik target P(4, 6). Sistem radar melakukan dilatasi dengan faktor skala k = 3 terhadap titik pusat A(2, 1), dilanjutkan rotasi 90° berlawanan arah jarum jam dengan pusat (0,0). Koordinat titik target P'' adalah...",
+                    options: ["A. (16, -8)", "B. (-16, 8)", "C. (8, 16)", "D. (-8, 16)", "E. (-16, -8)"],
+                    answer: 1,
+                    formula: "1. Dilatasi Pusat (a,b) Faktor k: x' = a + k(x - a), y' = b + k(y - b)<br>2. Rotasi 90° berlawanan jarum jam: (x', y') → (-y', x')",
+                    discussion: "Tahap 1 (Dilatasi P(4,6) pusat A(2,1) k=3): x' = 2 + 3(4-2) = 8, y' = 1 + 3(6-1) = 16. P'(8,16). Tahap 2 (Rotasi 90°): (-16, 8)."
+                },
+                {
+                    id: 2,
+                    title: "Populasi awal bakteri adalah 500 sel. Setiap 15 menit, bakteri membelah menjadi 2 kali lipat. Berapa populasi bakteri pada menit ke-90?",
+                    options: ["A. 16.000 sel", "B. 32.000 sel", "C. 64.000 sel", "D. 128.000 sel", "E. 256.000 sel"],
+                    answer: 1,
+                    formula: "Rumus Pertumbuhan Eksponensial: N(t) = N0 · 2^n dengan n = t / Td",
+                    discussion: "n = 90 / 15 = 6 siklus. N = 500 · 2^6 = 500 · 64 = 32.000 sel."
+                }
+            ],
+            indo: [
+                {
+                    id: 1,
+                    title: "Cermati kalimat berikut: 'Pembangunan pabrik limbah tersebut menuai protes dari warga sekitar karena dianggap mencemari lingkungan.' Inti kalimat tersebut adalah...",
+                    options: ["A. Pabrik limbah menuai protes warga", "B. Pembangunan pabrik menuai protes", "C. Warga sekitar mencemari lingkungan", "D. Pabrik limbah mencemari lingkungan", "E. Pembangunan pabrik limbah meresahkan"],
+                    answer: 1,
+                    formula: "Mencari inti kalimat (Sintaksis): Cari Subjek dan Predikat utama tanpa keterangan tambahan.",
+                    discussion: "Subjek utama: 'Pembangunan pabrik' (atau pembangunan pabrik limbah), Predikat utama: 'menuai protes'. Jadi inti kalimatnya adalah Pembangunan pabrik menuai protes."
+                },
+                {
+                    id: 2,
+                    title: "Perhatikan teks laporan hasil observasi berikut: (1) Tanaman lidah buaya banyak hidup di daerah kering. (2) Batang tanaman ini tebal dan berdaging. (3) Lidah buaya sering digunakan sebagai bahan kosmetik alami. (4) Harga produk lidah buaya sangat bervariasi di pasaran. Kalimat yang tidak padu (menyimpang dari gagasan utama laporan objek) adalah nomor...",
+                    options: ["A. (1)", "B. (2)", "C. (3)", "D. (4)", "E. Semua padu"],
+                    answer: 3,
+                    formula: "Kalimat tidak padu adalah kalimat yang gagasan utamanya melenceng dari topik utama teks.",
+                    discussion: "Topik teks adalah ciri fisik dan manfaat tanaman lidah buaya (kalimat 1, 2, 3). Kalimat (4) membahas harga produk di pasaran yang merupakan aspek ekonomi komersial, sehingga tidak padu."
+                }
+            ],
+            inggris: [
+                {
+                    id: 1,
+                    title: "Manager: 'Could you please submit the network maintenance report by 3 PM tomorrow?' Staff: 'Sure, I will finish it before the deadline.' What does the staff expression mean?",
+                    options: ["A. The staff is refusing the task", "B. The staff agrees and promises to complete the report on time", "C. The staff asks for a deadline extension", "D. The staff cannot finish the network report", "E. The staff is confused about the instruction"],
+                    answer: 1,
+                    formula: "Expressions of accepting requests and stating commitment to deadlines.",
+                    discussion: "Kalimat 'I will finish it before the deadline' menunjukkan kesanggupan dan persetujuan staf untuk menyelesaikan laporan tepat waktu."
+                },
+                {
+                    id: 2,
+                    title: "Read the job vacancy snippet: 'Looking for a certified Computer Network Technician with at least 2 years of experience in Cisco routing configuration.' What is one of the primary qualifications required?",
+                    options: ["A. Experience in culinary arts", "B. Certification in Network and Cisco routing skills", "C. Fluent in graphic design software", "D. Graduate in agriculture degree", "E. Willing to work as a cashier"],
+                    answer: 1,
+                    formula: "Reading Comprehension: Analyzing specific job requirements in a professional advertisement.",
+                    discussion: "Iklan lowongan mencari teknisi jaringan komputer bersertifikat dengan pengalaman minimal 2 tahun dalam konfigurasi routing Cisco."
+                }
+            ]
+        };
+
+        let currentSubject = 'matematika';
+        let currentIdx = 0;
+        let userAnswers = {};
+        let timeLeft = 75 * 60; // 75 Menit dalam detik
+        let timerInterval;
+
+        function initTimer() {
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Waktu ujian 75 menit telah habis! Sistem akan mengumpulkan jawaban Anda secara otomatis.");
+                    submitQuiz();
+                    return;
+                }
+                timeLeft--;
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                document.getElementById('timerDisplay').innerText = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 300) { // Di bawah 5 menit, beri indikator merah
+                    document.getElementById('timerDisplay').style.color = '#ef4444';
+                }
+            }, 1000);
+        }
+
+        function changeSubject(subject) {
+            currentSubject = subject;
+            currentIdx = 0;
+            userAnswers = {};
+            document.getElementById('resultBox').style.display = 'none';
+            
+            // Ubah tombol aktif tab
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
+            event.target.classList.add('active-tab');
+
+            loadQuestion();
+        }
+
+        function initNav() {
+            const nav = document.getElementById('navQuestions');
+            nav.innerHTML = '';
+            const activeData = dbSoal[currentSubject];
+            
+            activeData.forEach((q, index) => {
+                const btn = document.createElement('button');
+                btn.className = `btn-no ${index === currentIdx ? 'active' : ''} ${userAnswers[index] !== undefined ? 'answered' : ''}`;
+                btn.innerText = index + 1;
+                btn.onclick = () => goToQuestion(index);
+                nav.appendChild(btn);
+            });
+        }
+
+        function loadQuestion() {
+            const activeData = dbSoal[currentSubject];
+            const q = activeData[currentIdx];
+            
+            document.getElementById('questionTitle').innerHTML = `<b>Soal ${currentIdx + 1}:</b> ${q.title}`;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((opt, optIdx) => {
+                const btn = document.createElement('button');
+                btn.className = `option-btn ${userAnswers[currentIdx] === optIdx ? 'selected' : ''}`;
+                btn.innerHTML = opt;
+                btn.onclick = () => selectOption(optIdx);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('formulaContent').innerHTML = q.formula;
+            document.getElementById('discussionContent').innerHTML = q.discussion;
+            document.getElementById('discussionBox').style.display = 'none';
+
+            initNav();
+        }
+
+        function selectOption(optIdx) {
+            userAnswers[currentIdx] = optIdx;
+            loadQuestion();
+        }
+
+        function nextQuestion() {
+            const activeData = dbSoal[currentSubject];
+            if (currentIdx < activeData.length - 1) {
+                currentIdx++;
+                loadQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIdx > 0) {
+                currentIdx--;
+                loadQuestion();
+            }
+        }
+
+        function goToQuestion(index) {
+            currentIdx = index;
+            loadQuestion();
+        }
+
+        function toggleDiscussion() {
+            const box = document.getElementById('discussionBox');
+            box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
+        }
+
+        function submitQuiz() {
+            const activeData = dbSoal[currentSubject];
+            let score = 0;
+            
+            activeData.forEach((q, idx) => {
+                if (userAnswers[idx] === q.answer) {
+                    score++;
+                }
+            });
+
+            const resultBox = document.getElementById('resultBox');
+            const scoreText = document.getElementById('scoreText');
+            const totalScore = (score / activeData.length) * 100;
+
+            scoreText.innerText = `Skor Mata Uji Ini: ${totalScore.toFixed(0)} / 100 (${score} dari ${activeData.length} Soal Benar)`;
+            resultBox.style.display = 'block';
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            userAnswers = {};
+            currentIdx = 0;
+            document.getElementById('resultBox').style.display = 'none';
+            loadQuestion();
+        }
+
+        // Fungsi sidebar standar HAFAR'S
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        // Jalankan aplikasi & timer saat halaman dimuat
+        loadQuestion();
+        initTimer();
+    </script>
+</body>
+</html>
