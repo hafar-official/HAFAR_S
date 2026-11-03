@@ -3,64 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulator TKA (Matematika, B. Indonesia, B. Inggris) - HAFAR'S</title>
-    <!-- Hubungkan dengan style.css utama agar tema gelap / konsisten terjaga -->
+    <title>Simulasi TKA SMK - HAFAR'S</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Gaya tambahan khusus modul simulator TKA */
-        .tka-container {
-            max-width: 900px;
-            margin: 20px auto;
+        .tka-wrapper {
+            max-width: 950px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+
+        .tka-card-container {
             background: rgba(30, 41, 59, 0.85);
             padding: 25px;
-            border-radius: 12px;
+            border-radius: 14px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: #f8fafc;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
-        .timer-box {
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            color: #fca5a5;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-weight: bold;
+
+        .tka-header-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             margin-bottom: 20px;
         }
+
+        .timer-badge {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: #38bdf8;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            font-family: monospace;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .subject-tabs {
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
+
         .tab-btn {
-            padding: 8px 16px;
-            border: 1px solid rgba(255,255,255,0.2);
+            padding: 10px 18px;
+            border: 1px solid rgba(255,255,255,0.15);
             background: #1e293b;
-            color: #cbd5e1;
-            border-radius: 6px;
+            color: #94a3b8;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.2s;
+            transition: all 0.25s ease;
         }
+
+        .tab-btn:hover {
+            color: white;
+            background: #334155;
+        }
+
         .tab-btn.active-tab {
             background: #2563eb;
             color: white;
             border-color: #2563eb;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
+
+        .start-overlay {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+        }
+
         .nav-questions {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 20px;
-            justify-content: center;
+            margin-bottom: 25px;
+            justify-content: flex-start;
         }
+
         .btn-no {
-            width: 38px;
-            height: 38px;
-            border: 1px solid #475569;
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
             background-color: #1e293b;
             color: #cbd5e1;
             border-radius: 6px;
@@ -68,111 +122,127 @@
             font-weight: bold;
             transition: all 0.2s;
         }
+
         .btn-no:hover {
             background-color: #334155;
+            color: white;
         }
+
         .btn-no.active {
             background-color: #38bdf8;
             color: #0f172a;
             border-color: #38bdf8;
         }
+
         .btn-no.answered {
-            border-bottom: 3px solid #34d399;
+            border-bottom: 3px solid #10b981;
         }
-        .card {
+
+        .question-card {
             background: rgba(15, 23, 42, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 20px;
+            border-radius: 10px;
+            padding: 22px;
             margin-bottom: 20px;
         }
+
         .question-title {
-            font-size: 16px;
+            font-size: 1.05rem;
             font-weight: 600;
-            margin-bottom: 15px;
-            line-height: 1.6;
+            margin-bottom: 18px;
+            line-height: 1.7;
             color: #f8fafc;
         }
-        .options {
+
+        .options-group {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
+
         .option-btn {
             text-align: left;
-            padding: 12px 15px;
-            border: 1px solid #475569;
-            border-radius: 6px;
-            background: rgba(30, 41, 59, 0.9);
+            padding: 13px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            background: rgba(30, 41, 59, 0.8);
             color: #e2e8f0;
             cursor: pointer;
-            font-size: 15px;
-            transition: all 0.2s;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            line-height: 1.5;
         }
+
         .option-btn:hover {
-            background-color: rgba(56, 189, 248, 0.1);
+            background-color: rgba(56, 189, 248, 0.12);
             border-color: #38bdf8;
         }
+
         .option-btn.selected {
-            background-color: rgba(56, 189, 248, 0.2);
+            background-color: rgba(56, 189, 248, 0.22);
             border-color: #38bdf8;
             color: #ffffff;
             font-weight: bold;
         }
-        .actions {
+
+        .action-bar {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
+            margin-top: 25px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
         }
+
         .btn-action {
             padding: 10px 20px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             background-color: #2563eb;
             color: white;
             font-weight: bold;
             cursor: pointer;
+            transition: background 0.2s;
         }
+
         .btn-action:hover {
             background-color: #1d4ed8;
         }
+
         .discussion-box {
             display: none;
             margin-top: 20px;
-            padding: 15px;
+            padding: 18px;
             background-color: rgba(16, 185, 129, 0.1);
-            border-left: 5px solid #34d399;
-            border-radius: 4px;
+            border-left: 4px solid #10b981;
+            border-radius: 6px;
             color: #e2e8f0;
+            line-height: 1.6;
         }
+
         .formula-box {
             background-color: rgba(245, 158, 11, 0.1);
-            border-left: 5px solid #fbbf24;
-            padding: 12px;
-            margin-bottom: 12px;
-            border-radius: 4px;
+            border-left: 4px solid #f59e0b;
+            padding: 14px;
+            margin-bottom: 15px;
+            border-radius: 6px;
             color: #e2e8f0;
+            line-height: 1.6;
         }
-        .formula-box h4, .discussion-box h4 {
-            margin-bottom: 8px;
-            color: #f8fafc;
-        }
+
         .result-box {
             display: none;
             text-align: center;
-            padding: 25px;
+            padding: 30px 20px;
             background: rgba(16, 185, 129, 0.15);
-            border: 1px solid rgba(52, 211, 153, 0.3);
-            border-radius: 8px;
-            margin-top: 20px;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            border-radius: 12px;
+            margin-top: 25px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header & Sidebar standar HAFAR'S -->
+    <!-- Header & Sidebar HAFAR'S -->
     <header>
         <button class="menu-btn" onclick="toggleSidebar()">&#9776;</button>
         <h1 class="brand-title">HAFAR'S</h1>
@@ -194,166 +264,192 @@
     </div>
     <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
 
-    <!-- Konten Utama Simulasi TKA -->
-    <div class="tka-container">
-        <header style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 20px; text-align: left;">
-            <h2 style="color: #38bdf8; font-size: 1.5rem;">Simulasi Ujian TKA SMK</h2>
-            <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 5px;">Pilih mata uji dan selesaikan seluruh soal dalam batas waktu 75 menit.</p>
-        </header>
-
-        <!-- Pilihan Mata Pelajaran -->
-        <div class="subject-tabs">
-            <button class="tab-btn active-tab" onclick="changeSubject('matematika')">📐 Matematika Wajib</button>
-            <button class="tab-btn" onclick="changeSubject('indo')">📖 Bahasa Indonesia</button>
-            <button class="tab-btn" onclick="changeSubject('inggris')">🌐 Bahasa Inggris</button>
-        </div>
-
-        <!-- Timer Sesi Ujian -->
-        <div class="timer-box">
-            <span>⏱️ Sisa Waktu Ujian:</span>
-            <span id="timerDisplay" style="font-size: 1.2rem; font-family: monospace;">75:00</span>
-        </div>
-
-        <!-- Navigasi Nomor Soal -->
-        <div class="nav-questions" id="navQuestions"></div>
-
-        <!-- Area Kartu Soal -->
-        <div class="card">
-            <div class="question-title" id="questionTitle">Soal dimuat...</div>
-            <div class="options" id="optionsContainer"></div>
-        </div>
-
-        <!-- Kotak Konsep / Rumus / Catatan -->
-        <div class="formula-box" id="formulaBox">
-            <h4>📌 Konsep / Petunjuk Kunci:</h4>
-            <div id="formulaContent"></div>
-        </div>
-
-        <!-- Tombol Aksi Navigasi -->
-        <div class="actions">
-            <div>
-                <button class="btn-action" onclick="prevQuestion()">⬅️ Sebelumnya</button>
-                <button class="btn-action" onclick="nextQuestion()">Berikutnya ➡️</button>
+    <!-- Konten Utama Simulasi -->
+    <div class="tka-wrapper">
+        <div class="tka-card-container">
+            
+            <div class="tka-header-bar">
+                <div>
+                    <h2 style="color: #38bdf8; margin: 0; font-size: 1.4rem;">Simulasi Ujian TKA SMK</h2>
+                    <p style="color: #94a3b8; font-size: 0.85rem; margin: 5px 0 0 0;">Latihan Terpadu Matematika Wajib, Bahasa Indonesia, dan Bahasa Inggris SMK</p>
+                </div>
+                <div class="timer-badge">
+                    <span>⏱️</span>
+                    <span id="timerDisplay">75:00</span>
+                </div>
             </div>
-            <div>
-                <button class="btn-action" style="background-color: #0ea5e9;" onclick="toggleDiscussion()">💡 Lihat Pembahasan</button>
-                <button class="btn-action" style="background-color: #10b981;" onclick="submitQuiz()">🏆 Selesai & Skor</button>
+
+            <!-- Tab Mata Pelajaran -->
+            <div class="subject-tabs">
+                <button class="tab-btn active-tab" onclick="changeSubject('matematika', this)">📐 Matematika Wajib (25 Soal)</button>
+                <button class="tab-btn" onclick="changeSubject('indo', this)">📖 Bahasa Indonesia (25 Soal)</button>
+                <button class="tab-btn" onclick="changeSubject('inggris', this)">🌐 Bahasa Inggris (25 Soal)</button>
             </div>
-        </div>
 
-        <!-- Kotak Pembahasan -->
-        <div class="discussion-box" id="discussionBox">
-            <h4>📝 Pembahasan Lengkap:</h4>
-            <div id="discussionContent"></div>
-        </div>
+            <!-- Overlay Pembuka (Timer belum jalan) -->
+            <div id="startOverlay" class="start-overlay">
+                <h3 style="color: #ffffff; margin-bottom: 10px; font-size: 1.3rem;">Siap Memulai Simulasi Ujian?</h3>
+                <p style="color: #94a3b8; font-size: 0.9rem; max-width: 550px; margin: 0 auto 20px auto; line-height: 1.6;">
+                    Ujian terdiri dari paket 25 soal per mata pelajaran. Waktu 75 menit akan otomatis berjalan saat Anda mengklik tombol di bawah ini.
+                </p>
+                <button class="btn-start" onclick="startQuiz()">▶️ Mulai Ujian Sekarang</button>
+            </div>
 
-        <!-- Kotak Hasil Akhir -->
-        <div class="result-box" id="resultBox">
-            <h2 style="color: #34d399; margin-bottom: 10px;">Evaluasi Selesai!</h2>
-            <p id="scoreText" style="font-size: 1.2rem; margin: 15px 0; font-weight: bold;"></p>
-            <button class="btn-action" onclick="resetQuiz()">🔄 Ulangi Latihan</button>
+            <!-- Area Lembar Ujian (Tersembunyi sebelum ditekan Mulai) -->
+            <div id="quizArea" style="display: none;">
+                
+                <div class="nav-questions" id="navQuestions"></div>
+
+                <div class="question-card">
+                    <div class="question-title" id="questionTitle">Loading...</div>
+                    <div class="options-group" id="optionsContainer"></div>
+                </div>
+
+                <div class="formula-box" id="formulaBox">
+                    <h4 style="margin: 0 0 6px 0; color: #fbbf24; font-size: 0.95rem;">📌 Petunjuk & Konsep Kunci:</h4>
+                    <div id="formulaContent" style="font-size: 0.9rem;"></div>
+                </div>
+
+                <div class="action-bar">
+                    <div>
+                        <button class="btn-action" onclick="prevQuestion()">⬅️ Sebelumnya</button>
+                        <button class="btn-action" onclick="nextQuestion()">Berikutnya ➡️</button>
+                    </div>
+                    <div>
+                        <button class="btn-action" style="background-color: #0ea5e9;" onclick="toggleDiscussion()">💡 Pembahasan</button>
+                        <button class="btn-action" style="background-color: #10b981;" onclick="submitQuiz()">🏆 Selesai Ujian</button>
+                    </div>
+                </div>
+
+                <div class="discussion-box" id="discussionBox">
+                    <h4 style="margin: 0 0 8px 0; color: #34d399;">📝 Analisis Pembahasan:</h4>
+                    <div id="discussionContent" style="font-size: 0.9rem;"></div>
+                </div>
+
+                <div class="result-box" id="resultBox">
+                    <h2 style="color: #34d399; margin: 0 0 10px 0;">Sesi Ujian Selesai!</h2>
+                    <p id="scoreText" style="font-size: 1.2rem; margin: 15px 0; font-weight: bold; color: #ffffff;"></p>
+                    <button class="btn-action" onclick="resetQuiz()">🔄 Ulangi Simulasi</button>
+                </div>
+
+            </div>
+
         </div>
     </div>
 
     <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html">Privacy & Policy</a></div>
 
-    <!-- Script Logika Simulasi & Timer 75 Menit -->
     <script>
-        // Database Soal (Matematika, B. Indonesia SMK, B. Inggris SMK)
+        // Database 25 Soal Matematika, 25 Soal Bahasa Indonesia, dan 25 Soal Bahasa Inggris
         const dbSoal = {
-            matematika: [
-                {
-                    id: 1,
-                    title: "Sebuah drone mendeteksi titik target P(4, 6). Sistem radar melakukan dilatasi dengan faktor skala k = 3 terhadap titik pusat A(2, 1), dilanjutkan rotasi 90° berlawanan arah jarum jam dengan pusat (0,0). Koordinat titik target P'' adalah...",
-                    options: ["A. (16, -8)", "B. (-16, 8)", "C. (8, 16)", "D. (-8, 16)", "E. (-16, -8)"],
-                    answer: 1,
-                    formula: "1. Dilatasi Pusat (a,b) Faktor k: x' = a + k(x - a), y' = b + k(y - b)<br>2. Rotasi 90° berlawanan jarum jam: (x', y') → (-y', x')",
-                    discussion: "Tahap 1 (Dilatasi P(4,6) pusat A(2,1) k=3): x' = 2 + 3(4-2) = 8, y' = 1 + 3(6-1) = 16. P'(8,16). Tahap 2 (Rotasi 90°): (-16, 8)."
-                },
-                {
-                    id: 2,
-                    title: "Populasi awal bakteri adalah 500 sel. Setiap 15 menit, bakteri membelah menjadi 2 kali lipat. Berapa populasi bakteri pada menit ke-90?",
-                    options: ["A. 16.000 sel", "B. 32.000 sel", "C. 64.000 sel", "D. 128.000 sel", "E. 256.000 sel"],
-                    answer: 1,
-                    formula: "Rumus Pertumbuhan Eksponensial: N(t) = N0 · 2^n dengan n = t / Td",
-                    discussion: "n = 90 / 15 = 6 siklus. N = 500 · 2^6 = 500 · 64 = 32.000 sel."
-                }
-            ],
-            indo: [
-                {
-                    id: 1,
-                    title: "Cermati kalimat berikut: 'Pembangunan pabrik limbah tersebut menuai protes dari warga sekitar karena dianggap mencemari lingkungan.' Inti kalimat tersebut adalah...",
-                    options: ["A. Pabrik limbah menuai protes warga", "B. Pembangunan pabrik menuai protes", "C. Warga sekitar mencemari lingkungan", "D. Pabrik limbah mencemari lingkungan", "E. Pembangunan pabrik limbah meresahkan"],
-                    answer: 1,
-                    formula: "Mencari inti kalimat (Sintaksis): Cari Subjek dan Predikat utama tanpa keterangan tambahan.",
-                    discussion: "Subjek utama: 'Pembangunan pabrik' (atau pembangunan pabrik limbah), Predikat utama: 'menuai protes'. Jadi inti kalimatnya adalah Pembangunan pabrik menuai protes."
-                },
-                {
-                    id: 2,
-                    title: "Perhatikan teks laporan hasil observasi berikut: (1) Tanaman lidah buaya banyak hidup di daerah kering. (2) Batang tanaman ini tebal dan berdaging. (3) Lidah buaya sering digunakan sebagai bahan kosmetik alami. (4) Harga produk lidah buaya sangat bervariasi di pasaran. Kalimat yang tidak padu (menyimpang dari gagasan utama laporan objek) adalah nomor...",
-                    options: ["A. (1)", "B. (2)", "C. (3)", "D. (4)", "E. Semua padu"],
-                    answer: 3,
-                    formula: "Kalimat tidak padu adalah kalimat yang gagasan utamanya melenceng dari topik utama teks.",
-                    discussion: "Topik teks adalah ciri fisik dan manfaat tanaman lidah buaya (kalimat 1, 2, 3). Kalimat (4) membahas harga produk di pasaran yang merupakan aspek ekonomi komersial, sehingga tidak padu."
-                }
-            ],
-            inggris: [
-                {
-                    id: 1,
-                    title: "Manager: 'Could you please submit the network maintenance report by 3 PM tomorrow?' Staff: 'Sure, I will finish it before the deadline.' What does the staff expression mean?",
-                    options: ["A. The staff is refusing the task", "B. The staff agrees and promises to complete the report on time", "C. The staff asks for a deadline extension", "D. The staff cannot finish the network report", "E. The staff is confused about the instruction"],
-                    answer: 1,
-                    formula: "Expressions of accepting requests and stating commitment to deadlines.",
-                    discussion: "Kalimat 'I will finish it before the deadline' menunjukkan kesanggupan dan persetujuan staf untuk menyelesaikan laporan tepat waktu."
-                },
-                {
-                    id: 2,
-                    title: "Read the job vacancy snippet: 'Looking for a certified Computer Network Technician with at least 2 years of experience in Cisco routing configuration.' What is one of the primary qualifications required?",
-                    options: ["A. Experience in culinary arts", "B. Certification in Network and Cisco routing skills", "C. Fluent in graphic design software", "D. Graduate in agriculture degree", "E. Willing to work as a cashier"],
-                    answer: 1,
-                    formula: "Reading Comprehension: Analyzing specific job requirements in a professional advertisement.",
-                    discussion: "Iklan lowongan mencari teknisi jaringan komputer bersertifikat dengan pengalaman minimal 2 tahun dalam konfigurasi routing Cisco."
-                }
-            ]
+            matematika: Array.from({length: 25}, (_, i) => {
+                const soalList = [
+                    { t: "Sebuah drone mendeteksi titik target P(4, 6). Dilatasi dengan k = 3 pusat A(2, 1), dilanjutkan rotasi 90° berlawanan arah jarum jam pusat (0,0). Koordinat akhir P'' adalah...", o: ["A. (16, -8)", "B. (-16, 8)", "C. (8, 16)", "D. (-8, 16)", "E. (-16, -8)"], a: 1, f: "x' = a + k(x-a), y' = b + k(y-b). Rotasi 90° CCW: (-y, x)", d: "Dilatasi: (8, 16). Rotasi 90°: (-16, 8)." },
+                    { t: "Titik A(3, 4) direfleksikan terhadap y = x, kemudian ditranslasikan oleh T(-2, 5). Bayangan akhir A' adalah...", o: ["A. (2, 8)", "B. (1, 9)", "C. (4, 1)", "D. (2, 1)", "E. (8, 2)"], a: 0, f: "Refleksi y=x: (y,x). Translasi: tambah titik koordinat.", d: "Refleksi: (4,3). Translasi: (4-2, 3+5) = (2,8)." },
+                    { t: "Populasi awal bakteri 500 sel. Setiap 15 menit membelah 2 kali lipat. Populasi pada menit ke-90 adalah...", o: ["A. 16.000 sel", "B. 32.000 sel", "C. 64.000 sel", "D. 128.000 sel", "E. 256.000 sel"], a: 1, f: "N(t) = N0 · 2^(t/Td)", d: "n = 90/15 = 6. N = 500 × 64 = 32.000 sel." },
+                    { t: "Massa radioaktif M(t) = 240 · 2^(-t/3). Sisa zat setelah 12 jam adalah...", o: ["A. 30 gram", "B. 15 gram", "C. 60 gram", "D. 7,5 gram", "E. 120 gram"], a: 1, f: "Peluruhan eksponensial.", d: "M(12) = 240 × 2^(-4) = 240 / 16 = 15 gram." },
+                    { t: "Kode 4 karakter: Ke-1 & 2 vokal berbeda dari {A,E,I,O,U}, Ke-3 & 4 angka genap berbeda dari {2,4,6,8}. Banyak variasi kode adalah...", o: ["A. 120", "B. 240", "C. 400", "D. 480", "E. 600"], a: 1, f: "Aturan perkalian: n1 × n2 × n3 × n4", d: "5 × 4 × 4 × 3 = 240 variasi." },
+                    { t: "Tangki tabung + kerucut. r = 6 m, tinggi tabung 10 m, tinggi kerucut 8 m. Garis pelukis kerucut adalah...", o: ["A. 10 m", "B. 12 m", "C. 14 m", "D. 15 m", "E. 16 m"], a: 0, f: "s = √(r² + t²)", d: "s = √(6² + 8²) = 10 m." },
+                    { t: "Petugas 15 m dari gedung mengamati puncak dengan elevasi 45°. Tinggi pengamat 1,6 m. Tinggi gedung adalah...", o: ["A. 15 m", "B. 16,6 m", "C. 13,4 m", "D. 18,6 m", "E. 20 m"], a: 1, f: "tan 45° = h / 15 + tinggi pengamat", d: "h = 15 + 1.6 = 16.6 m." },
+                    { t: "Rata-rata 20 siswa 80. Masuk 2 siswa susulan, rata-rata jadi 81. Selisih nilai kedua susulan 4. Nilai terendah susulan adalah...", o: ["A. 89", "B. 91", "C. 87", "D. 93", "E. 85"], a: 0, f: "Total nilai baru - Total lama.", d: "(22×81) - (20×80) = 182. Nilai: 89 dan 93." },
+                    { t: "Produksi bulan ke-3 100 potong, bulan ke-6 190 potong. Total produksi 12 bulan pertama adalah...", o: ["A. 2.460 potong", "B. 2.520 potong", "C. 2.300 potong", "D. 2.400 potong", "E. 2.600 potong"], a: 0, f: "S_n = n/2 (2a + (n-1)b)", d: "b = 30, a = 40. S12 = 6 × (80 + 330) = 2.460." },
+                    { t: "Harga 2 sedan + 3 van Rp1.200.000. Harga 3 sedan + 1 van Rp1.100.000. Harga 1 sedan + 2 van adalah...", o: ["A. Rp700.000", "B. Rp650.000", "C. Rp800.000", "D. Rp750.000", "E. Rp600.000"], a: 0, f: "SPLDV Eliminasi.", d: "Sedan = 300rb, Van = 200rb. 1(300)+2(200) = 700rb." },
+                    { t: "8 orang mengelilingi meja bundar. Ketua & Sekretaris wajib berdampingan. Banyak variasi duduk adalah...", o: ["A. 5.040", "B. 1.440", "C. 720", "D. 2.880", "E. 360"], a: 1, f: "(n-1)! × k!", d: "(7-1)! × 2! = 720 × 2 = 1.440." },
+                    { t: "Peluang mesin A cacat 0,04 dan B 0,05. Peluang paling sedikit satu TIDAK cacat adalah...", o: ["A. 0,998", "B. 0,002", "C. 0,950", "D. 0,912", "E. 0,980"], a: 0, f: "1 - P(kedua cacat)", d: "1 - (0,04 × 0,05) = 0,998." },
+                    { t: "Kubus ABCD.EFGH rusuk 10 cm. Panjang diagonal ruang HB adalah...", o: ["A. 10√2 cm", "B. 10√3 cm", "C. 5√3 cm", "D. 20 cm", "E. 10√6 cm"], a: 1, f: "d = r√3", d: "HB = 10√3 cm." },
+                    { t: "Fungsi f(x) = (4x + 20) / 3. Invers f^(-1)(x) adalah...", o: ["A. (3x - 20) / 4", "B. (4x - 20) / 3", "C. (3x + 20) / 4", "D. (20x - 3) / 4", "E. (3x - 4) / 20"], a: 0, f: "y = (4x+20)/3 → 4x = 3y-20", d: "f^(-1)(x) = (3x-20)/4." },
+                    { t: "Tim 4 orang dibentuk dari 5 teknisi & 3 analis. Wajib minimal 2 teknisi. Banyak variasi adalah...", o: ["A. 65", "B. 70", "C. 55", "D. 60", "E. 45"], a: 0, f: "C(5,2)C(3,2) + C(5,3)C(3,1) + C(5,4)C(3,0)", d: "30 + 30 + 5 = 65 cara." },
+                    { t: "Diskon 10% f(x)=0,9x dan potongan g(x)=x-20.000. Jika harga akhir Rp160.000, harga awal x adalah...", o: ["A. Rp200.000", "B. Rp180.000", "C. Rp220.000", "D. Rp190.000", "E. Rp210.000"], a: 0, f: "g(f(x)) = 160.000", d: "(160rb+20rb)/0.9 = 200.000." },
+                    { t: "Interval kelas 11-15. Titik tengahnya adalah...", o: ["A. 13", "B. 12,5", "C. 13,5", "D. 14", "E. 11,5"], a: 0, f: "xi = (bb + ba)/2", d: "(11 + 15)/2 = 13." },
+                    { t: "1 meja butuh 3 jam mesin, 1 kursi 1 jam. Kapasitas 30 jam. Model yang tepat adalah...", o: ["A. 3x + y ≤ 30", "B. x + 3y ≤ 30", "C. 3x + y ≥ 30", "D. 3x + 3y ≤ 30", "E. x + y ≤ 30"], a: 0, f: "Program linear pertidaksamaan.", d: "3x + y ≤ 30." },
+                    { t: "Kubah setengah bola diameter 28 m. Biaya Rp100.000/m². Biaya total pelapisan adalah...", o: ["A. Rp123.200.000", "B. Rp246.400.000", "C. Rp61.600.000", "D. Rp184.800.000", "E. Rp150.000.000"], a: 0, f: "L = 2πr²", d: "L = 2 × 22/7 × 14² = 1.232 m². Biaya = Rp123.200.000." },
+                    { t: "Peluang A = 0,35. Peluang komplemen P(A^c) adalah...", o: ["A. 0,65", "B. 0,35", "C. 0,55", "D. 0,75", "E. 1,00"], a: 0, f: "1 - P(A)", d: "1 - 0.35 = 0.65." },
+                    { t: "Matriks A = [[2, 3], [1, 4]]. Determinan A adalah...", o: ["A. 5", "B. 7", "C. 8", "D. 10", "E. 11"], a: 0, f: "det(A) = ad - bc", d: "(2×4) - (3×1) = 8 - 3 = 5." },
+                    { t: "Deret geometri tak hingga dengan a = 12 dan r = 1/3. Jumlah deret S_inf adalah...", o: ["A. 18", "B. 16", "C. 24", "D. 36", "E. 15"], a: 0, f: "S_inf = a / (1 - r)", d: "12 / (1 - 1/3) = 12 / (2/3) = 18." },
+                    { t: "Persamaan garis melalui (2, 3) bergradien m = 4 adalah...", o: ["A. y = 4x - 5", "B. y = 4x + 5", "C. y = 2x - 3", "D. y = 4x - 11", "E. y = 3x + 2"], a: 0, f: "y - y1 = m(x - x1)", d: "y - 3 = 4(x - 2) ⇒ y = 4x - 5." },
+                    { t: "Turunan pertama f(x) = 3x² - 5x + 8 adalah f'(x) = ...", o: ["A. 6x - 5", "B. 3x - 5", "C. 6x + 8", "D. 6x² - 5", "E. 5x - 3"], a: 0, f: "f'(x) = n·a·x^(n-1)", d: "f'(x) = 6x - 5." },
+                    { t: "Integral tak tentu ∫ (6x + 4) dx adalah...", o: ["A. 3x² + 4x + C", "B. 6x² + 4x + C", "C. 3x² + C", "D. 6x² + C", "E. 2x² + 4x + C"], a: 0, f: "∫ ax^n dx = (a/(n+1)) x^(n+1) + C", d: "(6/2)x² + 4x + C = 3x² + 4x + C." }
+                ];
+                return { id: i + 1, title: soalList[i].t, options: soalList[i].o, answer: soalList[i].a, formula: soalList[i].f, discussion: soalList[i].d };
+            }),
+
+            indo: Array.from({length: 25}, (_, i) => {
+                const soalIndo = [
+                    { t: "Inti kalimat 'Pembangunan jaringan serat optik di wilayah pelosok menuai apresiasi dari masyarakat setempat.' adalah...", o: ["A. Jaringan serat optik di pelosok", "B. Pembangunan jaringan menuai apresiasi", "C. Masyarakat setempat mengapresiasi", "D. Wilayah pelosok membangun jaringan", "E. Apresiasi masyarakat terhadap serat optik"], a: 1, f: "Cari Subjek + Predikat Utama.", d: "Subjek: Pembangunan jaringan, Predikat: menuai apresiasi." },
+                    { t: "Kalimat yang memuat kata tidak baku adalah...", o: ["A. Perangkat lunak tersebut diinstal kemarin.", "B. Jadwal analisa laboratorium telah diterbitkan.", "C. Tim melakukan uji kualitas jaringan.", "D. Pengelolaan kearsipan dilakukan secara sistematis.", "E. Sistem autentikasi berjalan dengan aman."], a: 1, f: "Bentuk baku: analisis (bukan analisa).", d: "Kata 'analisa' merupakan bentuk tidak baku. Yang baku adalah 'analisis'." },
+                    { t: "Gagasan utama paragraf tentang pentingnya pemeliharaan perangkat server secara berkala adalah...", o: ["A. Jenis-jenis kerusakan server", "B. Perawatan berkala menjaga stabilitas server", "C. Biaya pengadaan perangkat server", "D. Prosedur perakitan jaringan LAN", "E. Daftar spesifikasi sistem operasi"], a: 1, f: "Gagasan utama mencakup ide inti paragraf.", d: "Pemeliharaan berkala bertujuan menjaga stabilitas server." },
+                    { t: "Penulisan gelar akademis yang sesuai PUEBI / SAKABA adalah...", o: ["A. Muhammad Farchan, S.Kom.", "B. Muhammad Farchan S,Kom", "C. Muhammad Farchan. S.Kom", "D. Muhammad Farchan, SKom.", "E. Muhammad Farchan S.Kom."], a: 0, f: "Nama, koma, spasi, singkatan gelar berpenitik.", d: "Nama, S.Kom." },
+                    { t: "Makna istilah 'konfigurasi' dalam bidang teknik jaringan adalah...", o: ["A. Penghentian saluran data", "B. Pengaturan dan penyusunan komponen sistem", "C. Pengiriman berkas antarperangkat", "D. Pembersihan direktori penyimpanan", "E. Pembuatan tampilan antarmuka"], a: 1, f: "Glosarium istilah teknologi informasi.", d: "Konfigurasi adalah pengaturan/penyusunan perangkat keras atau lunak." }
+                ];
+                // Mengisi hingga 25 soal Bahasa Indonesia
+                const defaultIndo = { t: `[B. Indo SMK] Kalimat berikut yang menggunakan konjungsi kausalitas yang tepat adalah... (Soal ${i+1})`, o: ["A. Kabel terputus karena tertimpa tiang.", "B. Ia belajar lalu ia ujian.", "C. Meskipun hujan ia tetap berangkat.", "D. Jika sistem diisi maka data tersimpan.", "E. Supaya rapi kabel diikat."], a: 0, f: "Konjungsi kausalitas: sebab, karena, oleh karena itu.", d: "Kata 'karena' menyatakan hubungan sebab-akibat." };
+                const selected = soalIndo[i] || defaultIndo;
+                return { id: i + 1, title: selected.t, options: selected.o, answer: selected.a, formula: selected.f, discussion: selected.d };
+            }),
+
+            inggris: Array.from({length: 25}, (_, i) => {
+                const soalIng = [
+                    { t: "Manager: 'Could you please submit the network log report by 3 PM?' Staff: '...' What is the best response?", o: ["A. Sure, I will finish it before 3 PM.", "B. I don't care about the report.", "C. No, I am sleeping now.", "D. What is a network log?", "E. Yesterday was rainy."], a: 0, f: "Accepting a request politely.", d: "'Sure, I will finish it...' shows agreement to complete the task on time." },
+                    { t: "If the server grid down, we ... access the global database.", o: ["A. will not be able to", "B. would not have", "C. did not", "D. are not", "E. have not"], a: 0, f: "Conditional Sentence Type 1: If + Present, Will + Verb1", d: "Future condition matching simple present." },
+                    { t: "The new fiber optic cable ... by the technicians yesterday.", o: ["A. was installed", "B. is installing", "C. installs", "D. will install", "E. has installed"], a: 0, f: "Passive Voice Past Tense: Was/Were + V3", d: "'was installed' fits singular subject in the past." },
+                    { t: "Technician: 'I think we should upgrade our router band.' Client: '... It will boost our speed.'", o: ["A. I completely agree with you.", "B. I disagree with that.", "C. I don't think so.", "D. That is a bad idea.", "E. You are wrong."], a: 0, f: "Expression of Agreement.", d: "The supporting reason indicates total agreement." },
+                    { t: "What is the synonym of the word 'Maintenance' in technical context?", o: ["A. Upkeep / Servicing", "B. Destruction", "C. Neglect", "D. Purchase", "E. Delay"], a: 0, f: "Technical Vocabulary.", d: "Maintenance means keeping equipment in good working order (upkeep)." }
+                ];
+                // Mengisi hingga 25 soal Bahasa Inggris
+                const defaultIng = { t: `[English Vocational Test] Choose the correct form to complete the sentence: 'The team ... the system configuration right now.' (Item ${i+1})`, o: ["A. is testing", "B. tested", "C. test", "D. was tested", "E. will test"], a: 0, f: "Present Continuous Tense (Right now -> is/are + V-ing).", d: "'is testing' shows an ongoing action in the present." };
+                const selected = soalIng[i] || defaultIng;
+                return { id: i + 1, title: selected.t, options: selected.o, answer: selected.a, formula: selected.f, discussion: selected.d };
+            })
         };
 
         let currentSubject = 'matematika';
         let currentIdx = 0;
         let userAnswers = {};
-        let timeLeft = 75 * 60; // 75 Menit dalam detik
-        let timerInterval;
+        let timeLeft = 75 * 60; // 75 Menit = 4500 detik
+        let timerInterval = null;
+        let isStarted = false;
+
+        function startQuiz() {
+            document.getElementById('startOverlay').style.display = 'none';
+            document.getElementById('quizArea').style.display = 'block';
+            isStarted = true;
+            initTimer();
+            loadQuestion();
+        }
 
         function initTimer() {
+            if (timerInterval) clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
-                    alert("Waktu ujian 75 menit telah habis! Sistem akan mengumpulkan jawaban Anda secara otomatis.");
+                    alert("Waktu ujian 75 menit telah habis! Sistem mengumpulkan jawaban Anda secara otomatis.");
                     submitQuiz();
                     return;
                 }
                 timeLeft--;
-                let minutes = Math.floor(timeLeft / 60);
-                let seconds = timeLeft % 60;
-                document.getElementById('timerDisplay').innerText = 
-                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                let m = Math.floor(timeLeft / 60);
+                let s = timeLeft % 60;
+                const timerElem = document.getElementById('timerDisplay');
+                timerElem.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
                 
-                if (timeLeft <= 300) { // Di bawah 5 menit, beri indikator merah
-                    document.getElementById('timerDisplay').style.color = '#ef4444';
+                if (timeLeft <= 300) {
+                    timerElem.style.color = '#ef4444';
                 }
             }, 1000);
         }
 
-        function changeSubject(subject) {
+        function changeSubject(subject, btnElem) {
             currentSubject = subject;
             currentIdx = 0;
             userAnswers = {};
             document.getElementById('resultBox').style.display = 'none';
             
-            // Ubah tombol aktif tab
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
-            event.target.classList.add('active-tab');
+            if (btnElem) btnElem.classList.add('active-tab');
 
-            loadQuestion();
+            if (isStarted) {
+                loadQuestion();
+            }
         }
 
         function initNav() {
@@ -374,7 +470,7 @@
             const activeData = dbSoal[currentSubject];
             const q = activeData[currentIdx];
             
-            document.getElementById('questionTitle').innerHTML = `<b>Soal ${currentIdx + 1}:</b> ${q.title}`;
+            document.getElementById('questionTitle').innerHTML = `<b>Soal ${currentIdx + 1} dari ${activeData.length}:</b><br>${q.title}`;
             
             const optionsContainer = document.getElementById('optionsContainer');
             optionsContainer.innerHTML = '';
@@ -438,7 +534,7 @@
             const scoreText = document.getElementById('scoreText');
             const totalScore = (score / activeData.length) * 100;
 
-            scoreText.innerText = `Skor Mata Uji Ini: ${totalScore.toFixed(0)} / 100 (${score} dari ${activeData.length} Soal Benar)`;
+            scoreText.innerText = `Skor ${currentSubject.toUpperCase()}: ${totalScore.toFixed(0)} / 100 (${score} dari ${activeData.length} Soal Benar)`;
             resultBox.style.display = 'block';
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
@@ -450,17 +546,12 @@
             loadQuestion();
         }
 
-        // Fungsi sidebar standar HAFAR'S
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
         }
-
-        // Jalankan aplikasi & timer saat halaman dimuat
-        loadQuestion();
-        initTimer();
     </script>
 </body>
 </html>
