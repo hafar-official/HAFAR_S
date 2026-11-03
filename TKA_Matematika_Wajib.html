@@ -348,7 +348,6 @@
     <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html">Privacy & Policy</a></div>
 
     <script>
-        // Bank Soal Lengkap Tematik TKA SMK 2026 (Matematika, B. Indonesia, B. Inggris)
         const masterSoal = {
             matematika: Array.from({length: 25}, (_, i) => {
                 const list = [
@@ -409,7 +408,7 @@
                     { t: "Pesan moral (amanat) yang ingin disampaikan pengarang umumnya terletak pada...", o: ["A. Kerapian cara tokoh mengatasi masalah di akhir cerita", "B. Judul buku", "C. Sampul depan", "D. Daftar isi", "E. Hak cipta"], a: 0, f: "Amanat cerita.", d: "Pesan moral tersirat atau tersurat dari penyelesaian konflik cerita." },
                     { t: "Tujuan utama dari penulisan teks Laporan Hasil Observasi (LHO) adalah...", o: ["A. Menyajikan informasi objektif berdasarkan pengamatan", "B. Menghibur pembaca dengan dongeng", "C. Memengaruhi pembaca agar memilih partai tertentu", "D. Mengritik kebijakan pemerintah secara emosional", "E. Menjual barang elektronik"], a: 0, f: "Tujuan Teks LHO.", d: "LHO ditulis untuk melaporkan hasil pengamatan secara ilmiah dan objektif." }
                 ];
-                return { id: i + 1, ...list[i] };
+                return { id: idx + 1, ...list[idx] };
             }),
 
             inggris: Array.from({length: 25}, (_, i) => {
@@ -440,7 +439,7 @@
                     { t: "The word 'DOWNLOAD' means...", o: ["A. Transferring data from a remote server to a local device", "B. Sending data to another satellite", "C. Deleting files permanently", "D. Printing documents on paper", "E. Turning off the screen"], a: 0, f: "IT Terminology.", d: "Download means receiving data from internet/server to local." },
                     { t: "Client: 'Thank you for your technical support.' Support: '...'", o: ["A. You're welcome!", "B. No, thanks.", "C. Don't touch it.", "D. I am busy.", "E. Goodbye."], a: 0, f: "Responding to Thanks.", d: "'You're welcome!' is standard polite response." }
                 ];
-                return { id: i + 1, ...list[i] };
+                return { id: idx + 1, ...list[idx] };
             })
         };
 
@@ -448,21 +447,18 @@
         let currentIdx = 0;
         let userAnswers = {};
         let dbSoal = {};
-        let timeLeft = 75 * 60; // 75 Menit = 4500 detik
+        let timeLeft = 75 * 60;
         let timerInterval = null;
         let isStarted = false;
 
-        // Fungsi memilih acak 25 soal dari master soal agar setiap sesi dinamis
         function initRandomizedQuestions() {
             dbSoal = {};
             for (let sub in masterSoal) {
-                // Acak urutan soal master, lalu ambil 25 soal pertama
                 let shuffled = [...masterSoal[sub]].sort(() => 0.5 - Math.random());
                 dbSoal[sub] = shuffled.slice(0, 25).map((q, idx) => ({ ...q, id: idx + 1 }));
             }
         }
 
-        // Muat data dari localStorage jika ada sesi tersimpan
         function loadFromStorage() {
             const savedState = localStorage.getItem('hafar_tka_state');
             if (savedState) {
@@ -480,7 +476,6 @@
                         document.getElementById('quizArea').style.display = 'block';
                         lockOtherTabs(currentSubject);
                         
-                        // Tandai tombol tab aktif
                         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
                         const activeBtnId = 'tab' + currentSubject.charAt(0).toUpperCase() + currentSubject.slice(1);
                         document.getElementById(activeBtnId).classList.add('active-tab');
@@ -497,7 +492,6 @@
             }
         }
 
-        // Simpan state ke localStorage agar tahan terhadap Refresh
         function saveToStorage() {
             const state = {
                 dbSoal,
@@ -566,9 +560,14 @@
         }
 
         function changeSubject(subject, btnElem) {
+            // CEK ANTI-RESET: Jika mapel yang diklik sama dengan mapel aktif saat ujian berjalan, abaikan klik!
+            if (currentSubject === subject && isStarted) {
+                return;
+            }
+
             currentSubject = subject;
             currentIdx = 0;
-            userAnswers = {}; // reset jawaban mapel baru
+            userAnswers = {};
             document.getElementById('resultBox').style.display = 'none';
             
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
@@ -673,7 +672,7 @@
             resultBox.style.display = 'block';
 
             unlockAllTabs();
-            localStorage.removeItem('hafar_tka_state'); // Bersihkan penyimpanan setelah selesai
+            localStorage.removeItem('hafar_tka_state');
 
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
@@ -704,7 +703,6 @@
             overlay.classList.toggle('active');
         }
 
-        // Jalankan pemuatan state saat halaman dibuka pertama kali / di-refresh
         loadFromStorage();
     </script>
 </body>
