@@ -64,7 +64,7 @@
             transition: all 0.25s ease;
         }
 
-        .tab-btn:hover {
+        .tab-btn:hover:not(:disabled) {
             color: white;
             background: #334155;
         }
@@ -74,6 +74,15 @@
             color: white;
             border-color: #2563eb;
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Styling saat tombol tab dikunci / disable */
+        .tab-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: #0f172a;
+            border-color: rgba(255, 255, 255, 0.05);
+            color: #64748b;
         }
 
         .start-overlay {
@@ -279,23 +288,23 @@
                 </div>
             </div>
 
-            <!-- Tab Mata Pelajaran -->
+            <!-- Tab Mata Pelajaran (Tombol tab akan dikunci saat ujian berjalan) -->
             <div class="subject-tabs">
-                <button class="tab-btn active-tab" onclick="changeSubject('matematika', this)">📐 Matematika Wajib (25 Soal)</button>
-                <button class="tab-btn" onclick="changeSubject('indo', this)">📖 Bahasa Indonesia (25 Soal)</button>
-                <button class="tab-btn" onclick="changeSubject('inggris', this)">🌐 Bahasa Inggris (25 Soal)</button>
+                <button id="tabMatematika" class="tab-btn active-tab" onclick="changeSubject('matematika', this)">📐 Matematika Wajib (25 Soal)</button>
+                <button id="tabIndo" class="tab-btn" onclick="changeSubject('indo', this)">📖 Bahasa Indonesia (25 Soal)</button>
+                <button id="tabInggris" class="tab-btn" onclick="changeSubject('inggris', this)">🌐 Bahasa Inggris (25 Soal)</button>
             </div>
 
             <!-- Overlay Pembuka (Timer belum jalan) -->
             <div id="startOverlay" class="start-overlay">
                 <h3 style="color: #ffffff; margin-bottom: 10px; font-size: 1.3rem;">Siap Memulai Simulasi Ujian?</h3>
                 <p style="color: #94a3b8; font-size: 0.9rem; max-width: 550px; margin: 0 auto 20px auto; line-height: 1.6;">
-                    Ujian terdiri dari paket 25 soal per mata pelajaran. Waktu 75 menit akan otomatis berjalan saat Anda mengklik tombol di bawah ini.
+                    Ujian terdiri dari paket 25 soal per mata pelajaran. Waktu 75 menit akan otomatis berjalan saat Anda mengklik tombol di bawah ini. Mapel lain akan terkunci sampai Anda menyelesaikan ujian mapel ini.
                 </p>
                 <button class="btn-start" onclick="startQuiz()">▶️ Mulai Ujian Sekarang</button>
             </div>
 
-            <!-- Area Lembar Ujian (Tersembunyi sebelum ditekan Mulai) -->
+            <!-- Area Lembar Ujian -->
             <div id="quizArea" style="display: none;">
                 
                 <div class="nav-questions" id="navQuestions"></div>
@@ -329,7 +338,7 @@
                 <div class="result-box" id="resultBox">
                     <h2 style="color: #34d399; margin: 0 0 10px 0;">Sesi Ujian Selesai!</h2>
                     <p id="scoreText" style="font-size: 1.2rem; margin: 15px 0; font-weight: bold; color: #ffffff;"></p>
-                    <button class="btn-action" onclick="resetQuiz()">🔄 Ulangi Simulasi</button>
+                    <button class="btn-action" onclick="resetQuiz()">🔄 Pilih Mapel Lain / Ulangi</button>
                 </div>
 
             </div>
@@ -340,7 +349,6 @@
     <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html">Privacy & Policy</a></div>
 
     <script>
-        // Database 25 Soal Matematika, 25 Soal Bahasa Indonesia, dan 25 Soal Bahasa Inggris
         const dbSoal = {
             matematika: Array.from({length: 25}, (_, i) => {
                 const soalList = [
@@ -381,7 +389,6 @@
                     { t: "Penulisan gelar akademis yang sesuai PUEBI / SAKABA adalah...", o: ["A. Muhammad Farchan, S.Kom.", "B. Muhammad Farchan S,Kom", "C. Muhammad Farchan. S.Kom", "D. Muhammad Farchan, SKom.", "E. Muhammad Farchan S.Kom."], a: 0, f: "Nama, koma, spasi, singkatan gelar berpenitik.", d: "Nama, S.Kom." },
                     { t: "Makna istilah 'konfigurasi' dalam bidang teknik jaringan adalah...", o: ["A. Penghentian saluran data", "B. Pengaturan dan penyusunan komponen sistem", "C. Pengiriman berkas antarperangkat", "D. Pembersihan direktori penyimpanan", "E. Pembuatan tampilan antarmuka"], a: 1, f: "Glosarium istilah teknologi informasi.", d: "Konfigurasi adalah pengaturan/penyusunan perangkat keras atau lunak." }
                 ];
-                // Mengisi hingga 25 soal Bahasa Indonesia
                 const defaultIndo = { t: `[B. Indo SMK] Kalimat berikut yang menggunakan konjungsi kausalitas yang tepat adalah... (Soal ${i+1})`, o: ["A. Kabel terputus karena tertimpa tiang.", "B. Ia belajar lalu ia ujian.", "C. Meskipun hujan ia tetap berangkat.", "D. Jika sistem diisi maka data tersimpan.", "E. Supaya rapi kabel diikat."], a: 0, f: "Konjungsi kausalitas: sebab, karena, oleh karena itu.", d: "Kata 'karena' menyatakan hubungan sebab-akibat." };
                 const selected = soalIndo[i] || defaultIndo;
                 return { id: i + 1, title: selected.t, options: selected.o, answer: selected.a, formula: selected.f, discussion: selected.d };
@@ -395,7 +402,6 @@
                     { t: "Technician: 'I think we should upgrade our router band.' Client: '... It will boost our speed.'", o: ["A. I completely agree with you.", "B. I disagree with that.", "C. I don't think so.", "D. That is a bad idea.", "E. You are wrong."], a: 0, f: "Expression of Agreement.", d: "The supporting reason indicates total agreement." },
                     { t: "What is the synonym of the word 'Maintenance' in technical context?", o: ["A. Upkeep / Servicing", "B. Destruction", "C. Neglect", "D. Purchase", "E. Delay"], a: 0, f: "Technical Vocabulary.", d: "Maintenance means keeping equipment in good working order (upkeep)." }
                 ];
-                // Mengisi hingga 25 soal Bahasa Inggris
                 const defaultIng = { t: `[English Vocational Test] Choose the correct form to complete the sentence: 'The team ... the system configuration right now.' (Item ${i+1})`, o: ["A. is testing", "B. tested", "C. test", "D. was tested", "E. will test"], a: 0, f: "Present Continuous Tense (Right now -> is/are + V-ing).", d: "'is testing' shows an ongoing action in the present." };
                 const selected = soalIng[i] || defaultIng;
                 return { id: i + 1, title: selected.t, options: selected.o, answer: selected.a, formula: selected.f, discussion: selected.d };
@@ -413,8 +419,35 @@
             document.getElementById('startOverlay').style.display = 'none';
             document.getElementById('quizArea').style.display = 'block';
             isStarted = true;
+
+            // Kunci semua tombol tab mapel lain saat ujian dimulai
+            lockOtherTabs(currentSubject);
+
             initTimer();
             loadQuestion();
+        }
+
+        // Fungsi mengunci tab mapel lain agar tidak bisa diklik saat ujian berjalan
+        function lockOtherTabs(activeSub) {
+            const subjects = ['matematika', 'indo', 'inggris'];
+            subjects.forEach(sub => {
+                const btnId = 'tab' + sub.charAt(0).toUpperCase() + sub.slice(1);
+                const btn = document.getElementById(btnId);
+                if (sub !== activeSub) {
+                    btn.disabled = true;
+                } else {
+                    btn.disabled = false;
+                }
+            });
+        }
+
+        // Fungsi membuka kembali semua tab setelah ujian selesai/direset
+        function unlockAllTabs() {
+            const subjects = ['matematika', 'indo', 'inggris'];
+            subjects.forEach(sub => {
+                const btnId = 'tab' + sub.charAt(0).toUpperCase() + sub.slice(1);
+                document.getElementById(btnId).disabled = false;
+            });
         }
 
         function initTimer() {
@@ -448,6 +481,7 @@
             if (btnElem) btnElem.classList.add('active-tab');
 
             if (isStarted) {
+                lockOtherTabs(currentSubject);
                 loadQuestion();
             }
         }
@@ -521,6 +555,8 @@
         }
 
         function submitQuiz() {
+            if (timerInterval) clearInterval(timerInterval);
+
             const activeData = dbSoal[currentSubject];
             let score = 0;
             
@@ -536,14 +572,28 @@
 
             scoreText.innerText = `Skor ${currentSubject.toUpperCase()}: ${totalScore.toFixed(0)} / 100 (${score} dari ${activeData.length} Soal Benar)`;
             resultBox.style.display = 'block';
+
+            // Setelah ujian selesai, buka kembali kunci tombol tab agar bisa mengerjakan mapel lain
+            unlockAllTabs();
+
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
         function resetQuiz() {
             userAnswers = {};
             currentIdx = 0;
+            isStarted = false;
+            timeLeft = 75 * 60;
+            if (timerInterval) clearInterval(timerInterval);
+
+            document.getElementById('timerDisplay').innerText = "75:00";
+            document.getElementById('timerDisplay').style.color = "#38bdf8";
             document.getElementById('resultBox').style.display = 'none';
-            loadQuestion();
+            document.getElementById('quizArea').style.display = 'none';
+            document.getElementById('startOverlay').style.display = 'block';
+
+            // Buka kunci seluruh tab agar bisa memilih mapel berikutnya
+            unlockAllTabs();
         }
 
         function toggleSidebar() {
