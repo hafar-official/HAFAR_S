@@ -389,7 +389,7 @@
             <div id="startOverlay" class="start-overlay">
                 <h3 style="color: #ffffff; margin-bottom: 8px; font-size: 1.3rem;">Masukkan Identitas Anda</h3>
                 <p style="color: #94a3b8; font-size: 0.85rem; max-width: 500px; margin: 0 auto 20px auto; line-height: 1.5;">
-                    Dengan memasukan identitas mu nama mu akan tertampil di leader bord.
+                    Dengan memasukan identitas mu nama mu akan tertampil di leaderboard.
                 </p>
                 
                 <div class="form-group">
@@ -621,7 +621,6 @@
             dbSoal = {};
             for (let sub in masterSoal) {
                 let shuffledSoal = [...masterSoal[sub]].sort(() => 0.5 - Math.random());
-                // Jika mode latihan, ambil 5 soal saja. Jika ujian, ambil 25 soal.
                 let limit = (currentUser.mode === 'latihan') ? 5 : 25;
                 let selectedSoal = shuffledSoal.slice(0, limit).map((q, idx) => {
                     let cleanOptions = q.o.map(opt => opt.replace(/^[A-E]\.\s*/, ''));
@@ -660,7 +659,7 @@
                             if (!isSubmitted) {
                                 lockOtherTabs(currentSubject);
                                 initTimer();
-                                initAntiCheat();
+                                if (currentUser.mode === 'ujian') initAntiCheat();
                             } else {
                                 showResultView();
                             }
@@ -724,7 +723,6 @@
             saveToStorage();
         }
 
-        // Sistem Anti-Cheat (Mode Ujian: Kurang 20 Menit jika terdeteksi curang / pindah tab / keluar fokus)
         function initAntiCheat() {
             window.addEventListener('blur', handleCheatDetection);
             document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -749,8 +747,7 @@
 
         function triggerPenalty(reason) {
             cheatCount++;
-            // Kurangi waktu 20 menit (1200 detik)
-            timeLeft -= 1200;
+            timeLeft -= 1200; // Kurangi 20 menit
             if (timeLeft < 0) timeLeft = 0;
             
             alert(`⚠️ PERINGATAN KECURANGAN KE-${cheatCount}!\nAlasan: ${reason}\nSanksi: Waktu ujian Anda dikurangi 20 menit!`);
@@ -808,6 +805,11 @@
         }
 
         function changeSubject(subject, btnElem) {
+            // CEGAH RESET/ACAK ULANG JIKA KLIK MAPEL YANG SAMA SAAT UJIAN BERJALAN
+            if (currentSubject === subject && isStarted) {
+                return;
+            }
+
             currentSubject = subject;
             currentIdx = 0;
             userAnswers = {};
@@ -984,7 +986,6 @@
 
             const totalScore = (score / activeData.length) * 100;
 
-            // Jika mode ujian, masukkan ke leaderboard. Jika mode latihan, abaikan leaderboard.
             if (currentUser.mode === 'ujian') {
                 sendScoreToFirebase(currentSubject, currentUser.name, currentUser.kelas, Math.round(totalScore));
             }
@@ -1019,10 +1020,10 @@
             scoreText.innerText = `Nama: ${currentUser.name} (${currentUser.kelas}) — Skor: ${Math.round(totalScore)} / 100 (${score} Benar dari ${total})`;
             
             if (currentUser.mode === 'ujian') {
-                lbStatusText.innerText = "Skor Anda telah berhasil dikirim dan ditampilkan di Papan Peringkat Online.";
+                lbStatusText.innerText = "Skor Anda telah berhasil dikirim dan ditampilkan di Leaderboard.";
                 lbStatusText.style.color = "#34d399";
             } else {
-                lbStatusText.innerText = "Mode Latihan (Uji Coba 5 Soal): Skor tidak dicatat ke Papan Peringkat.";
+                lbStatusText.innerText = "Mode Latihan (Uji Coba 5 Soal): Skor tidak dicatat ke Leaderboard.";
                 lbStatusText.style.color = "#fbbf24";
             }
 
