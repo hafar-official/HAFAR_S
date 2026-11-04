@@ -108,7 +108,7 @@
             margin-bottom: 5px;
         }
 
-        .form-input {
+        .form-input, .form-select {
             width: 100%;
             padding: 12px 15px;
             background: rgba(30, 41, 59, 0.9);
@@ -370,7 +370,7 @@
             <div class="tka-header-bar">
                 <div>
                     <h2 style="color: #38bdf8; margin: 0; font-size: 1.4rem;">Latihan Soal TKA SMK 2026</h2>
-                    <p style="color: #94a3b8; font-size: 0.85rem; margin: 5px 0 0 0;">Latihan Terpadu Karakter & Semesta Fiksi (Sairo, Hans, Kael, Lux' Hela, Azzux, Shion, Astoria)</p>
+                    <p style="color: #94a3b8; font-size: 0.85rem; margin: 5px 0 0 0;" id="modeHeaderInfo">Mode Simulasi Terpadu HAFAR'S</p>
                 </div>
                 <div class="timer-badge">
                     <span>⏱️</span>
@@ -387,21 +387,28 @@
 
             <!-- Overlay Pembuka & Registrasi Nama -->
             <div id="startOverlay" class="start-overlay">
-                <h3 style="color: #ffffff; margin-bottom: 8px; font-size: 1.3rem;">Masukkan Identitas Karakter Fiksi</h3>
+                <h3 style="color: #ffffff; margin-bottom: 8px; font-size: 1.3rem;">Masukkan Identitas Anda</h3>
                 <p style="color: #94a3b8; font-size: 0.85rem; max-width: 500px; margin: 0 auto 20px auto; line-height: 1.5;">
-                    Gunakan salah satu nama karakter fiksimu (Sairo, Hans, Kael, Lux' Hela, Azzux, Shion, atau Astoria) untuk masuk ke papan peringkat (*leaderboard*).
+                    Dengan memasukan identitas mu nama mu akan tertampil di leader bord.
                 </p>
                 
                 <div class="form-group">
-                    <label>Nama Karakter Fiksi:</label>
-                    <input type="text" id="inputNama" class="form-input" placeholder="Contoh: Sairo / Kael / Hans" required>
+                    <label>Nama Karakter / Nama Anda:</label>
+                    <input type="text" id="inputNama" class="form-input" placeholder="Contoh: Sairo / Kael" required>
                 </div>
                 <div class="form-group">
-                    <label>Asal Wilayah / Faksi:</label>
-                    <input type="text" id="inputKelas" class="form-input" placeholder="Contoh: Dimensi Akhir / Bumi" required>
+                    <label>Asal:</label>
+                    <input type="text" id="inputKelas" class="form-input" placeholder="Contoh: Dimensi Akhir / Malang" required>
+                </div>
+                <div class="form-group">
+                    <label>Pilih Mode Pengerjaan:</label>
+                    <select id="inputMode" class="form-select">
+                        <option value="latihan">Mode Latihan (5 Soal - Tidak Masuk Leaderboard)</option>
+                        <option value="ujian">Mode Ujian Resmi (25 Soal - Masuk Leaderboard + Anti-Cheat)</option>
+                    </select>
                 </div>
 
-                <button class="btn-start" onclick="startQuiz()">▶️ Mulai Simulasi & Masuk Leaderboard</button>
+                <button class="btn-start" onclick="startQuiz()">▶️ Mulai Mengerjakan</button>
             </div>
 
             <!-- Area Lembar Soal -->
@@ -441,10 +448,10 @@
                 </div>
 
                 <div class="result-box" id="resultBox">
-                    <h2 style="color: #34d399; margin: 0 0 10px 0;">Simulasi Selesai!</h2>
+                    <h2 style="color: #34d399; margin: 0 0 10px 0;">Pengerjaan Selesai!</h2>
                     <p id="scoreText" style="font-size: 1.2rem; margin: 15px 0; font-weight: bold; color: #ffffff;"></p>
-                    <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;">Hasil pencapaian karakter telah dicatat ke Papan Peringkat Online.</p>
-                    <button class="btn-action" onclick="resetQuiz()">🔄 Ulangi / Ganti Faksi</button>
+                    <p id="leaderboardStatusText" style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;"></p>
+                    <button class="btn-action" onclick="resetQuiz()">🔄 Ulangi / Ganti Mode</button>
                 </div>
 
             </div>
@@ -457,8 +464,8 @@
                         <thead>
                             <tr>
                                 <th style="width: 50px;">Rank</th>
-                                <th>Nama Karakter</th>
-                                <th>Faksi / Asal</th>
+                                <th>Nama</th>
+                                <th>Asal</th>
                                 <th style="text-align: right;">Skor</th>
                             </tr>
                         </thead>
@@ -491,7 +498,6 @@
             appId: "1:123:web:abc"
         };
 
-        // Inisialisasi Firebase Firestore
         let db = null;
         try {
             if (!firebase.apps.length) {
@@ -605,7 +611,9 @@
         let timerInterval = null;
         let isStarted = false;
         let isSubmitted = false;
-        let currentUser = { name: "", kelas: "" };
+        let currentUser = { name: "", kelas: "", mode: "ujian" };
+        let activeTotalQuestions = 25;
+        let cheatCount = 0;
 
         const prefixLabels = ["A. ", "B. ", "C. ", "D. ", "E. "];
 
@@ -613,7 +621,9 @@
             dbSoal = {};
             for (let sub in masterSoal) {
                 let shuffledSoal = [...masterSoal[sub]].sort(() => 0.5 - Math.random());
-                let selected25 = shuffledSoal.slice(0, 25).map((q, idx) => {
+                // Jika mode latihan, ambil 5 soal saja. Jika ujian, ambil 25 soal.
+                let limit = (currentUser.mode === 'latihan') ? 5 : 25;
+                let selectedSoal = shuffledSoal.slice(0, limit).map((q, idx) => {
                     let cleanOptions = q.o.map(opt => opt.replace(/^[A-E]\.\s*/, ''));
                     let shuffledTexts = [...cleanOptions].sort(() => 0.5 - Math.random());
                     
@@ -623,7 +633,7 @@
                         shuffledTexts: shuffledTexts
                     };
                 });
-                dbSoal[sub] = selected25;
+                dbSoal[sub] = selectedSoal;
             }
         }
 
@@ -640,7 +650,8 @@
                         timeLeft = data.timeLeft !== undefined ? data.timeLeft : 75 * 60;
                         isStarted = data.isStarted || false;
                         isSubmitted = data.isSubmitted || false;
-                        currentUser = data.currentUser || { name: "", kelas: "" };
+                        currentUser = data.currentUser || { name: "", kelas: "", mode: "ujian" };
+                        activeTotalQuestions = dbSoal[currentSubject] ? dbSoal[currentSubject].length : 25;
 
                         if (isStarted) {
                             document.getElementById('startOverlay').style.display = 'none';
@@ -649,6 +660,7 @@
                             if (!isSubmitted) {
                                 lockOtherTabs(currentSubject);
                                 initTimer();
+                                initAntiCheat();
                             } else {
                                 showResultView();
                             }
@@ -686,13 +698,17 @@
         function startQuiz() {
             const nameInput = document.getElementById('inputNama').value.trim();
             const kelasInput = document.getElementById('inputKelas').value.trim();
+            const modeInput = document.getElementById('inputMode').value;
 
             if (!nameInput || !kelasInput) {
-                alert("Harap masukkan Nama Karakter dan Faksi terlebih dahulu!");
+                alert("Harap masukkan Nama dan Asal terlebih dahulu!");
                 return;
             }
 
-            currentUser = { name: nameInput, kelas: kelasInput };
+            currentUser = { name: nameInput, kelas: kelasInput, mode: modeInput };
+            activeTotalQuestions = (modeInput === 'latihan') ? 5 : 25;
+
+            initRandomizedQuestions();
 
             document.getElementById('startOverlay').style.display = 'none';
             document.getElementById('quizArea').style.display = 'block';
@@ -701,8 +717,50 @@
 
             lockOtherTabs(currentSubject);
             initTimer();
+            if (currentUser.mode === 'ujian') {
+                initAntiCheat();
+            }
             loadQuestion();
             saveToStorage();
+        }
+
+        // Sistem Anti-Cheat (Mode Ujian: Kurang 20 Menit jika terdeteksi curang / pindah tab / keluar fokus)
+        function initAntiCheat() {
+            window.addEventListener('blur', handleCheatDetection);
+            document.addEventListener('visibilitychange', handleVisibilityChange);
+        }
+
+        function removeAntiCheat() {
+            window.removeEventListener('blur', handleCheatDetection);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        }
+
+        function handleCheatDetection() {
+            if (!isStarted || isSubmitted || currentUser.mode !== 'ujian') return;
+            triggerPenalty("Terdeteksi meninggalkan halaman / berpindah tab!");
+        }
+
+        function handleVisibilityChange() {
+            if (!isStarted || isSubmitted || currentUser.mode !== 'ujian') return;
+            if (document.hidden) {
+                triggerPenalty("Terdeteksi berpindah aplikasi atau menyembunyikan tab ujian!");
+            }
+        }
+
+        function triggerPenalty(reason) {
+            cheatCount++;
+            // Kurangi waktu 20 menit (1200 detik)
+            timeLeft -= 1200;
+            if (timeLeft < 0) timeLeft = 0;
+            
+            alert(`⚠️ PERINGATAN KECURANGAN KE-${cheatCount}!\nAlasan: ${reason}\nSanksi: Waktu ujian Anda dikurangi 20 menit!`);
+            
+            if (timeLeft <= 0) {
+                alert("Waktu Anda habis akibat akumulasi sanksi kecurangan!");
+                submitQuiz();
+            } else {
+                saveToStorage();
+            }
         }
 
         function lockOtherTabs(activeSub) {
@@ -731,7 +789,7 @@
             timerInterval = setInterval(() => {
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
-                    alert("Waktu simulasi 75 menit telah habis! Sistem mengumpulkan jawaban secara otomatis.");
+                    alert("Waktu simulasi telah habis! Sistem mengumpulkan jawaban secara otomatis.");
                     submitQuiz();
                     return;
                 }
@@ -761,6 +819,7 @@
 
             if (isStarted) {
                 if (!isSubmitted) lockOtherTabs(currentSubject);
+                initRandomizedQuestions();
                 loadQuestion();
             }
             fetchLeaderboard(currentSubject);
@@ -908,6 +967,7 @@
         function submitQuiz() {
             if (timerInterval) clearInterval(timerInterval);
             isSubmitted = true;
+            removeAntiCheat();
 
             const activeData = dbSoal[currentSubject];
             let score = 0;
@@ -924,7 +984,10 @@
 
             const totalScore = (score / activeData.length) * 100;
 
-            sendScoreToFirebase(currentSubject, currentUser.name, currentUser.kelas, Math.round(totalScore));
+            // Jika mode ujian, masukkan ke leaderboard. Jika mode latihan, abaikan leaderboard.
+            if (currentUser.mode === 'ujian') {
+                sendScoreToFirebase(currentSubject, currentUser.name, currentUser.kelas, Math.round(totalScore));
+            }
 
             showResultView(score, activeData.length);
             saveToStorage();
@@ -950,9 +1013,19 @@
             const total = customTotal !== undefined ? customTotal : activeData.length;
             const resultBox = document.getElementById('resultBox');
             const scoreText = document.getElementById('scoreText');
+            const lbStatusText = document.getElementById('leaderboardStatusText');
             const totalScore = (score / total) * 100;
 
-            scoreText.innerText = `Karakter: ${currentUser.name} (${currentUser.kelas}) — Skor: ${Math.round(totalScore)} / 100 (${score} Benar dari ${total})`;
+            scoreText.innerText = `Nama: ${currentUser.name} (${currentUser.kelas}) — Skor: ${Math.round(totalScore)} / 100 (${score} Benar dari ${total})`;
+            
+            if (currentUser.mode === 'ujian') {
+                lbStatusText.innerText = "Skor Anda telah berhasil dikirim dan ditampilkan di Papan Peringkat Online.";
+                lbStatusText.style.color = "#34d399";
+            } else {
+                lbStatusText.innerText = "Mode Latihan (Uji Coba 5 Soal): Skor tidak dicatat ke Papan Peringkat.";
+                lbStatusText.style.color = "#fbbf24";
+            }
+
             resultBox.style.display = 'block';
 
             unlockAllTabs();
@@ -1043,7 +1116,7 @@
             let list = localData[mapel] || [];
 
             if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8;">Belum ada data peringkat. Jadilah yang pertama!</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8;">Belum ada data peringkat. Jadilah yang pertama di Mode Ujian!</td></tr>`;
                 return;
             }
 
@@ -1067,7 +1140,9 @@
             isStarted = false;
             isSubmitted = false;
             timeLeft = 75 * 60;
+            cheatCount = 0;
             if (timerInterval) clearInterval(timerInterval);
+            removeAntiCheat();
             localStorage.removeItem('hafar_tka_state');
 
             initRandomizedQuestions();
