@@ -116,6 +116,7 @@
             border-radius: 8px;
             color: white;
             font-size: 1rem;
+            box-sizing: border-box;
         }
 
         .btn-start {
@@ -475,31 +476,30 @@
 
     <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html">Privacy & Policy</a></div>
 
-    <!-- Firebase SDK (Gunakan Firebase v9/v10 Compat atau Realtime Database SDK) -->
+    <!-- Firebase SDK (Firestore versi Compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
     <script>
-        // Konfigurasi Firebase HAFAR'S (Sesuaikan dengan kredensial project Firebase kamu)
+        // Konfigurasi Firebase HAFAR'S
         const firebaseConfig = {
             apiKey: "AIzaSyD-contoh-api-key-kamu",
             authDomain: "hafar-official.firebaseapp.com",
-            databaseURL: "https://hafar-official-default-rtdb.firebaseio.com",
             projectId: "hafar-official",
             storageBucket: "hafar-official.appspot.com",
             messagingSenderId: "123456789",
             appId: "1:123:web:abc"
         };
 
-        // Inisialisasi Firebase aman dengan penanganan error jika offline
+        // Inisialisasi Firebase Firestore
         let db = null;
         try {
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
             }
-            db = firebase.database();
+            db = firebase.firestore();
         } catch (e) {
-            console.warn("Firebase belum terhubung penuh, menggunakan mode penyimpanan lokal sementara.", e);
+            console.warn("Gagal menginisialisasi Firestore, menggunakan mode lokal:", e);
         }
 
         const masterSoal = {
@@ -928,7 +928,7 @@
 
             const totalScore = (score / activeData.length) * 100;
 
-            // Kirim data ke Firebase Leaderboard
+            // Kirim data ke Firestore Leaderboard
             sendScoreToFirebase(currentSubject, currentUser.name, currentUser.kelas, Math.round(totalScore));
 
             showResultView(score, activeData.length);
@@ -966,29 +966,30 @@
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
-        // Fungsi Kirim ke Firebase Realtime Database
+        // Fungsi Kirim ke Firestore
         function sendScoreToFirebase(mapel, nama, kelas, skor) {
             if (!db) {
-                // Fallback lokal jika database belum dikonfigurasi penuh
                 saveToLocalLeaderboard(mapel, nama, kelas, skor);
                 return;
             }
 
-            const scoreRef = db.ref('leaderboard/' + mapel);
-            const newScoreRef = scoreRef.push();
-            newScoreRef.set({
+            db.collection("leaderboard").add({
+                mapel: mapel,
                 nama: nama,
                 kelas: kelas,
                 skor: skor,
-                timestamp: Date.now()
-            }, (error) => {
-                if (!error) {
-                    fetchLeaderboard(mapel);
-                }
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                fetchLeaderboard(mapel);
+            })
+            .catch((error) => {
+                console.error("Gagal mengirim skor: ", error);
+                saveToLocalLeaderboard(mapel, nama, kelas, skor);
             });
         }
 
-        // Fungsi Ambil Leaderboard dari Firebase
+        // Fungsi Ambil Leaderboard dari Firestore (Aman dari Infinite Loading)
         function fetchLeaderboard(mapel) {
             const titleElem = document.getElementById('leaderboardTitle');
             const mapelNames = { matematika: 'Matematika Wajib', indo: 'Bahasa Indonesia', inggris: 'Bahasa Inggris' };
@@ -1002,36 +1003,41 @@
                 return;
             }
 
-            const scoreRef = db.ref('leaderboard/' + mapel).orderByChild('skor').limitToLast(10);
-            scoreRef.once('value', (snapshot) => {
-                tbody.innerHTML = '';
-                if (!snapshot.exists()) {
-                    tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8;">Belum ada data peringkat untuk mapel ini. Jadilah yang pertama!</td></tr>`;
-                    return;
-                }
+            db.collection("leaderboard")
+              .where("mapel", "==", mapel)
+              .orderBy("skor", "desc")
+              .limit(10)
+              .get()
+              .then((querySnapshot) => {
+                  tbody.innerHTML = '';
+                  if (querySnapshot.empty) {
+                      tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8;">Belum ada data peringkat untuk mapel ini. Jadilah yang pertama!</td></tr>`;
+                      return;
+                  }
 
-                let list = [];
-                snapshot.forEach((childSnapshot) => {
-                    list.push(childSnapshot.val());
-                });
+                  let list = [];
+                  querySnapshot.forEach((doc) => {
+                      list.push(doc.data());
+                  });
 
-                // Urutkan dari skor tertinggi ke terendah
-                list.sort((a, b) => b.skor - a.skor);
-
-                list.forEach((item, index) => {
-                    let rankClass = index === 0 ? 'rank-1' : (index === 1 ? 'rank-2' : (index === 2 ? 'rank-3' : ''));
-                    let row = `<tr>
-                        <td class="${rankClass}">#${index + 1}</td>
-                        <td style="font-weight: 500; color: #fff;">${item.nama}</td>
-                        <td>${item.kelas}</td>
-                        <td style="text-align: right; font-weight: bold; color: #38bdf8;">${item.skor}</td>
-                    </tr>`;
-                    tbody.innerHTML += row;
-                });
-            });
+                  list.forEach((item, index) => {
+                      let rankClass = index === 0 ? 'rank-1' : (index === 1 ? 'rank-2' : (index === 2 ? 'rank-3' : ''));
+                      let row = `<tr>
+                          <td class="${rankClass}">#${index + 1}</td>
+                          <td style="font-weight: 500; color: #fff;">${item.nama}</td>
+                          <td>${item.kelas}</td>
+                          <td style="text-align: right; font-weight: bold; color: #38bdf8;">${item.skor}</td>
+                      </tr>`;
+                      tbody.innerHTML += row;
+                  });
+              })
+              .catch((error) => {
+                  console.warn("Indeks Firestore belum aktif:", error);
+                  tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #f87171;">Belum ada data atau indeks database sedang disiapkan.</td></tr>`;
+              });
         }
 
-        // Fallback Penyimpanan Lokal Sementara jika Firebase Offline
+        // Fallback Penyimpanan Lokal
         function saveToLocalLeaderboard(mapel, nama, kelas, skor) {
             let localData = JSON.parse(localStorage.getItem('hafar_local_lb') || '{}');
             if (!localData[mapel]) localData[mapel] = [];
