@@ -499,7 +499,7 @@
             }
             db = firebase.firestore();
         } catch (e) {
-            console.warn("Gagal menginisialisasi Firestore, menggunakan mode lokal:", e);
+            console.warn("Gagal menginisialisasi Firestore:", e);
         }
 
         const masterSoal = {
@@ -750,10 +750,6 @@
         }
 
         function changeSubject(subject, btnElem) {
-            if (currentSubject === subject && isStarted) {
-                return;
-            }
-
             currentSubject = subject;
             currentIdx = 0;
             userAnswers = {};
@@ -928,7 +924,7 @@
 
             const totalScore = (score / activeData.length) * 100;
 
-            // Kirim data ke Firestore Leaderboard
+            // Kirim data ke Firestore & simpan cadangan lokal
             sendScoreToFirebase(currentSubject, currentUser.name, currentUser.kelas, Math.round(totalScore));
 
             showResultView(score, activeData.length);
@@ -966,12 +962,12 @@
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
-        // Fungsi Kirim ke Firestore
+        // Fungsi Kirim ke Firestore + Simpan ke LocalStorage Cadangan
         function sendScoreToFirebase(mapel, nama, kelas, skor) {
-            if (!db) {
-                saveToLocalLeaderboard(mapel, nama, kelas, skor);
-                return;
-            }
+            // Simpan juga ke cache lokal agar tidak hilang instan
+            saveToLocalLeaderboard(mapel, nama, kelas, skor);
+
+            if (!db) return;
 
             db.collection("leaderboard").add({
                 mapel: mapel,
@@ -984,12 +980,11 @@
                 fetchLeaderboard(mapel);
             })
             .catch((error) => {
-                console.error("Gagal mengirim skor: ", error);
-                saveToLocalLeaderboard(mapel, nama, kelas, skor);
+                console.error("Gagal sinkronisasi ke Firebase:", error);
             });
         }
 
-        // Fungsi Ambil Leaderboard dari Firestore (Aman dari Infinite Loading)
+        // Fungsi Ambil Leaderboard (Menggabungkan Firestore & Local Cache agar stabil saat Refresh)
         function fetchLeaderboard(mapel) {
             const titleElem = document.getElementById('leaderboardTitle');
             const mapelNames = { matematika: 'Matematika Wajib', indo: 'Bahasa Indonesia', inggris: 'Bahasa Inggris' };
@@ -998,29 +993,29 @@
             const tbody = document.getElementById('leaderboardBody');
             tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8;">Memuat data peringkat...</td></tr>`;
 
-            if (!db) {
-                loadLocalLeaderboard(mapel);
-                return;
-            }
+            // Tampilkan dulu data lokal yang ada agar tabel langsung terisi tanpa menunggu loading cloud
+            renderTableFromLocal(mapel);
 
+            if (!db) return;
+
+            // Ambil data terbaru dari Firestore secara asinkron
             db.collection("leaderboard")
               .where("mapel", "==", mapel)
-              .orderBy("skor", "desc")
-              .limit(10)
               .get()
               .then((querySnapshot) => {
-                  tbody.innerHTML = '';
-                  if (querySnapshot.empty) {
-                      tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8;">Belum ada data peringkat untuk mapel ini. Jadilah yang pertama!</td></tr>`;
-                      return;
-                  }
+                  if (querySnapshot.empty) return;
 
                   let list = [];
                   querySnapshot.forEach((doc) => {
                       list.push(doc.data());
                   });
 
-                  list.forEach((item, index) => {
+                  // Urutkan berdasarkan skor tertinggi
+                  list.sort((a, b) => b.skor - a.skor);
+
+                  // Render ke tabel HTML
+                  tbody.innerHTML = '';
+                  list.slice(0, 10).forEach((item, index) => {
                       let rankClass = index === 0 ? 'rank-1' : (index === 1 ? 'rank-2' : (index === 2 ? 'rank-3' : ''));
                       let row = `<tr>
                           <td class="${rankClass}">#${index + 1}</td>
@@ -1032,32 +1027,35 @@
                   });
               })
               .catch((error) => {
-                  console.warn("Indeks Firestore belum aktif:", error);
-                  tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #f87171;">Belum ada data atau indeks database sedang disiapkan.</td></tr>`;
+                  console.warn("Menggunakan data lokal cadangan karena kendala koneksi cloud:", error);
               });
         }
 
-        // Fallback Penyimpanan Lokal
+        // Fungsi Penyimpanan Cadangan Lokal (LocalStorage)
         function saveToLocalLeaderboard(mapel, nama, kelas, skor) {
             let localData = JSON.parse(localStorage.getItem('hafar_local_lb') || '{}');
             if (!localData[mapel]) localData[mapel] = [];
-            localData[mapel].push({ nama, kelas, skor });
+            
+            // Cek apakah user sudah ada, update jika skor lebih tinggi
+            let existing = localData[mapel].find(item => item.nama === nama && item.kelas === kelas);
+            if (existing) {
+                if (skor > existing.skor) existing.skor = skor;
+            } else {
+                localData[mapel].push({ nama, kelas, skor });
+            }
+
             localStorage.setItem('hafar_local_lb', JSON.stringify(localData));
-            loadLocalLeaderboard(mapel);
         }
 
-        function loadLocalLeaderboard(mapel) {
+        function renderTableFromLocal(mapel) {
             const tbody = document.getElementById('leaderboardBody');
             let localData = JSON.parse(localStorage.getItem('hafar_local_lb') || '{}');
             let list = localData[mapel] || [];
 
+            if (list.length === 0) return;
+
             list.sort((a, b) => b.skor - a.skor);
             tbody.innerHTML = '';
-
-            if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8;">Belum ada data peringkat lokal.</td></tr>`;
-                return;
-            }
 
             list.slice(0, 10).forEach((item, index) => {
                 let rankClass = index === 0 ? 'rank-1' : (index === 1 ? 'rank-2' : (index === 2 ? 'rank-3' : ''));
