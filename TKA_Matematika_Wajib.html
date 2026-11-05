@@ -423,11 +423,11 @@
                 <div class="action-bar">
                     <div>
                         <button class="btn-action" onclick="prevQuestion()">⬅️ Sebelumnya</button>
-                        <button class="btn-action" onclick="nextQuestion()">Berikutnya ➡️</button>
+                        <button id="btnNext" class="btn-action" onclick="nextQuestion()">Berikutnya ➡️</button>
                     </div>
                     <div>
                         <button id="btnDiscussion" class="btn-action" style="background-color: #0ea5e9;" onclick="toggleDiscussion()">💡 Analisis Lore</button>
-                        <button id="btnSubmit" class="btn-action" style="background-color: #10b981;" onclick="submitQuiz()">🏆 Selesai Simulasi</button>
+                        <button id="btnSubmit" class="btn-action" style="background-color: #10b981; display: none;" onclick="submitQuiz()">🏆 Selesai Simulasi</button>
                     </div>
                 </div>
 
@@ -440,7 +440,11 @@
                     <h2 style="color: #34d399; margin: 0 0 10px 0;">Pengerjaan Selesai!</h2>
                     <p id="scoreText" style="font-size: 1.2rem; margin: 15px 0; font-weight: bold; color: #ffffff;"></p>
                     <p id="leaderboardStatusText" style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;"></p>
-                    <button class="btn-action" onclick="resetQuiz()">🔄 Ulangi / Ganti Mode</button>
+                    
+                    <!-- Wadah untuk Pembahasan Lengkap -->
+                    <div id="reviewContainer"></div>
+
+                    <button class="btn-action" style="margin-top: 25px;" onclick="resetQuiz()">🔄 Ulangi / Ganti Mode</button>
                 </div>
 
             </div>
@@ -915,6 +919,16 @@
                 document.getElementById('discussionBox').style.display = 'none';
             }
 
+            // Ubah teks tombol Berikutnya menjadi Selesai Ujian jika sudah di soal terakhir
+            const btnNext = document.getElementById('btnNext');
+            if (currentIdx === activeData.length - 1) {
+                btnNext.innerText = "Selesai Ujian 🏁";
+                btnNext.style.backgroundColor = "#10b981";
+            } else {
+                btnNext.innerText = "Berikutnya ➡️";
+                btnNext.style.backgroundColor = "#2563eb";
+            }
+
             initNav();
         }
 
@@ -931,6 +945,13 @@
                 currentIdx++;
                 saveToStorage();
                 loadQuestion();
+            } else {
+                // Jika berada di soal terakhir, tombol berikutnya berfungsi sebagai Selesai Ujian
+                if (!isSubmitted) {
+                    if (confirm("Apakah Anda sudah yakin dengan semua jawaban dan ingin menyelesaikan ujian?")) {
+                        submitQuiz();
+                    }
+                }
             }
         }
 
@@ -1002,6 +1023,7 @@
             const resultBox = document.getElementById('resultBox');
             const scoreText = document.getElementById('scoreText');
             const lbStatusText = document.getElementById('leaderboardStatusText');
+            const reviewContainer = document.getElementById('reviewContainer');
             const totalScore = (score / total) * 100;
 
             scoreText.innerText = `Nama: ${currentUser.name} (${currentUser.kelas}) — Skor: ${Math.round(totalScore)} / 100 (${score} Benar dari ${total})`;
@@ -1014,16 +1036,38 @@
                 lbStatusText.style.color = "#fbbf24";
             }
 
+            // Membuat daftar pembahasan / penyelesaian lengkap untuk semua soal
+            let reviewHTML = `<h3 style="color: #38bdf8; margin-top: 25px; margin-bottom: 15px; text-align: left; font-size: 1.1rem;">📖 Pembahasan & Penyelesaian Lengkap:</h3>
+            <div style="text-align: left; display: flex; flex-direction: column; gap: 15px;">`;
+
+            activeData.forEach((q, idx) => {
+                let chosenOptIdx = userAnswers[idx];
+                let chosenTextClean = chosenOptIdx !== undefined ? q.shuffledTexts[chosenOptIdx] : "Tidak dijawab";
+                let correctClean = q.correctRaw.replace(/^[A-E]\.\s*/, '');
+                let isCorrect = chosenTextClean === correctClean;
+
+                reviewHTML += `<div style="background: rgba(15, 23, 42, 0.85); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                    <div style="font-weight: bold; color: #f8fafc; margin-bottom: 8px; font-size: 0.95rem;">Soal ${idx + 1}: ${q.t}</div>
+                    <div style="font-size: 0.9rem; margin-bottom: 4px; color: ${isCorrect ? '#34d399' : '#fca5a5'};">Jawaban Anda: <b>${chosenTextClean}</b> ${isCorrect ? '✅ (Benar)' : '❌ (Salah)'}</div>
+                    <div style="font-size: 0.9rem; margin-bottom: 8px; color: #34d399;">Kunci Jawaban: <b>${q.correctRaw}</b></div>
+                    <div style="font-size: 0.85rem; background: rgba(16, 185, 129, 0.1); padding: 10px; border-left: 3px solid #10b981; border-radius: 4px; color: #e2e8f0; margin-top: 6px; line-height: 1.5;">
+                        <b>Konsep / Rumus:</b> ${q.f}<br><b>Penyelesaian:</b> ${q.d}
+                    </div>
+                </div>`;
+            });
+            reviewHTML += `</div>`;
+            reviewContainer.innerHTML = reviewHTML;
+
             resultBox.style.display = 'block';
 
             unlockAllTabs();
-            document.getElementById('btnSubmit').style.display = 'none';
+            document.getElementById('btnNext').style.display = 'none';
 
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
         // =========================================================================
-        // SINKRONISASI LEADERBOARD PUBLIK (BERDASARKAN NAMA + KELAS/ASAL)
+        // SINKRONISASI LEADERBOARD DENGAN CACHE LOKAL AGAR TIDAK HILANG SAAT REFRESH
         // =========================================================================
         function sendScoreToFirebase(mapel, nama, kelas, skor) {
             saveToLocalLeaderboard(mapel, nama, kelas, skor);
@@ -1068,9 +1112,11 @@
             titleElem.innerText = `🏆 Leaderboard: ${mapelNames[mapel]}`;
 
             const tbody = document.getElementById('leaderboardBody');
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8;">Memuat data peringkat...</td></tr>`;
-
-            renderTableFromLocal(mapel);
+            
+            // Tampilkan cache lokal instan agar saat direfresh tidak kosong / hilang
+            let localData = JSON.parse(localStorage.getItem('hafar_local_lb') || '{}');
+            let localList = localData[mapel] || [];
+            renderTableData(localList, tbody);
 
             if (!db) return;
 
@@ -1078,35 +1124,51 @@
               .where("mapel", "==", mapel)
               .get()
               .then((querySnapshot) => {
-                  let list = [];
+                  let firebaseList = [];
                   querySnapshot.forEach((doc) => {
-                      list.push(doc.data());
+                      firebaseList.push(doc.data());
                   });
 
-                  list.sort((a, b) => b.skor - a.skor);
+                  // Gabungkan data lokal dan firebase, singkirkan duplikat nama+kelas, ambil skor tertinggi
+                  let mergedMap = new Map();
+                  [...localList, ...firebaseList].forEach(item => {
+                      let key = item.nama + "_" + item.kelas;
+                      if (!mergedMap.has(key) || item.skor > mergedMap.get(key).skor) {
+                          mergedMap.set(key, item);
+                      }
+                  });
 
-                  tbody.innerHTML = '';
-                  let top10 = list.slice(0, 10);
+                  let combinedList = Array.from(mergedMap.values());
+                  combinedList.sort((a, b) => b.skor - a.skor);
 
-                  if (top10.length === 0) {
-                      tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8;">Belum ada data peringkat. Jadilah yang pertama di Mode Ujian!</td></tr>`;
-                      return;
+                  if (combinedList.length > 0) {
+                      renderTableData(combinedList, tbody);
                   }
-
-                  top10.forEach((item, index) => {
-                      let rankClass = index === 0 ? 'rank-1' : (index === 1 ? 'rank-2' : (index === 2 ? 'rank-3' : ''));
-                      let row = `<tr>
-                          <td class="${rankClass}">#${index + 1}</td>
-                          <td style="font-weight: 500; color: #fff;">${item.nama}</td>
-                          <td>${item.kelas}</td>
-                          <td style="text-align: right; font-weight: bold; color: #38bdf8;">${item.skor}</td>
-                      </tr>`;
-                      tbody.innerHTML += row;
-                  });
               })
               .catch((error) => {
-                  console.warn("Gagal memuat dari Firebase, menggunakan data lokal:", error);
+                  console.warn("Menggunakan data lokal:", error);
               });
+        }
+
+        function renderTableData(list, tbody) {
+            tbody.innerHTML = '';
+            let top10 = list.slice(0, 10);
+
+            if (top10.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8;">Belum ada data peringkat. Jadilah yang pertama di Mode Ujian!</td></tr>`;
+                return;
+            }
+
+            top10.forEach((item, index) => {
+                let rankClass = index === 0 ? 'rank-1' : (index === 1 ? 'rank-2' : (index === 2 ? 'rank-3' : ''));
+                let row = `<tr>
+                    <td class="${rankClass}">#${index + 1}</td>
+                    <td style="font-weight: 500; color: #fff;">${item.nama}</td>
+                    <td>${item.kelas}</td>
+                    <td style="text-align: right; font-weight: bold; color: #38bdf8;">${item.skor}</td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
         }
 
         function saveToLocalLeaderboard(mapel, nama, kelas, skor) {
@@ -1124,30 +1186,6 @@
             localData[mapel] = localData[mapel].slice(0, 10);
 
             localStorage.setItem('hafar_local_lb', JSON.stringify(localData));
-        }
-
-        function renderTableFromLocal(mapel) {
-            const tbody = document.getElementById('leaderboardBody');
-            let localData = JSON.parse(localStorage.getItem('hafar_local_lb') || '{}');
-            let list = localData[mapel] || [];
-
-            if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8;">Belum ada data peringkat. Jadilah yang pertama di Mode Ujian!</td></tr>`;
-                return;
-            }
-
-            list.sort((a, b) => b.skor - a.skor);
-            tbody.innerHTML = '';
-
-            list.slice(0, 10).forEach((item, index) => {
-                let rankClass = index === 0 ? 'rank-1' : (index === 1 ? 'rank-2' : (index === 2 ? 'rank-3' : ''));
-                tbody.innerHTML += `<tr>
-                    <td class="${rankClass}">#${index + 1}</td>
-                    <td style="font-weight: 500; color: #fff;">${item.nama}</td>
-                    <td>${item.kelas}</td>
-                    <td style="text-align: right; font-weight: bold; color: #38bdf8;">${item.skor}</td>
-                </tr>`;
-            });
         }
 
         function resetQuiz() {
@@ -1168,7 +1206,7 @@
             document.getElementById('resultBox').style.display = 'none';
             document.getElementById('quizArea').style.display = 'none';
             document.getElementById('startOverlay').style.display = 'block';
-            document.getElementById('btnSubmit').style.display = 'inline-block';
+            document.getElementById('btnNext').style.display = 'inline-block';
             document.getElementById('inputNama').value = currentUser.name || '';
             document.getElementById('inputKelas').value = currentUser.kelas || '';
 
