@@ -181,6 +181,18 @@
             margin-bottom: 20px;
         }
 
+        .reading-passage {
+            background: rgba(30, 41, 59, 0.9);
+            border-left: 4px solid #38bdf8;
+            padding: 15px 18px;
+            border-radius: 6px;
+            margin-bottom: 18px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+            font-style: italic;
+        }
+
         .question-header-info {
             display: flex;
             justify-content: space-between;
@@ -414,13 +426,15 @@
                         </div>
                         <div id="difficultyBadge" class="difficulty-badge diff-1">Level 1 (Mudah)</div>
                     </div>
+                    <!-- Wadah Teks Wacana / Soal Cerita -->
+                    <div id="readingPassageBox" class="reading-passage" style="display: none;"></div>
                     <div class="question-title" id="questionTitle">Loading...</div>
                 </div>
 
                 <div class="options-group" id="optionsContainer"></div>
 
                 <div class="formula-box" id="formulaBox" style="margin-top: 20px;">
-                    <h4 style="margin: 0 0 6px 0; color: #fbbf24; font-size: 0.95rem;">📌 Catatan Lore & Konsep Kunci:</h4>
+                    <h4 style="margin: 0 0 6px 0; color: #fbbf24; font-size: 0.95rem;">📌 Konsep & Analisis:</h4>
                     <div id="formulaContent" style="font-size: 0.9rem;"></div>
                 </div>
 
@@ -445,7 +459,6 @@
                     <p id="scoreText" style="font-size: 1.2rem; margin: 15px 0; font-weight: bold; color: #ffffff;"></p>
                     <p id="leaderboardStatusText" style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;"></p>
                     
-                    <!-- Wadah untuk Pembahasan Lengkap -->
                     <div id="reviewContainer"></div>
 
                     <button class="btn-action" style="margin-top: 25px;" onclick="resetQuiz()">🔄 Ulangi / Ganti Mode</button>
@@ -508,13 +521,11 @@
         const masterSoal = {
             matematika: Array.from({length: 25}, (_, i) => {
                 const list = [
-                    // Contoh Soal 1: Pilihan Ganda Kompleks (isComplex: true, correctRaws: array)
-                    { t: "Sairo mendeteksi titik koordinat anomali waktu P(4, 6). Manakah pernyataan di bawah ini yang BENAR mengenai transformasi geometri terkait? (Pilih semua yang benar)", isComplex: true, o: ["A. Hasil dilatasi dengan k = 3 pusat (0,0) adalah (12, 18)", "B. Hasil refleksi terhadap sumbu y adalah (-4, 6)", "C. Hasil translasi dengan T(-2, 4) adalah (2, 10)", "D. Hasil rotasi 90° searah jarum jam terhadap pusat (0,0) adalah (6, -4)", "E. Hasil pencerminan terhadap y = x adalah (6, 4)"], correctRaws: ["A. Hasil dilatasi dengan k = 3 pusat (0,0) adalah (12, 18)", "B. Hasil refleksi terhadap sumbu y adalah (-4, 6)", "C. Hasil translasi dengan T(-2, 4) adalah (2, 10)", "E. Hasil pencerminan terhadap y = x adalah (6, 4)"], f: "Uji koordinat transformasi geometri dasar.", d: "Pernyataan A, B, C, dan E terbukti benar secara matematis.", level: 3 },
+                    { t: "Sairo mendeteksi titik koordinat anomali waktu P(4, 6). Dilatasi dengan k = 3 pusat A(2, 1), dilanjutkan manipulasi distorsi 90° berlawanan arah jarum jam pusat (0,0). Posisi akhir temporal P'' adalah...", isComplex: false, o: ["A. (16, -8)", "B. (-16, 8)", "C. (8, 16)", "D. (-8, 16)", "E. (-16, -8)"], correctRaw: "B. (-16, 8)", f: "x' = a + k(x-a), y' = b + k(y-b). Rotasi 90° CCW: (-y, x)", d: "Dilatasi: (8, 16). Rotasi distorsi 90°: (-16, 8).", level: 3 },
                     { t: "Karakter Kael memetakan koordinat titik A(3, 4) pada cermin dimensi y = x, kemudian menggesernya melalui vektor T(-2, 5). Posisi akhir Kael berada di titik...", isComplex: false, o: ["A. (2, 8)", "B. (1, 9)", "C. (4, 1)", "D. (2, 1)", "E. (8, 2)"], correctRaw: "A. (2, 8)", f: "Refleksi y=x: (y,x). Translasi: penjumlahan vektor koordinat.", d: "Refleksi: (4,3). Translasi: (4-2, 3+5) = (2,8).", level: 1 },
                     { t: "Populasi energi klon kluster Lux' Hela bermula dari 500 unit. Setiap 15 menit mengalami duplikasi ganda 2 kali lipat. Berapa jumlah energi Lux' Hela pada menit ke-90?", isComplex: false, o: ["A. 16.000 unit", "B. 32.000 unit", "C. 64.000 unit", "D. 128.000 unit", "E. 256.000 unit"], correctRaw: "B. 32.000 unit", f: "N(t) = N0 · 2^(t/Td)", d: "n = 90/15 = 6. N = 500 × 64 = 32.000 unit energi.", level: 2 },
                     { t: "Arus esensi magis Astoria M(t) = 240 · 2^(-t/3). Sisa esensi Astoria setelah 12 jam peluruhan adalah...", isComplex: false, o: ["A. 30 unit", "B. 15 unit", "C. 60 unit", "D. 7,5 unit", "E. 120 unit"], correctRaw: "B. 15 unit", f: "Peluruhan eksponensial esensi.", d: "M(12) = 240 × 2^(-4) = 240 / 16 = 15 unit.", level: 2 },
-                    // Contoh Soal 5: Pilihan Ganda Kompleks kedua
-                    { t: "Azzux merancang sandi enkripsi faksi. Manakah sifat atau nilai berikut yang menghasilkan bilangan genap? (Pilih dua jawaban yang benar)", isComplex: true, o: ["A. 5 × 4 × 3", "B. 5 × 4 × 4 × 3", "C. 120 + 1", "D. 240 × 2", "E. 600 - 15"], correctRaws: ["B. 5 × 4 × 4 × 3", "D. 240 × 2"], f: "Analisis sifat aritmetika bilangan genap.", d: "Hasil kali 240 dan perkalian 5×4×4×3 bernilai genap.", level: 2 },
+                    { t: "Azzux merancang sandi enkripsi 4 karakter faksi: Ke-1 & 2 vokal berbeda dari {A,E,I,O,U}, Ke-3 & 4 digit genap sistem dari {2,4,6,8}. Berapa total variasi sandi Azzux?", isComplex: false, o: ["A. 120", "B. 240", "C. 400", "D. 480", "E. 600"], correctRaw: "B. 240", f: "Kaidah pencacahan perkalian.", d: "5 × 4 × 4 × 3 = 240 variasi sandi.", level: 2 },
                     { t: "Menara pengintai Shion berbentuk gabungan tabung dan kerucut. Jari-jari r = 6 m, tinggi tabung 10 m, tinggi kerucut 8 m. Berapakah panjang garis pelukis kerucut menara Shion?", isComplex: false, o: ["A. 10 m", "B. 12 m", "C. 14 m", "D. 15 m", "E. 16 m"], correctRaw: "A. 10 m", f: "s = √(r² + t²)", d: "s = √(6² + 8²) = 10 m.", level: 1 },
                     { t: "Hans berdiri 15 m dari dinding benteng, mengamati puncak menara dengan sudut elevasi 45°. Jika tinggi Hans 1,6 m, berapakah tinggi total benteng yang diamati Hans?", isComplex: false, o: ["A. 15 m", "B. 16,6 m", "C. 13,4 m", "D. 18,6 m", "E. 20 m"], correctRaw: "B. 16,6 m", f: "tan 45° = h / 15 + tinggi pengamat", d: "h = 15 + 1.6 = 16.6 m.", level: 2 },
                     { t: "Rata-rata kekuatan 20 prajurit pengawal Sairo adalah 80. Saat 2 prajurit elit tambahan bergabung, rata-rata naik jadi 81. Selisih kekuatan kedua prajurit baru adalah 4. Berapa kekuatan prajurit baru yang terendah?", isComplex: false, o: ["A. 89", "B. 91", "C. 87", "D. 93", "E. 85"], correctRaw: "A. 89", f: "Analisis selisih total nilai kelompok.", d: "(22×81) - (20×80) = 182. Kekuatan: 89 dan 93.", level: 3 },
@@ -540,31 +551,109 @@
             }),
 
             indo: Array.from({length: 25}, (_, i) => {
-                const list = Array.from({length: 25}, (_, j) => ({
-                    t: `Soal Bahasa Indonesia #${j + 1} faksi HAFAR'S: Analisis struktur kebahasaan teks laporan observasi.`,
-                    isComplex: j === 0, // Soal pertama dibuat kompleks sebagai contoh
-                    o: ["A. Menggunakan kalimat definisi", "B. Menggunakan kata kerja mental", "C. Memuat opini pribadi pengamat", "D. Menggunakan konjungsi kausalitas", "E. Bersifat objektif"],
-                    correctRaw: "A. Menggunakan kalimat definisi",
-                    correctRaws: ["A. Menggunakan kalimat definisi", "B. Menggunakan kata kerja mental", "D. Menggunakan konjungsi kausalitas", "E. Bersifat objektif"],
-                    f: "Kaidah kebahasaan laporan hasil observasi.",
-                    d: "Teks LHO bersifat objektif, menggunakan definisi, verba mental, dan kausalitas.",
-                    level: (j % 3) + 1
-                }));
-                return list[i];
+                const passages = [
+                    "Pembangunan infrastruktur jaringan serat optik di wilayah terpencil nusantara terus dikebut oleh pemerintah bekerja sama dengan faksi teknisi swasta. Langkah ini diambil guna mengatasi kesenjangan akses informasi digital yang selama ini dirasakan oleh masyarakat daerah. Kendati menghadapi tantangan geografis yang cukup ekstrim seperti pegunungan terjal dan cuaca buruk, proyek ini diproyeksikan selesai tepat waktu demi pemerataan teknologi.",
+                    "Sistem keamanan siber berbasis kecerdasan buatan kini menjadi benteng utama dalam melindungi data vital instansi pemerintahan dari ancaman peretasan global. Dengan kemampuan mendeteksi anomali secara mandiri dalam hitungan milidetik, sistem ini mampu mengisolasi jaringan yang terinfeksi tanpa mengganggu aktivitas operasional sistem utama.",
+                    "Pemanfaatan energi surya terbarukan di kawasan industri modern terbukti mampu menekan biaya operasional hingga 40 persen sekaligus mengurangi emisi karbon secara signifikan. Transisi energi hijau ini tidak hanya berdampak positif bagi kelestarian lingkungan ekologis, tetapi juga meningkatkan citra perusahaan di mata global."
+                ];
+                
+                const p = passages[i % passages.length];
+                const isComp = (i % 2 === 0);
+
+                if (isComp) {
+                    return {
+                        id: i + 1,
+                        isComplex: true,
+                        passage: p,
+                        t: "Berdasarkan wacana di atas, manakah pernyataan-pernyataan berikut yang SESUAI dengan isi teks? (Pilih semua pernyataan yang benar)",
+                        o: [
+                            "A. Proyek infrastruktur bertujuan mengatasi kesenjangan akses informasi digital di daerah.",
+                            "B. Tantangan geografis yang dihadapi dalam proyek mencakup wilayah pegunungan dan cuaca buruk.",
+                            "C. Sistem keamanan siber membutuhkan waktu berhari-hari untuk mendeteksi anomali.",
+                            "D. Pemanfaatan energi surya mampu menekan biaya operasional perusahaan.",
+                            "E. Transisi energi hijau berdampak negatif terhadap kelestarian lingkungan."
+                        ],
+                        correctRaws: [
+                            "A. Proyek infrastruktur bertujuan mengatasi kesenjangan akses informasi digital di daerah.",
+                            "B. Tantangan geografis yang dihadapi dalam proyek mencakup wilayah pegunungan dan cuaca buruk.",
+                            "D. Pemanfaatan energi surya mampu menekan biaya operasional perusahaan."
+                        ],
+                        f: "Analisis informasi tersurat dan kesesuaian pernyataan dalam teks wacana.",
+                        d: "Pernyataan A, B, dan D secara langsung didukung oleh kalimat-kalimat di dalam teks bacaan.",
+                        level: 2
+                    };
+                } else {
+                    return {
+                        id: i + 1,
+                        isComplex: false,
+                        passage: p,
+                        t: "Apakah gagasan utama (ide pokok) yang paling tepat untuk paragraf wacana di atas?",
+                        o: [
+                            "A. Hambatan cuaca buruk di wilayah pegunungan terjal nusantara.",
+                            "B. Percepatan pembangunan infrastruktur jaringan dan teknologi digital untuk mengatasi kesenjangan.",
+                            "C. Kerja sama antara pemerintah dan pihak swasta dalam bidang ekonomi.",
+                            "D. Pentingnya peretasan global bagi instansi pemerintahan.",
+                            "E. Proyek pembangunan jalan tol lintas daerah."
+                        ],
+                        correctRaw: "B. Percepatan pembangunan infrastruktur jaringan dan teknologi digital untuk mengatasi kesenjangan.",
+                        f: "Menentukan gagasan pokok / ide utama paragraf teks wacana.",
+                        d: "Gagasan utama mencakup keseluruhan inti pembahasan teks tentang pemerataan akses digital melalui pembangunan infrastruktur.",
+                        level: 1
+                    };
+                }
             }),
 
             inggris: Array.from({length: 25}, (_, i) => {
-                const list = Array.from({length: 25}, (_, j) => ({
-                    t: `English Question #${j + 1} HAFAR'S Tech: Choose the appropriate grammatical structures.`,
-                    isComplex: j === 0,
-                    o: ["A. Present continuous tense", "B. Simple past passive", "C. Incorrect vocabulary", "D. Modal of obligation", "E. Conditional type 1"],
-                    correctRaw: "A. Present continuous tense",
-                    correctRaws: ["A. Present continuous tense", "B. Simple past passive", "D. Modal of obligation"],
-                    f: "English grammar structures and rules.",
-                    d: "Multiple valid grammatical patterns can apply in technical contexts.",
-                    level: (j % 3) + 1
-                }));
-                return list[i];
+                const passagesEN = [
+                    "Cloud computing has fundamentally revolutionized how global enterprises store, manage, and process massive volumes of operational data. Instead of relying heavily on physical on-premise servers, companies can now scale their digital resources dynamically via secure remote networks. This technological shift drastically reduces hardware maintenance costs while maximizing system uptime and data security standards.",
+                    "Artificial Intelligence and machine learning algorithms are reshaping modern cybersecurity frameworks. These advanced systems autonomously monitor network traffic patterns, instantly identifying potential breaches and malicious intrusions before human operators can even notice. Consequently, digital assets remain exceptionally protected against sophisticated cyberattacks.",
+                    "Renewable energy integration is no longer optional for forward-hinking industrial sectors. Solar panels, wind turbines, and smart microgrids are actively replacing fossil-fuel dependencies, paving the way toward a sustainable ecological future and drastically lower carbon footprints worldwide."
+                ];
+
+                const pEN = passagesEN[i % passagesEN.length];
+                const isCompEN = (i % 2 === 0);
+
+                if (isCompEN) {
+                    return {
+                        id: i + 1,
+                        isComplex: true,
+                        passage: pEN,
+                        t: "Based on the passage above, which of the following statements are TRUE? (Choose all correct answers)",
+                        o: [
+                            "A. Cloud computing allows enterprises to scale digital resources dynamically.",
+                            "B. Companies still rely exclusively on heavy physical on-premise servers.",
+                            "C. Cloud computing helps reduce hardware maintenance costs.",
+                            "D. AI algorithms can autonomously monitor network traffic and detect intrusions.",
+                            "E. Renewable energy increases fossil-fuel dependency."
+                        ],
+                        correctRaws: [
+                            "A. Cloud computing allows enterprises to scale digital resources dynamically.",
+                            "C. Cloud computing helps reduce hardware maintenance costs.",
+                            "D. AI algorithms can autonomously monitor network traffic and detect intrusions."
+                        ],
+                        f: "Reading comprehension and factual information extraction in English.",
+                        d: "Statements A, C, and D accurately reflect the core facts stated explicitly in the reading passages.",
+                        level: 2
+                    };
+                } else {
+                    return {
+                        id: i + 1,
+                        isComplex: false,
+                        passage: pEN,
+                        t: "What is the primary main idea or purpose of the passage?",
+                        o: [
+                            "A. To explain how modern technologies like cloud computing and AI transform enterprise operations.",
+                            "B. To discuss the financial disadvantages of maintaining physical hardware.",
+                            "C. To critique the inefficiency of renewable energy sources in industries.",
+                            "D. To outline manual methods of preventing cyberattacks.",
+                            "E. To describe the history of computer programming languages."
+                        ],
+                        correctRaw: "A. To explain how modern technologies like cloud computing and AI transform enterprise operations.",
+                        f: "Identifying the main idea/primary purpose of an informational text.",
+                        d: "The text outlines the transformative impact of cloud computing, AI security, and green energy on modern infrastructure.",
+                        level: 1
+                    };
+                }
             })
         };
 
@@ -591,7 +680,6 @@
                     let cleanOptions = q.o.map(opt => opt.replace(/^[A-E]\.\s*/, ''));
                     let shuffledTexts = [...cleanOptions].sort(() => 0.5 - Math.random());
                     
-                    // Sesuaikan pemetaan kunci jawaban jika di-shuffle
                     let mappedRaws = q.correctRaw ? q.correctRaw.replace(/^[A-E]\.\s*/, '') : null;
                     let mappedRawsComplex = q.isComplex ? q.correctRaws.map(r => r.replace(/^[A-E]\.\s*/, '')) : [];
 
@@ -842,6 +930,15 @@
             const q = activeData[currentIdx];
             
             document.getElementById('questionNumberTitle').innerText = `Soal ${currentIdx + 1} dari ${activeData.length}`;
+            
+            const passageBox = document.getElementById('readingPassageBox');
+            if (q.passage) {
+                passageBox.innerText = q.passage;
+                passageBox.style.display = 'block';
+            } else {
+                passageBox.style.display = 'none';
+            }
+
             document.getElementById('questionTitle').innerHTML = q.t;
 
             const typeBadge = document.getElementById('typeBadge');
@@ -901,7 +998,6 @@
                 }
 
                 btn.className = btnClass;
-                // Tambahkan ikon checkbox [] untuk kompleks dan radio () untuk tunggal
                 let marker = q.isComplex ? ( (userAnswers[currentIdx] || []).includes(optIdx) ? '☑ ' : '☐ ' ) : '';
                 btn.innerHTML = marker + prefixLabels[optIdx] + textItem;
                 
@@ -925,7 +1021,7 @@
                 btnDiscussion.style.display = 'inline-block';
             } else {
                 document.getElementById('discussionBox').style.display = 'none';
-                btnDiscussion.style.display = 'none'; // Sembunyikan Analisis Lore selama ujian berlangsung
+                btnDiscussion.style.display = 'none';
             }
 
             const btnNext = document.getElementById('btnNext');
@@ -950,9 +1046,9 @@
                 let arr = userAnswers[currentIdx];
                 let pos = arr.indexOf(optIdx);
                 if (pos > -1) {
-                    arr.splice(pos, 1); // Hapus jika sudah dipilih
+                    arr.splice(pos, 1);
                 } else {
-                    arr.push(optIdx); // Tambahkan jika belum
+                    arr.push(optIdx);
                 }
             } else {
                 userAnswers[currentIdx] = optIdx;
@@ -1086,10 +1182,11 @@
 
                 reviewHTML += `<div style="background: rgba(15, 23, 42, 0.85); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
                     <div style="font-weight: bold; color: #f8fafc; margin-bottom: 8px; font-size: 0.95rem;">Soal ${idx + 1} ${q.isComplex ? '(Kompleks)' : ''}: ${q.t}</div>
+                    ${q.passage ? `<div style="font-size: 0.85rem; color: #94a3b8; font-style: italic; margin-bottom: 6px;">Wacana: "${q.passage}"</div>` : ''}
                     <div style="font-size: 0.9rem; margin-bottom: 4px; color: ${isCorrect ? '#34d399' : '#fca5a5'};">Jawaban Anda: <b>${userDesc}</b> ${isCorrect ? '✅ (Benar)' : '❌ (Salah)'}</div>
                     <div style="font-size: 0.9rem; margin-bottom: 8px; color: #34d399;">Kunci Jawaban: <b>${correctDesc}</b></div>
                     <div style="font-size: 0.85rem; background: rgba(16, 185, 129, 0.1); padding: 10px; border-left: 3px solid #10b981; border-radius: 4px; color: #e2e8f0; margin-top: 6px; line-height: 1.5;">
-                        <b>Konsep / Rumus:</b> ${q.f}<br><b>Penyelesaian:</b> ${q.d}
+                        <b>Konsep / Analisis:</b> ${q.f}<br><b>Pembahasan:</b> ${q.d}
                     </div>
                 </div>`;
             });
