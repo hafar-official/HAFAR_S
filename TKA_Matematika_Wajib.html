@@ -426,7 +426,6 @@
                         </div>
                         <div id="difficultyBadge" class="difficulty-badge diff-1">Level 1 (Mudah)</div>
                     </div>
-                    <!-- Wadah Teks Wacana / Soal Cerita -->
                     <div id="readingPassageBox" class="reading-passage" style="display: none;"></div>
                     <div class="question-title" id="questionTitle">Loading...</div>
                 </div>
@@ -485,6 +484,11 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Tombol Pembersih Cache Lokal untuk Mencegah Data Tersangkut -->
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="clearLocalCache()" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: bold; transition: all 0.2s;">🗑️ Bersihkan Cache Peringkat Lokal</button>
                 </div>
             </div>
 
@@ -607,7 +611,7 @@
                 const passagesEN = [
                     "Cloud computing has fundamentally revolutionized how global enterprises store, manage, and process massive volumes of operational data. Instead of relying heavily on physical on-premise servers, companies can now scale their digital resources dynamically via secure remote networks. This technological shift drastically reduces hardware maintenance costs while maximizing system uptime and data security standards.",
                     "Artificial Intelligence and machine learning algorithms are reshaping modern cybersecurity frameworks. These advanced systems autonomously monitor network traffic patterns, instantly identifying potential breaches and malicious intrusions before human operators can even notice. Consequently, digital assets remain exceptionally protected against sophisticated cyberattacks.",
-                    "Renewable energy integration is no longer optional for forward-hinking industrial sectors. Solar panels, wind turbines, and smart microgrids are actively replacing fossil-fuel dependencies, paving the way toward a sustainable ecological future and drastically lower carbon footprints worldwide."
+                    "Renewable energy integration is no longer optional for forward-thinking industrial sectors. Solar panels, wind turbines, and smart microgrids are actively replacing fossil-fuel dependencies, paving the way toward a sustainable ecological future and drastically lower carbon footprints worldwide."
                 ];
 
                 const pEN = passagesEN[i % passagesEN.length];
@@ -1313,6 +1317,14 @@
             localData[mapel] = localData[mapel].slice(0, 10);
 
             localStorage.setItem('hafar_local_lb', JSON.stringify(localData));
+        }
+
+        function clearLocalCache() {
+            if (confirm("Apakah Anda ingin menghapus data riwayat skor lokal di perangkat ini?")) {
+                localStorage.removeItem('hafar_local_lb');
+                alert("Cache lokal berhasil dibersihkan!");
+                location.reload();
+            }
         }
 
         function resetQuiz() {
