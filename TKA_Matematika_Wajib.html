@@ -227,11 +227,6 @@
             line-height: 1.5;
         }
 
-        .option-btn:hover:not(:disabled) {
-            background-color: rgba(56, 189, 248, 0.12);
-            border-color: #38bdf8;
-        }
-
         .option-btn.selected {
             background-color: rgba(56, 189, 248, 0.22);
             border-color: #38bdf8;
@@ -307,7 +302,6 @@
             margin-top: 25px;
         }
 
-        /* Styling Leaderboard Section */
         .leaderboard-section {
             margin-top: 40px;
             background: rgba(15, 23, 42, 0.7);
@@ -341,7 +335,6 @@
 </head>
 <body>
 
-    <!-- Header & Sidebar HAFAR'S -->
     <header>
         <button class="menu-btn" onclick="toggleSidebar()">&#9776;</button>
         <h1 class="brand-title">HAFAR'S</h1>
@@ -363,7 +356,6 @@
     </div>
     <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
 
-    <!-- Konten Utama Latihan Soal -->
     <div class="tka-wrapper">
         <div class="tka-card-container">
             
@@ -378,14 +370,12 @@
                 </div>
             </div>
 
-            <!-- Tab Mata Pelajaran -->
             <div class="subject-tabs">
                 <button id="tabMatematika" class="tab-btn active-tab" onclick="changeSubject('matematika', this)">📐 Matematika Wajib</button>
                 <button id="tabIndo" class="tab-btn" onclick="changeSubject('indo', this)">📖 Bahasa Indonesia</button>
                 <button id="tabInggris" class="tab-btn" onclick="changeSubject('inggris', this)">🌐 Bahasa Inggris</button>
             </div>
 
-            <!-- Overlay Pembuka & Registrasi Nama -->
             <div id="startOverlay" class="start-overlay">
                 <h3 style="color: #ffffff; margin-bottom: 8px; font-size: 1.3rem;">Masukkan Identitas Anda</h3>
                 <p style="color: #94a3b8; font-size: 0.85rem; max-width: 500px; margin: 0 auto 20px auto; line-height: 1.5;">
@@ -411,7 +401,6 @@
                 <button class="btn-start" onclick="startQuiz()">▶️ Mulai Mengerjakan</button>
             </div>
 
-            <!-- Area Lembar Soal -->
             <div id="quizArea" style="display: none;">
                 
                 <div class="nav-questions" id="navQuestions"></div>
@@ -456,7 +445,7 @@
 
             </div>
 
-            <!-- Papan Leaderboard Online per Mapel -->
+            <!-- Leaderboard Section -->
             <div class="leaderboard-section">
                 <h3 id="leaderboardTitle" style="color: #38bdf8; margin-top: 0; font-size: 1.1rem;">🏆 Leaderboard: Matematika Wajib</h3>
                 <div style="overflow-x: auto;">
@@ -483,12 +472,16 @@
 
     <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html">Privacy & Policy</a></div>
 
+    <!-- ========================================== -->
+    <!-- BAGIAN KODE FIREBASE & SKrip UTAMA        -->
+    <!-- ========================================== -->
+
     <!-- Firebase SDK (Firestore versi Compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
     <script>
-        // Konfigurasi Firebase HAFAR'S
+        // 1. Konfigurasi Kredensial Firebase Project HAFAR'S
         const firebaseConfig = {
             apiKey: "AIzaSyD-contoh-api-key-kamu",
             authDomain: "hafar-official.firebaseapp.com",
@@ -498,6 +491,7 @@
             appId: "1:123:web:abc"
         };
 
+        // 2. Inisialisasi Firebase & Firestore Database
         let db = null;
         try {
             if (!firebase.apps.length) {
@@ -506,6 +500,13 @@
             db = firebase.firestore();
         } catch (e) {
             console.warn("Gagal menginisialisasi Firestore:", e);
+        }
+
+        // 3. Pengenalan Device ID Unik (mencegah penumpukan leaderboard oleh device yang sama)
+        let deviceId = localStorage.getItem('hafar_device_id');
+        if (!deviceId) {
+            deviceId = 'dev_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+            localStorage.setItem('hafar_device_id', deviceId);
         }
 
         const masterSoal = {
@@ -747,7 +748,7 @@
 
         function triggerPenalty(reason) {
             cheatCount++;
-            timeLeft -= 1200; // Kurangi 20 menit
+            timeLeft -= 1200;
             if (timeLeft < 0) timeLeft = 0;
             
             alert(`⚠️ PERINGATAN KECURANGAN KE-${cheatCount}!\nAlasan: ${reason}\nSanksi: Waktu ujian Anda dikurangi 20 menit!`);
@@ -805,7 +806,6 @@
         }
 
         function changeSubject(subject, btnElem) {
-            // CEGAH RESET/ACAK ULANG JIKA KLIK MAPEL YANG SAMA SAAT UJIAN BERJALAN
             if (currentSubject === subject && isStarted) {
                 return;
             }
@@ -1035,24 +1035,46 @@
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
+        // =========================================================================
+        // LOGIKA FIREBASE: Sinkronisasi, Device ID, & Render Leaderboard Publik
+        // =========================================================================
         function sendScoreToFirebase(mapel, nama, kelas, skor) {
             saveToLocalLeaderboard(mapel, nama, kelas, skor);
 
             if (!db) return;
 
-            db.collection("leaderboard").add({
-                mapel: mapel,
-                nama: nama,
-                kelas: kelas,
-                skor: skor,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .then(() => {
-                fetchLeaderboard(mapel);
-            })
-            .catch((error) => {
-                console.error("Gagal sinkronisasi ke Firebase:", error);
-            });
+            db.collection("leaderboard")
+              .where("mapel", "==", mapel)
+              .where("deviceId", "==", deviceId)
+              .get()
+              .then((querySnapshot) => {
+                  if (!querySnapshot.empty) {
+                      querySnapshot.forEach((doc) => {
+                          let existingData = doc.data();
+                          if (skor >= existingData.skor) {
+                              db.collection("leaderboard").doc(doc.id).update({
+                                  nama: nama,
+                                  kelas: kelas,
+                                  skor: skor,
+                                  timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                              });
+                          }
+                      });
+                  } else {
+                      db.collection("leaderboard").add({
+                          mapel: mapel,
+                          nama: nama,
+                          kelas: kelas,
+                          skor: skor,
+                          deviceId: deviceId,
+                          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                      });
+                  }
+                  fetchLeaderboard(mapel);
+              })
+              .catch((error) => {
+                  console.error("Gagal sinkronisasi ke Firebase:", error);
+              });
         }
 
         function fetchLeaderboard(mapel) {
@@ -1071,8 +1093,6 @@
               .where("mapel", "==", mapel)
               .get()
               .then((querySnapshot) => {
-                  if (querySnapshot.empty) return;
-
                   let list = [];
                   querySnapshot.forEach((doc) => {
                       list.push(doc.data());
@@ -1081,7 +1101,14 @@
                   list.sort((a, b) => b.skor - a.skor);
 
                   tbody.innerHTML = '';
-                  list.slice(0, 10).forEach((item, index) => {
+                  let top10 = list.slice(0, 10);
+
+                  if (top10.length === 0) {
+                      tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8;">Belum ada data peringkat. Jadilah yang pertama di Mode Ujian!</td></tr>`;
+                      return;
+                  }
+
+                  top10.forEach((item, index) => {
                       let rankClass = index === 0 ? 'rank-1' : (index === 1 ? 'rank-2' : (index === 2 ? 'rank-3' : ''));
                       let row = `<tr>
                           <td class="${rankClass}">#${index + 1}</td>
@@ -1093,7 +1120,7 @@
                   });
               })
               .catch((error) => {
-                  console.warn("Menggunakan data lokal cadangan:", error);
+                  console.warn("Gagal memuat dari Firebase, menggunakan data lokal:", error);
               });
         }
 
@@ -1101,12 +1128,17 @@
             let localData = JSON.parse(localStorage.getItem('hafar_local_lb') || '{}');
             if (!localData[mapel]) localData[mapel] = [];
             
-            let existing = localData[mapel].find(item => item.nama === nama && item.kelas === kelas);
+            let existing = localData[mapel].find(item => item.deviceId === deviceId);
             if (existing) {
+                existing.nama = nama;
+                existing.kelas = kelas;
                 if (skor > existing.skor) existing.skor = skor;
             } else {
-                localData[mapel].push({ nama, kelas, skor });
+                localData[mapel].push({ nama, kelas, skor, deviceId });
             }
+
+            localData[mapel].sort((a, b) => b.skor - a.skor);
+            localData[mapel] = localData[mapel].slice(0, 10);
 
             localStorage.setItem('hafar_local_lb', JSON.stringify(localData));
         }
