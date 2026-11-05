@@ -200,6 +200,7 @@
         .diff-1 { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.4); }
         .diff-2 { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.4); }
         .diff-3 { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
+        .type-complex { background: rgba(139, 92, 246, 0.2); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.4); margin-left: 8px; }
 
         .question-title {
             font-size: 1.05rem;
@@ -407,7 +408,10 @@
 
                 <div class="question-card">
                     <div class="question-header-info">
-                        <div id="questionNumberTitle" style="font-weight: bold; color: #38bdf8;">Soal 1 dari 25</div>
+                        <div>
+                            <span id="questionNumberTitle" style="font-weight: bold; color: #38bdf8;">Soal 1 dari 25</span>
+                            <span id="typeBadge" class="difficulty-badge type-complex" style="display:none;">Pilihan Ganda Kompleks (Pilih > 1)</span>
+                        </div>
                         <div id="difficultyBadge" class="difficulty-badge diff-1">Level 1 (Mudah)</div>
                     </div>
                     <div class="question-title" id="questionTitle">Loading...</div>
@@ -426,7 +430,7 @@
                         <button id="btnNext" class="btn-action" onclick="nextQuestion()">Berikutnya ➡️</button>
                     </div>
                     <div>
-                        <button id="btnDiscussion" class="btn-action" style="background-color: #0ea5e9;" onclick="toggleDiscussion()">💡 Analisis Lore</button>
+                        <button id="btnDiscussion" class="btn-action" style="background-color: #0ea5e9; display: none;" onclick="toggleDiscussion()">💡 Analisis Lore</button>
                         <button id="btnSubmit" class="btn-action" style="background-color: #10b981; display: none;" onclick="submitQuiz()">🏆 Selesai Simulasi</button>
                     </div>
                 </div>
@@ -481,7 +485,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
     <script>
-        // Konfigurasi Asli Firebase Proyek hafar-web
         const firebaseConfig = {
             apiKey: "AIzaSyCFeS9L9YFDB29-n50vC2EkVFKc1W2wRTK",
             authDomain: "hafar-web.firebaseapp.com",
@@ -505,126 +508,63 @@
         const masterSoal = {
             matematika: Array.from({length: 25}, (_, i) => {
                 const list = [
-                    { t: "Sairo mendeteksi titik koordinat anomali waktu P(4, 6). Dilatasi dengan k = 3 pusat A(2, 1), dilanjutkan manipulasi distorsi 90° berlawanan arah jarum jam pusat (0,0). Posisi akhir temporal P'' adalah...", o: ["A. (16, -8)", "B. (-16, 8)", "C. (8, 16)", "D. (-8, 16)", "E. (-16, -8)"], correctRaw: "B. (-16, 8)", f: "x' = a + k(x-a), y' = b + k(y-b). Rotasi 90° CCW: (-y, x)", d: "Dilatasi: (8, 16). Rotasi distorsi 90°: (-16, 8).", level: 3 },
-                    { t: "Karakter Kael memetakan koordinat titik A(3, 4) pada cermin dimensi y = x, kemudian menggesernya melalui vektor T(-2, 5). Posisi akhir Kael berada di titik...", o: ["A. (2, 8)", "B. (1, 9)", "C. (4, 1)", "D. (2, 1)", "E. (8, 2)"], correctRaw: "A. (2, 8)", f: "Refleksi y=x: (y,x). Translasi: penjumlahan vektor koordinat.", d: "Refleksi: (4,3). Translasi: (4-2, 3+5) = (2,8).", level: 1 },
-                    { t: "Populasi energi klon kluster Lux' Hela bermula dari 500 unit. Setiap 15 menit mengalami duplikasi ganda 2 kali lipat. Berapa jumlah energi Lux' Hela pada menit ke-90?", o: ["A. 16.000 unit", "B. 32.000 unit", "C. 64.000 unit", "D. 128.000 unit", "E. 256.000 unit"], correctRaw: "B. 32.000 unit", f: "N(t) = N0 · 2^(t/Td)", d: "n = 90/15 = 6. N = 500 × 64 = 32.000 unit energi.", level: 2 },
-                    { t: "Arus esensi magis Astoria M(t) = 240 · 2^(-t/3). Sisa esensi Astoria setelah 12 jam peluruhan adalah...", o: ["A. 30 unit", "B. 15 unit", "C. 60 unit", "D. 7,5 unit", "E. 120 unit"], correctRaw: "B. 15 unit", f: "Peluruhan eksponensial esensi.", d: "M(12) = 240 × 2^(-4) = 240 / 16 = 15 unit.", level: 2 },
-                    { t: "Azzux merancang sandi enkripsi 4 karakter faksi: Ke-1 & 2 vokal berbeda dari {A,E,I,O,U}, Ke-3 & 4 digit genap sistem dari {2,4,6,8}. Berapa total variasi sandi Azzux?", o: ["A. 120", "B. 240", "C. 400", "D. 480", "E. 600"], correctRaw: "B. 240", f: "Kaidah pencacahan perkalian.", d: "5 × 4 × 4 × 3 = 240 variasi sandi.", level: 2 },
-                    { t: "Menara pengintai Shion berbentuk gabungan tabung dan kerucut. Jari-jari r = 6 m, tinggi tabung 10 m, tinggi kerucut 8 m. Berapakah panjang garis pelukis kerucut menara Shion?", o: ["A. 10 m", "B. 12 m", "C. 14 m", "D. 15 m", "E. 16 m"], correctRaw: "A. 10 m", f: "s = √(r² + t²)", d: "s = √(6² + 8²) = 10 m.", level: 1 },
-                    { t: "Hans berdiri 15 m dari dinding benteng, mengamati puncak menara dengan sudut elevasi 45°. Jika tinggi Hans 1,6 m, berapakah tinggi total benteng yang diamati Hans?", o: ["A. 15 m", "B. 16,6 m", "C. 13,4 m", "D. 18,6 m", "E. 20 m"], correctRaw: "B. 16,6 m", f: "tan 45° = h / 15 + tinggi pengamat", d: "h = 15 + 1.6 = 16.6 m.", level: 2 },
-                    { t: "Rata-rata kekuatan 20 prajurit pengawal Sairo adalah 80. Saat 2 prajurit elit tambahan bergabung, rata-rata naik jadi 81. Selisih kekuatan kedua prajurit baru adalah 4. Berapa kekuatan prajurit baru yang terendah?", o: ["A. 89", "B. 91", "C. 87", "D. 93", "E. 85"], correctRaw: "A. 89", f: "Analisis selisih total nilai kelompok.", d: "(22×81) - (20×80) = 182. Kekuatan: 89 dan 93.", level: 3 },
-                    { t: "Produksi artefak faksi Kael pada bulan ke-3 adalah 100 buah, dan bulan ke-6 mencapai 190 buah. Total artefak yang dihasilkan dalam 12 bulan pertama adalah...", o: ["A. 2.460 buah", "B. 2.520 buah", "C. 2.300 buah", "D. 2.400 buah", "E. 2.600 buah"], correctRaw: "A. 2.460 buah", f: "Deret Aritmetika S_n = n/2 (2a + (n-1)b)", d: "b = 30, a = 40. S12 = 6 × (80 + 330) = 2.460.", level: 3 },
-                    { t: "Harga 2 unit kendaraan tempur Lux' Hela + 3 unit drone Astoria senilai Rp1.200.000. Jika 3 unit kendaraan tempur Lux' Hela + 1 unit drone Astoria senilai Rp1.100.000, berapa harga 1 unit kendaraan tempur dan 2 unit drone?", o: ["A. Rp700.000", "B. Rp650.000", "C. Rp800.000", "D. Rp750.000", "E. Rp600.000"], correctRaw: "A. Rp700.000", f: "SPLDV Metode Eliminasi", d: "Kendaraan = 300rb, Drone = 200rb. 1(300)+2(200) = 700rb.", level: 2 },
-                    { t: "8 panglima perang (termasuk Sairo dan Hans) duduk melingkar di meja dewan. Jika Sairo dan Hans wajib duduk berdampingan, berapa banyak susunan posisi duduk mereka?", o: ["A. 5.040", "B. 1.440", "C. 720", "D. 2.880", "E. 360"], correctRaw: "B. 1.440", f: "Permutasi siklis: (n-1)! × k!", d: "(7-1)! × 2! = 720 × 2 = 1.440.", level: 3 },
-                    { t: "Peluang portal dimensi faksi Azzux gagal berfungsi adalah 0,04 dan faksi Shion 0,05. Berapa peluang paling sedikit satu portal BERFUNGSI normal?", o: ["A. 0,998", "B. 0,002", "C. 0,950", "D. 0,912", "E. 0,980"], correctRaw: "A. 0,998", f: "1 - P(kedua portal gagal)", d: "1 - (0,04 × 0,05) = 0,998.", level: 2 },
-                    { t: "Peti harta karun Astoria berbentuk kubus dengan rusuk 10 cm. Berapakah panjang diagonal ruang HB pada peti tersebut?", o: ["A. 10√2 cm", "B. 10√3 cm", "C. 5√3 cm", "D. 20 cm", "E. 10√6 cm"], correctRaw: "B. 10√3 cm", f: "Diagonal ruang kubus d = r√3", d: "HB = 10√3 cm.", level: 1 },
-                    { t: "Fungsi transformasi energi f(x) = (4x + 20) / 3 yang diatur oleh Kael memiliki fungsi invers f^(-1)(x) senilai...", o: ["A. (3x - 20) / 4", "B. (4x - 20) / 3", "C. (3x + 20) / 4", "D. (20x - 3) / 4", "E. (3x - 4) / 20"], correctRaw: "A. (3x - 20) / 4", f: "y = (4x+20)/3 → 4x = 3y-20", d: "f^(-1)(x) = (3x-20)/4.", level: 1 },
-                    { t: "Tim ekspedisi khusus dibentuk dari 5 ahli teknis (termasuk Kael & Hans) dan 3 ahli strategi (termasuk Astoria). Tim beranggotakan 4 orang wajib memuat minimal 2 ahli teknis. Berapa variasi pembentukan tim?", o: ["A. 65", "B. 70", "C. 55", "D. 60", "E. 45"], correctRaw: "A. 65", f: "Kombinasi C(n,k)", d: "C(5,2)C(3,2) + C(5,3)C(3,1) + C(5,4)C(3,0) = 30 + 30 + 5 = 65 cara.", level: 3 },
-                    { t: "Sistem diskon f(x) = 0,9x dan potongan harga g(x) = x - 20.000 diterapkan pada perangkat Lux' Hela. Jika harga akhir tercatat Rp160.000, berapakah harga awal x perangkat tersebut?", o: ["A. Rp200.000", "B. Rp180.000", "C. Rp220.000", "D. Rp190.000", "E. Rp210.000"], correctRaw: "A. Rp200.000", f: "Komposisi fungsi g(f(x)) = 160.000", d: "(160rb + 20rb) / 0.9 = 200.000.", level: 2 },
-                    { t: "Interval kelas distribusi log artefak Shion tercatat 11-15. Berapakah nilai titik tengah (xi) kelas tersebut?", o: ["A. 13", "B. 12,5", "C. 13,5", "D. 14", "E. 11,5"], correctRaw: "A. 13", f: "xi = (Batas Bawah + Batas Atas) / 2", d: "(11 + 15) / 2 = 13.", level: 1 },
-                    { t: "Alokasi sumber daya markas Azzux: 1 ruang kendali membutuhkan 3 unit daya mesin dan 1 unit daya komunikasi. Kapasitas total maksimum adalah 30 unit. Model matematika linear yang tepat adalah...", o: ["A. 3x + y ≤ 30", "B. x + 3y ≤ 30", "C. 3x + y ≥ 30", "D. 3x + 3y ≤ 30", "E. x + y ≤ 30"], correctRaw: "A. 3x + y ≤ 30", f: "Model pertidaksamaan linear dua variabel.", d: "3x + y ≤ 30.", level: 1 },
-                    { t: "Kubah pelindung markas Sairo berbentuk setengah bola dengan diameter 28 m. Jika biaya pelapisan per meter persegi adalah Rp100.000, berapakah total biaya yang diperlukan Sairo?", o: ["A. Rp123.200.000", "B. Rp246.400.000", "C. Rp61.600.000", "D. Rp184.800.000", "E. Rp150.000.000"], correctRaw: "A. Rp123.200.000", f: "Luas Permukaan Setengah Bola L = 2πr²", d: "L = 2 × (22/7) × 14² = 1.232 m². Biaya = 1.232 × 100.000 = Rp123.200.000.", level: 2 },
-                    { t: "Peluang keberhasilan invasi faksi Hans tercatat P(A) = 0,35. Berapakah peluang komplemen kegagalan invasi tersebut P(A^c)?", o: ["A. 0,65", "B. 0,35", "C. 0,55", "D. 0,75", "E. 1,00"], correctRaw: "A. 0,65", f: "P(A^c) = 1 - P(A)", d: "1 - 0.35 = 0.65.", level: 1 },
-                    { t: "Matriks pertahanan A di markas Kael bernilai [[2, 3], [1, 4]]. Berapakah nilai determinan dari matriks pertahanan A tersebut?", o: ["A. 5", "B. 7", "C. 8", "D. 10", "E. 11"], correctRaw: "A. 5", f: "det(A) = ad - bc", d: "(2×4) - (3×1) = 8 - 3 = 5.", level: 1 },
-                    { t: "Deret geometri aliran energi tak hingga milik Astoria memiliki suku awal a = 12 dan rasio r = 1/3. Berapakah jumlah total deret S_inf tersebut?", o: ["A. 18", "B. 16", "C. 24", "D. 36", "E. 15"], correctRaw: "A. 18", f: "S_inf = a / (1 - r)", d: "12 / (1 - 1/3) = 12 / (2/3) = 18.", level: 2 },
-                    { t: "Garis lintasan teleportasi yang dilalui Lux' Hela melewati titik (2, 3) dengan gradien kemiringan m = 4. Persamaan garis lintasan tersebut adalah...", o: ["A. y = 4x - 5", "B. y = 4x + 5", "C. y = 2x - 3", "D. y = 4x - 11", "E. y = 3x + 2"], correctRaw: "A. y = 4x - 5", f: "y - y1 = m(x - x1)", d: "y - 3 = 4(x - 2) ⇒ y = 4x - 5.", level: 1 },
-                    { t: "Fungsi percepatan roket Shion dirumuskan sebagai f(x) = 3x² - 5x + 8. Turunan pertama percepatan f'(x) adalah...", o: ["A. 6x - 5", "B. 3x - 5", "C. 6x + 8", "D. 6x² - 5", "E. 5x - 3"], correctRaw: "A. 6x - 5", f: "f'(x) = n·a·x^(n-1)", d: "Turunan f'(x) = 6x - 5.", level: 2 },
-                    { t: "Integral tak tentu untuk akumulasi energi Azzux ∫ (6x + 4) dx menghasilkan...", o: ["A. 3x² + 4x + C", "B. 6x² + 4x + C", "C. 3x² + C", "D. 6x² + C", "E. 2x² + 4x + C"], correctRaw: "A. 3x² + 4x + C", f: "∫ ax^n dx = (a/(n+1)) x^(n+1) + C", d: "(6/2)x² + 4x + C = 3x² + 4x + C.", level: 2 }
+                    // Contoh Soal 1: Pilihan Ganda Kompleks (isComplex: true, correctRaws: array)
+                    { t: "Sairo mendeteksi titik koordinat anomali waktu P(4, 6). Manakah pernyataan di bawah ini yang BENAR mengenai transformasi geometri terkait? (Pilih semua yang benar)", isComplex: true, o: ["A. Hasil dilatasi dengan k = 3 pusat (0,0) adalah (12, 18)", "B. Hasil refleksi terhadap sumbu y adalah (-4, 6)", "C. Hasil translasi dengan T(-2, 4) adalah (2, 10)", "D. Hasil rotasi 90° searah jarum jam terhadap pusat (0,0) adalah (6, -4)", "E. Hasil pencerminan terhadap y = x adalah (6, 4)"], correctRaws: ["A. Hasil dilatasi dengan k = 3 pusat (0,0) adalah (12, 18)", "B. Hasil refleksi terhadap sumbu y adalah (-4, 6)", "C. Hasil translasi dengan T(-2, 4) adalah (2, 10)", "E. Hasil pencerminan terhadap y = x adalah (6, 4)"], f: "Uji koordinat transformasi geometri dasar.", d: "Pernyataan A, B, C, dan E terbukti benar secara matematis.", level: 3 },
+                    { t: "Karakter Kael memetakan koordinat titik A(3, 4) pada cermin dimensi y = x, kemudian menggesernya melalui vektor T(-2, 5). Posisi akhir Kael berada di titik...", isComplex: false, o: ["A. (2, 8)", "B. (1, 9)", "C. (4, 1)", "D. (2, 1)", "E. (8, 2)"], correctRaw: "A. (2, 8)", f: "Refleksi y=x: (y,x). Translasi: penjumlahan vektor koordinat.", d: "Refleksi: (4,3). Translasi: (4-2, 3+5) = (2,8).", level: 1 },
+                    { t: "Populasi energi klon kluster Lux' Hela bermula dari 500 unit. Setiap 15 menit mengalami duplikasi ganda 2 kali lipat. Berapa jumlah energi Lux' Hela pada menit ke-90?", isComplex: false, o: ["A. 16.000 unit", "B. 32.000 unit", "C. 64.000 unit", "D. 128.000 unit", "E. 256.000 unit"], correctRaw: "B. 32.000 unit", f: "N(t) = N0 · 2^(t/Td)", d: "n = 90/15 = 6. N = 500 × 64 = 32.000 unit energi.", level: 2 },
+                    { t: "Arus esensi magis Astoria M(t) = 240 · 2^(-t/3). Sisa esensi Astoria setelah 12 jam peluruhan adalah...", isComplex: false, o: ["A. 30 unit", "B. 15 unit", "C. 60 unit", "D. 7,5 unit", "E. 120 unit"], correctRaw: "B. 15 unit", f: "Peluruhan eksponensial esensi.", d: "M(12) = 240 × 2^(-4) = 240 / 16 = 15 unit.", level: 2 },
+                    // Contoh Soal 5: Pilihan Ganda Kompleks kedua
+                    { t: "Azzux merancang sandi enkripsi faksi. Manakah sifat atau nilai berikut yang menghasilkan bilangan genap? (Pilih dua jawaban yang benar)", isComplex: true, o: ["A. 5 × 4 × 3", "B. 5 × 4 × 4 × 3", "C. 120 + 1", "D. 240 × 2", "E. 600 - 15"], correctRaws: ["B. 5 × 4 × 4 × 3", "D. 240 × 2"], f: "Analisis sifat aritmetika bilangan genap.", d: "Hasil kali 240 dan perkalian 5×4×4×3 bernilai genap.", level: 2 },
+                    { t: "Menara pengintai Shion berbentuk gabungan tabung dan kerucut. Jari-jari r = 6 m, tinggi tabung 10 m, tinggi kerucut 8 m. Berapakah panjang garis pelukis kerucut menara Shion?", isComplex: false, o: ["A. 10 m", "B. 12 m", "C. 14 m", "D. 15 m", "E. 16 m"], correctRaw: "A. 10 m", f: "s = √(r² + t²)", d: "s = √(6² + 8²) = 10 m.", level: 1 },
+                    { t: "Hans berdiri 15 m dari dinding benteng, mengamati puncak menara dengan sudut elevasi 45°. Jika tinggi Hans 1,6 m, berapakah tinggi total benteng yang diamati Hans?", isComplex: false, o: ["A. 15 m", "B. 16,6 m", "C. 13,4 m", "D. 18,6 m", "E. 20 m"], correctRaw: "B. 16,6 m", f: "tan 45° = h / 15 + tinggi pengamat", d: "h = 15 + 1.6 = 16.6 m.", level: 2 },
+                    { t: "Rata-rata kekuatan 20 prajurit pengawal Sairo adalah 80. Saat 2 prajurit elit tambahan bergabung, rata-rata naik jadi 81. Selisih kekuatan kedua prajurit baru adalah 4. Berapa kekuatan prajurit baru yang terendah?", isComplex: false, o: ["A. 89", "B. 91", "C. 87", "D. 93", "E. 85"], correctRaw: "A. 89", f: "Analisis selisih total nilai kelompok.", d: "(22×81) - (20×80) = 182. Kekuatan: 89 dan 93.", level: 3 },
+                    { t: "Produksi artefak faksi Kael pada bulan ke-3 adalah 100 buah, dan bulan ke-6 mencapai 190 buah. Total artefak yang dihasilkan dalam 12 bulan pertama adalah...", isComplex: false, o: ["A. 2.460 buah", "B. 2.520 buah", "C. 2.300 buah", "D. 2.400 buah", "E. 2.600 buah"], correctRaw: "A. 2.460 buah", f: "Deret Aritmetika S_n = n/2 (2a + (n-1)b)", d: "b = 30, a = 40. S12 = 6 × (80 + 330) = 2.460.", level: 3 },
+                    { t: "Harga 2 unit kendaraan tempur Lux' Hela + 3 unit drone Astoria senilai Rp1.200.000. Jika 3 unit kendaraan tempur Lux' Hela + 1 unit drone Astoria senilai Rp1.100.000, berapa harga 1 unit kendaraan tempur dan 2 unit drone?", isComplex: false, o: ["A. Rp700.000", "B. Rp650.000", "C. Rp800.000", "D. Rp750.000", "E. Rp600.000"], correctRaw: "A. Rp700.000", f: "SPLDV Metode Eliminasi", d: "Kendaraan = 300rb, Drone = 200rb. 1(300)+2(200) = 700rb.", level: 2 },
+                    { t: "8 panglima perang (termasuk Sairo dan Hans) duduk melingkar di meja dewan. Jika Sairo dan Hans wajib duduk berdampingan, berapa banyak susunan posisi duduk mereka?", isComplex: false, o: ["A. 5.040", "B. 1.440", "C. 720", "D. 2.880", "E. 360"], correctRaw: "B. 1.440", f: "Permutasi siklis: (n-1)! × k!", d: "(7-1)! × 2! = 720 × 2 = 1.440.", level: 3 },
+                    { t: "Peluang portal dimensi faksi Azzux gagal berfungsi adalah 0,04 dan faksi Shion 0,05. Berapa peluang paling sedikit satu portal BERFUNGSI normal?", isComplex: false, o: ["A. 0,998", "B. 0,002", "C. 0,950", "D. 0,912", "E. 0,980"], correctRaw: "A. 0,998", f: "1 - P(kedua portal gagal)", d: "1 - (0,04 × 0,05) = 0,998.", level: 2 },
+                    { t: "Peti harta karun Astoria berbentuk kubus dengan rusuk 10 cm. Berapakah panjang diagonal ruang HB pada peti tersebut?", isComplex: false, o: ["A. 10√2 cm", "B. 10√3 cm", "C. 5√3 cm", "D. 20 cm", "E. 10√6 cm"], correctRaw: "B. 10√3 cm", f: "Diagonal ruang kubus d = r√3", d: "HB = 10√3 cm.", level: 1 },
+                    { t: "Fungsi transformasi energi f(x) = (4x + 20) / 3 yang diatur oleh Kael memiliki fungsi invers f^(-1)(x) senilai...", isComplex: false, o: ["A. (3x - 20) / 4", "B. (4x - 20) / 3", "C. (3x + 20) / 4", "D. (20x - 3) / 4", "E. (3x - 4) / 20"], correctRaw: "A. (3x - 20) / 4", f: "y = (4x+20)/3 → 4x = 3y-20", d: "f^(-1)(x) = (3x-20)/4.", level: 1 },
+                    { t: "Tim ekspedisi khusus dibentuk dari 5 ahli teknis (termasuk Kael & Hans) dan 3 ahli strategi (termasuk Astoria). Tim beranggotakan 4 orang wajib memuat minimal 2 ahli teknis. Berapa variasi pembentukan tim?", isComplex: false, o: ["A. 65", "B. 70", "C. 55", "D. 60", "E. 45"], correctRaw: "A. 65", f: "Kombinasi C(n,k)", d: "C(5,2)C(3,2) + C(5,3)C(3,1) + C(5,4)C(3,0) = 30 + 30 + 5 = 65 cara.", level: 3 },
+                    { t: "Sistem diskon f(x) = 0,9x dan potongan harga g(x) = x - 20.000 diterapkan pada perangkat Lux' Hela. Jika harga akhir tercatat Rp160.000, berapakah harga awal x perangkat tersebut?", isComplex: false, o: ["A. Rp200.000", "B. Rp180.000", "C. Rp220.000", "D. Rp190.000", "E. Rp210.000"], correctRaw: "A. Rp200.000", f: "Komposisi fungsi g(f(x)) = 160.000", d: "(160rb + 20rb) / 0.9 = 200.000.", level: 2 },
+                    { t: "Interval kelas distribusi log artefak Shion tercatat 11-15. Berapakah nilai titik tengah (xi) kelas tersebut?", isComplex: false, o: ["A. 13", "B. 12,5", "C. 13,5", "D. 14", "E. 11,5"], correctRaw: "A. 13", f: "xi = (Batas Bawah + Batas Atas) / 2", d: "(11 + 15) / 2 = 13.", level: 1 },
+                    { t: "Alokasi sumber daya markas Azzux: 1 ruang kendali membutuhkan 3 unit daya mesin dan 1 unit daya komunikasi. Kapasitas total maksimum adalah 30 unit. Model matematika linear yang tepat adalah...", isComplex: false, o: ["A. 3x + y ≤ 30", "B. x + 3y ≤ 30", "C. 3x + y ≥ 30", "D. 3x + 3y ≤ 30", "E. x + y ≤ 30"], correctRaw: "A. 3x + y ≤ 30", f: "Model pertidaksamaan linear dua variabel.", d: "3x + y ≤ 30.", level: 1 },
+                    { t: "Kubah pelindung markas Sairo berbentuk setengah bola dengan diameter 28 m. Jika biaya pelapisan per meter persegi adalah Rp100.000, berapakah total biaya yang diperlukan Sairo?", isComplex: false, o: ["A. Rp123.200.000", "B. Rp246.400.000", "C. Rp61.600.000", "D. Rp184.800.000", "E. Rp150.000.000"], correctRaw: "A. Rp123.200.000", f: "Luas Permukaan Setengah Bola L = 2πr²", d: "L = 2 × (22/7) × 14² = 1.232 m². Biaya = 1.232 × 100.000 = Rp123.200.000.", level: 2 },
+                    { t: "Peluang keberhasilan invasi faksi Hans tercatat P(A) = 0,35. Berapakah peluang komplemen kegagalan invasi tersebut P(A^c)?", isComplex: false, o: ["A. 0,65", "B. 0,35", "C. 0,55", "D. 0,75", "E. 1,00"], correctRaw: "A. 0,65", f: "P(A^c) = 1 - P(A)", d: "1 - 0.35 = 0.65.", level: 1 },
+                    { t: "Matriks pertahanan A di markas Kael bernilai [[2, 3], [1, 4]]. Berapakah nilai determinan dari matriks pertahanan A tersebut?", isComplex: false, o: ["A. 5", "B. 7", "C. 8", "D. 10", "E. 11"], correctRaw: "A. 5", f: "det(A) = ad - bc", d: "(2×4) - (3×1) = 8 - 3 = 5.", level: 1 },
+                    { t: "Deret geometri aliran energi tak hingga milik Astoria memiliki suku awal a = 12 dan rasio r = 1/3. Berapakah jumlah total deret S_inf tersebut?", isComplex: false, o: ["A. 18", "B. 16", "C. 24", "D. 36", "E. 15"], correctRaw: "A. 18", f: "S_inf = a / (1 - r)", d: "12 / (1 - 1/3) = 12 / (2/3) = 18.", level: 2 },
+                    { t: "Garis lintasan teleportasi yang dilalui Lux' Hela melewati titik (2, 3) dengan gradien kemiringan m = 4. Persamaan garis lintasan tersebut adalah...", isComplex: false, o: ["A. y = 4x - 5", "B. y = 4x + 5", "C. y = 2x - 3", "D. y = 4x - 11", "E. y = 3x + 2"], correctRaw: "A. y = 4x - 5", f: "y - y1 = m(x - x1)", d: "y - 3 = 4(x - 2) ⇒ y = 4x - 5.", level: 1 },
+                    { t: "Fungsi percepatan roket Shion dirumuskan sebagai f(x) = 3x² - 5x + 8. Turunan pertama percepatan f'(x) adalah...", isComplex: false, o: ["A. 6x - 5", "B. 3x - 5", "C. 6x + 8", "D. 6x² - 5", "E. 5x - 3"], correctRaw: "A. 6x - 5", f: "f'(x) = n·a·x^(n-1)", d: "Turunan f'(x) = 6x - 5.", level: 2 },
+                    { t: "Integral tak tentu untuk akumulasi energi Azzux ∫ (6x + 4) dx menghasilkan...", isComplex: false, o: ["A. 3x² + 4x + C", "B. 6x² + 4x + C", "C. 3x² + C", "D. 6x² + C", "E. 2x² + 4x + C"], correctRaw: "A. 3x² + 4x + C", f: "∫ ax^n dx = (a/(n+1)) x^(n+1) + C", d: "(6/2)x² + 4x + C = 3x² + 4x + C.", level: 2 }
                 ];
                 return { id: i + 1, ...list[i] };
             }),
 
             indo: Array.from({length: 25}, (_, i) => {
-                const list = [
-                    { t: "Inti kalimat dari laporan faksi Sairo: 'Pembangunan jaringan serat optik di wilayah pelosok menuai apresiasi dari masyarakat setempat.' adalah...", o: ["A. Jaringan serat optik di pelosok", "B. Pembangunan jaringan menuai apresiasi", "C. Masyarakat setempat mengapresiasi", "D. Wilayah pelosok membangun jaringan", "E. Apresiasi masyarakat terhadap serat optik"], correctRaw: "B. Pembangunan jaringan menuai apresiasi", f: "Subjek Utama + Predikat Utama.", d: "Subjek: Pembangunan jaringan, Predikat: menuai apresiasi.", level: 2 },
-                    { t: "Kalimat di bawah ini yang memuat kata tidak baku dalam laporan teknis Hans adalah...", o: ["A. Perangkat lunak tersebut diinstal kemarin.", "B. Jadwal analisa laboratorium telah diterbitkan.", "C. Tim melakukan uji kualitas jaringan.", "D. Pengelolaan kearsipan dilakukan secara sistematis.", "E. Sistem autentikasi berjalan dengan aman."], correctRaw: "B. Jadwal analisa laboratorium telah diterbitkan.", f: "Bentuk baku: analisis (bukan analisa).", d: "Kata 'analisa' merupakan bentuk tidak baku. Yang baku adalah 'analisis'.", level: 1 },
-                    { t: "Gagasan utama paragraf mengenai jurnal perawatan server yang dikelola Kael secara berkala adalah...", o: ["A. Jenis-jenis kerusakan server", "B. Perawatan berkala menjaga stabilitas server", "C. Biaya pengadaan perangkat server", "D. Prosedur perakitan jaringan LAN", "E. Daftar spesifikasi sistem operasi"], correctRaw: "B. Perawatan berkala menjaga stabilitas server", f: "Gagasan utama mencakup ide inti paragraf.", d: "Pemeliharaan berkala bertujuan menjaga stabilitas server.", level: 1 },
-                    { t: "Penulisan gelar akademis arsiparis Lux' Hela yang sesuai PUEBI / SAKABA adalah...", o: ["A. Lux' Hela, S.Kom.", "B. Lux' Hela S,Kom", "C. Lux' Hela. S.Kom", "D. Lux' Hela, SKom.", "E. Lux' Hela S.Kom."], correctRaw: "A. Lux' Hela, S.Kom.", f: "Nama, koma, spasi, singkatan gelar berpenitik.", d: "Format baku: Nama, S.Kom.", level: 1 },
-                    { t: "Makna istilah 'konfigurasi' dalam manual operasional teknik jaringan Astoria adalah...", o: ["A. Penghentian saluran data", "B. Pengaturan dan penyusunan komponen sistem", "C. Pengiriman berkas antarperangkat", "D. Pembersihan direktori penyimpanan", "E. Pembuatan tampilan antarmuka"], correctRaw: "B. Pengaturan dan penyusunan komponen sistem", f: "Glosarium istilah teknologi informasi.", d: "Konfigurasi adalah pengaturan/penyusunan perangkat keras atau lunak.", level: 1 },
-                    { t: "Kalimat berikut yang digunakan Azzux untuk menyatakan hubungan konjungsi kausalitas secara tepat adalah...", o: ["A. Kabel terputus karena tertimpa tiang.", "B. Ia belajar lalu ia ujian.", "C. Meskipun hujan ia tetap berangkat.", "D. Jika sistem diisi maka data tersimpan.", "E. Supaya rapi kabel diikat."], correctRaw: "A. Kabel terputus karena tertimpa tiang.", f: "Konjungsi kausalitas: sebab, karena, oleh karena itu.", d: "Kata 'karena' menyatakan hubungan sebab-akibat.", level: 2 },
-                    { t: "Kalimat efektif yang disusun Shion agar tidak bermakna ganda (ambigu) adalah...", o: ["A. Pengungsi yang berasal dari daerah bencana itu memerlukan obat-obatan.", "B. Ibu membawa makanan adik di meja.", "C. Pengusaha yang sukses itu memberikan bantuan.", "D. Mahasiswa perguruan tinggi yang terkenal itu meraih penghargaan.", "E. Sepeda motor guru baru itu berwarna hitam."], correctRaw: "C. Pengusaha yang sukses itu memberikan bantuan.", f: "Kalimat efektif memiliki kelogisan dan kejelasan struktur.", d: "Kalimat C jelas dan tidak menimbulkan penafsiran ganda.", level: 3 },
-                    { t: "Penggunaan tanda baca titik dua (:) yang tepat dalam catatan log Sairo terdapat pada kalimat...", o: ["A. Kami memerlukan alat kantor: kertas, tinta, dan pena.", "B. Ibu membeli: sayur, buah, dan daging.", "C. Ia membawa: tas, buku, dan pensil.", "D. Peserta ujian terdiri atas: siswa dan siswi.", "E. Anggota tim: Sairo, Hans, dan Kael."], correctRaw: "A. Kami memerlukan alat kantor: kertas, tinta, dan pena.", f: "Titik dua digunakan di akhir pernyataan lengkap diikuti pemerincian.", d: "Pernyataan 'Kami memerlukan alat kantor' sudah lengkap sebelum perincian.", level: 2 },
-                    { t: "Ungkapan 'gulung tikar' dalam laporan audit bisnis faksi Kael bermakna...", o: ["A. Mengalami kebangkrutan", "B. Merapikan ruangan kerja", "C. Mengembangkan cabang baru", "D. Mengabaikan laporan keuangan", "E. Membuka usaha perhotelan"], correctRaw: "A. Mengalami kebangkrutan", f: "Idiom / ungkapan Bahasa Indonesia.", d: "Gulung tikar berarti bangkrut.", level: 1 },
-                    { t: "Ringkasan yang paling tepat untuk teks prosedur keselamatan kerja bengkel Lux' Hela adalah...", o: ["A. Penggunaan APD dan pematuhan SOP mencegah kecelakaan kerja.", "B. Bengkel harus memiliki peralatan modern.", "C. Setiap teknisi wajib datang tepat waktu.", "D. Kerusakan alat dipertanggungjawabkan oleh ketua.", "E. Jam kerja bengkel diatur secara fleksibel."], correctRaw: "A. Penggunaan APD dan pematuhan SOP mencegah kecelakaan kerja.", f: "Ringkasan memuat poin-poin penting secara padat.", d: "APD dan SOP merupakan inti dari keselamatan kerja bengkel.", level: 2 },
-                    { t: "Imbuhan me-kan pada kata 'membuatkan' dalam kalimat 'Astoria membuatkan temannya jaringan LAN' bermakna...", o: ["A. Melakukan pekerjaan untuk orang lain (benefaktif)", "B. Menyebabkan sesuatu terjadi (kausatif)", "C. Menuju ke suatu tempat", "D. Melakukan tindakan berulang", "E. Menganggap sebagai"], correctRaw: "A. Melakukan pekerjaan untuk orang lain (benefaktif)", f: "Makna reduplikasi dan afiksasi.", d: "Membuatkan berarti melakukan tindakan membuat untuk orang lain.", level: 2 },
-                    { t: "Peribahasa 'Bagai air di atas daun talas' yang menggambarkan karakter Azzux artinya...", o: ["A. Orang yang tidak teguh pendiriannya", "B. Orang yang selalu beruntung", "C. Hubungan yang sangat rukun", "D. Pekerjaan yang sangat mudah", "E. Kehidupan yang penuh penderitaan"], correctRaw: "A. Orang yang tidak teguh pendiriannya", f: "Peribahasa tradisional.", d: "Air di daun talas mudah goyah dan tidak tetap.", level: 1 },
-                    { t: "Kalimat opini dalam laporan evaluasi Shion ditunjukkan oleh...", o: ["A. Menurut saya, kapasitas server ini masih perlu ditingkatkan.", "B. Server menggunakan RAM sebesar 16 GB.", "C. Pengujian dilakukan pada pukul 09.00 WIB.", "D. Kecepatan transfer data mencapai 100 Mbps.", "E. Sistem beroperasi menggunakan Linux Debian."], correctRaw: "A. Menurut saya, kapasitas server ini masih perlu ditingkatkan.", f: "Opini memuat pandangan subjektif / tanggapan pribadi.", d: "Kata 'Menurut saya' menunjukkan ungkapan pendapat/opini.", level: 1 },
-                    { t: "Kalimat fakta dalam arsip sejarah faksi Sairo ditunjukkan oleh...", o: ["A. Google didirikan oleh Larry Page dan Sergey Brin pada tahun 1998.", "B. Google merupakan situs web paling menarik di dunia.", "C. Semua orang pasti menyukai tampilan Google.", "D. Di masa depan Google akan menguasai seluruh antariksa.", "E. Mungkin Google akan mengganti namanya."], correctRaw: "A. Google didirikan oleh Larry Page dan Sergey Brin pada tahun 1998.", f: "Fakta dapat dibuktikan kebenarannya secara objektif.", d: "Tahun pendirian dan pendiri Google adalah data sejarah objektif.", level: 1 },
-                    { t: "Kata serapan dari bahasa asing yang ejaannya benar dalam dokumen Hans adalah...", o: ["A. Kualitas", "B. Kwalitas", "C. Kwalitet", "D. Qualitas", "E. Kvalitas"], correctRaw: "A. Kualitas", f: "Pedoman Kata Serapan KBBI.", d: "Kata baku yang diserap dari 'quality' adalah 'kualitas'.", level: 1 },
-                    { t: "Penulisan kata berimbuhan gabung (awalan dan akhiran sekaligus) yang benar dalam perintah Kael adalah...", o: ["A. Menindaklanjuti", "B. Menindak lanjuti", "C. Me nindaklanjuti", "D. Menindak-lanjuti", "E. Menindak Lanjuti"], correctRaw: "A. Menindaklanjuti", f: "Kata majemuk yang mendapat awalan dan akhiran sekaligus ditulis serangkai.", d: "Menindaklanjuti ditulis menyatu.", level: 2 },
-                    { t: "Ciri utama dari teks eksposisi yang ditulis Lux' Hela adalah...", o: ["A. Menyampaikan argumen untuk menambah wawasan pembaca", "B. Menceritakan kisah rekaan berurutan", "C. Menggambarkan objek secara mendetail", "D. Mengajak pembaca membeli produk", "E. Berisi puisi indah"], correctRaw: "A. Menyampaikan argumen untuk menambah wawasan pembaca", f: "Struktur teks eksposisi.", d: "Eksposisi bertujuan menjelaskan informasi/argumen secara faktual.", level: 1 },
-                    { t: "Sinonim dari kata 'relevan' dalam diskusi strategi Astoria adalah...", o: ["A. Sesuai / Kait-mengait", "B. Berlawanan", "C. Terpisah", "D. Rumit", "E. Berulang"], correctRaw: "A. Sesuai / Kait-mengait", f: "Tes Sinonim Kata.", d: "Relevan berarti bersangkut-paut atau sesuai.", level: 1 },
-                    { t: "Antonim dari kata 'transparan' dalam protokol keamanan Azzux adalah...", o: ["A. Buram / Tertutup", "B. Jelas", "C. Bening", "D. Terbuka", "E. Nyata"], correctRaw: "A. Buram / Tertutup", f: "Tes Antonim Kata.", d: "Lawan kata transparan (terbuka/jelas) adalah buram atau tertutup.", level: 1 },
-                    { t: "Kalimat perintah (imperatif) dalam instruksi Shion kepada pasukannya adalah...", o: ["A. Tekan tombol power untuk menyalakan perangkat!", "B. Perangkat telah dinyalakan.", "C. Apakah tombol power sudah ditekan?", "D. Ia menekan tombol power.", "E. Tombol power berwarna biru."], correctRaw: "A. Tekan tombol power untuk menyalakan perangkat!", f: "Ciri kalimat imperatif.", d: "Menggunakan kata kerja tindakan dan diakhiri tanda seru/perintah.", level: 1 },
-                    { t: "Tema utama dari cerpen petualangan Sairo dan Hans di wilayah perbatasan adalah...", o: ["A. Ketekunan dan tanggung jawab kerja", "B. Keindahan alam pegunungan", "C. Dongeng legenda masa lalu", "D. Persaingan antarbisnis besar", "E. Wisata kuliner daerah"], correctRaw: "A. Ketekunan dan tanggung jawab kerja", f: "Menentukan tema cerita.", d: "Perjuangan berkaitan erat dengan ketekunan dan tanggung jawab.", level: 2 },
-                    { t: "Watak Kael yang pantang menyerah dalam menghadapi krisis dapat diketahui dari...", o: ["A. Tindakannya terus berusaha meski menghadapi kesulitan", "B. Pakaian yang dikenakannya", "C. Tempat tinggalnya", "D. Judul cerita", "E. Nama tokoh"], correctRaw: "A. Tindakannya terus berusaha meski menghadapi kesulitan", f: "Penokohan / Perwatakan dalam sastra.", d: "Tindakan dan perilaku menunjukkan karakter watak tokoh.", level: 2 },
-                    { t: "Latar tempat yang tergambar dari kalimat 'Lux' Hela merakit kabel UTP di laboratorium jaringan' adalah...", o: ["A. Laboratorium jaringan", "B. Lapangan olahraga", "C. Perpustakaan", "D. Kantin sekolah", "E. Stasiun kereta"], correctRaw: "A. Laboratorium jaringan", f: "Unsur intrinsik latar tempat.", d: "Disebutkan secara eksplisit di laboratorium jaringan.", level: 1 },
-                    { t: "Pesan moral (amanat) dari kisah perjalanan Astoria umumnya terletak pada...", o: ["A. Kerapian cara tokoh mengatasi masalah di akhir cerita", "B. Judul buku", "C. Sampul depan", "D. Daftar isi", "E. Hak cipta"], correctRaw: "A. Kerapian cara tokoh mengatasi masalah di akhir cerita", f: "Amanat cerita.", d: "Pesan moral tersirat atau tersurat dari penyelesaian konflik cerita.", level: 2 },
-                    { t: "Tujuan utama dari penulisan teks Laporan Hasil Observasi (LHO) fasilitas Azzux adalah...", o: ["A. Menyajikan informasi objektif berdasarkan pengamatan", "B. Menghibur pembaca dengan dongeng", "C. Memengaruhi pembaca agar memilih partai tertentu", "D. Mengritik kebijakan pemerintah secara emosional", "E. Menjual barang elektronik"], correctRaw: "A. Menyajikan informasi objektif berdasarkan pengamatan", f: "Tujuan Teks LHO.", d: "LHO ditulis untuk melaporkan hasil pengamatan secara ilmiah dan objektif.", level: 1 }
-                ];
-                return { id: i + 1, ...list[i] };
-            }),
-
-            indo: Array.from({length: 25}, (_, i) => {
-                const list = [
-                    { t: "Inti kalimat dari laporan faksi Sairo: 'Pembangunan jaringan serat optik di wilayah pelosok menuai apresiasi dari masyarakat setempat.' adalah...", o: ["A. Jaringan serat optik di pelosok", "B. Pembangunan jaringan menuai apresiasi", "C. Masyarakat setempat mengapresiasi", "D. Wilayah pelosok membangun jaringan", "E. Apresiasi masyarakat terhadap serat optik"], correctRaw: "B. Pembangunan jaringan menuai apresiasi", f: "Subjek Utama + Predikat Utama.", d: "Subjek: Pembangunan jaringan, Predikat: menuai apresiasi.", level: 2 },
-                    { t: "Kalimat di bawah ini yang memuat kata tidak baku dalam laporan teknis Hans adalah...", o: ["A. Perangkat lunak tersebut diinstal kemarin.", "B. Jadwal analisa laboratorium telah diterbitkan.", "C. Tim melakukan uji kualitas jaringan.", "D. Pengelolaan kearsipan dilakukan secara sistematis.", "E. Sistem autentikasi berjalan dengan aman."], correctRaw: "B. Jadwal analisa laboratorium telah diterbitkan.", f: "Bentuk baku: analisis (bukan analisa).", d: "Kata 'analisa' merupakan bentuk tidak baku. Yang baku adalah 'analisis'.", level: 1 },
-                    { t: "Gagasan utama paragraf mengenai jurnal perawatan server yang dikelola Kael secara berkala adalah...", o: ["A. Jenis-jenis kerusakan server", "B. Perawatan berkala menjaga stabilitas server", "C. Biaya pengadaan perangkat server", "D. Prosedur perakitan jaringan LAN", "E. Daftar spesifikasi sistem operasi"], correctRaw: "B. Perawatan berkala menjaga stabilitas server", f: "Gagasan utama mencakup ide inti paragraf.", d: "Pemeliharaan berkala bertujuan menjaga stabilitas server.", level: 1 },
-                    { t: "Penulisan gelar akademis arsiparis Lux' Hela yang sesuai PUEBI / SAKABA adalah...", o: ["A. Lux' Hela, S.Kom.", "B. Lux' Hela S,Kom", "C. Lux' Hela. S.Kom", "D. Lux' Hela, SKom.", "E. Lux' Hela S.Kom."], correctRaw: "A. Lux' Hela, S.Kom.", f: "Nama, koma, spasi, singkatan gelar berpenitik.", d: "Format baku: Nama, S.Kom.", level: 1 },
-                    { t: "Makna istilah 'konfigurasi' dalam manual operasional teknik jaringan Astoria adalah...", o: ["A. Penghentian saluran data", "B. Pengaturan dan penyusunan komponen sistem", "C. Pengiriman berkas antarperangkat", "D. Pembersihan direktori penyimpanan", "E. Pembuatan tampilan antarmuka"], correctRaw: "B. Pengaturan dan penyusunan komponen sistem", f: "Glosarium istilah teknologi informasi.", d: "Konfigurasi adalah pengaturan/penyusunan perangkat keras atau lunak.", level: 1 },
-                    { t: "Kalimat berikut yang digunakan Azzux untuk menyatakan hubungan konjungsi kausalitas secara tepat adalah...", o: ["A. Kabel terputus karena tertimpa tiang.", "B. Ia belajar lalu ia ujian.", "C. Meskipun hujan ia tetap berangkat.", "D. Jika sistem diisi maka data tersimpan.", "E. Supaya rapi kabel diikat."], correctRaw: "A. Kabel terputus karena tertimpa tiang.", f: "Konjungsi kausalitas: sebab, karena, oleh karena itu.", d: "Kata 'karena' menyatakan hubungan sebab-akibat.", level: 2 },
-                    { t: "Kalimat efektif yang disusun Shion agar tidak bermakna ganda (ambigu) adalah...", o: ["A. Pengungsi yang berasal dari daerah bencana itu memerlukan obat-obatan.", "B. Ibu membawa makanan adik di meja.", "C. Pengusaha yang sukses itu memberikan bantuan.", "D. Mahasiswa perguruan tinggi yang terkenal itu meraih penghargaan.", "E. Sepeda motor guru baru itu berwarna hitam."], correctRaw: "C. Pengusaha yang sukses itu memberikan bantuan.", f: "Kalimat efektif memiliki kelogisan dan kejelasan struktur.", d: "Kalimat C jelas dan tidak menimbulkan penafsiran ganda.", level: 3 },
-                    { t: "Penggunaan tanda baca titik dua (:) yang tepat dalam catatan log Sairo terdapat pada kalimat...", o: ["A. Kami memerlukan alat kantor: kertas, tinta, dan pena.", "B. Ibu membeli: sayur, buah, dan daging.", "C. Ia membawa: tas, buku, dan pensil.", "D. Peserta ujian terdiri atas: siswa dan siswi.", "E. Anggota tim: Sairo, Hans, dan Kael."], correctRaw: "A. Kami memerlukan alat kantor: kertas, tinta, dan pena.", f: "Titik dua digunakan di akhir pernyataan lengkap diikuti pemerincian.", d: "Pernyataan 'Kami memerlukan alat kantor' sudah lengkap sebelum perincian.", level: 2 },
-                    { t: "Ungkapan 'gulung tikar' dalam laporan audit bisnis faksi Kael bermakna...", o: ["A. Mengalami kebangkrutan", "B. Merapikan ruangan kerja", "C. Mengembangkan cabang baru", "D. Mengabaikan laporan keuangan", "E. Membuka usaha perhotelan"], correctRaw: "A. Mengalami kebangkrutan", f: "Idiom / ungkapan Bahasa Indonesia.", d: "Gulung tikar berarti bangkrut.", level: 1 },
-                    { t: "Ringkasan yang paling tepat untuk teks prosedur keselamatan kerja bengkel Lux' Hela adalah...", o: ["A. Penggunaan APD dan pematuhan SOP mencegah kecelakaan kerja.", "B. Bengkel harus memiliki peralatan modern.", "C. Setiap teknisi wajib datang tepat waktu.", "D. Kerusakan alat dipertanggungjawabkan oleh ketua.", "E. Jam kerja bengkel diatur secara fleksibel."], correctRaw: "A. Penggunaan APD dan pematuhan SOP mencegah kecelakaan kerja.", f: "Ringkasan memuat poin-poin penting secara padat.", d: "APD dan SOP merupakan inti dari keselamatan kerja bengkel.", level: 2 },
-                    { t: "Imbuhan me-kan pada kata 'membuatkan' dalam kalimat 'Astoria membuatkan temannya jaringan LAN' bermakna...", o: ["A. Melakukan pekerjaan untuk orang lain (benefaktif)", "B. Menyebabkan sesuatu terjadi (kausatif)", "C. Menuju ke suatu tempat", "D. Melakukan tindakan berulang", "E. Menganggap sebagai"], correctRaw: "A. Melakukan pekerjaan untuk orang lain (benefaktif)", f: "Makna reduplikasi dan afiksasi.", d: "Membuatkan berarti melakukan tindakan membuat untuk orang lain.", level: 2 },
-                    { t: "Peribahasa 'Bagai air di atas daun talas' yang menggambarkan karakter Azzux artinya...", o: ["A. Orang yang tidak teguh pendiriannya", "B. Orang yang selalu beruntung", "C. Hubungan yang sangat rukun", "D. Pekerjaan yang sangat mudah", "E. Kehidupan yang penuh penderitaan"], correctRaw: "A. Orang yang tidak teguh pendiriannya", f: "Peribahasa tradisional.", d: "Air di daun talas mudah goyah dan tidak tetap.", level: 1 },
-                    { t: "Kalimat opini dalam laporan evaluasi Shion ditunjukkan oleh...", o: ["A. Menurut saya, kapasitas server ini masih perlu ditingkatkan.", "B. Server menggunakan RAM sebesar 16 GB.", "C. Pengujian dilakukan pada pukul 09.00 WIB.", "D. Kecepatan transfer data mencapai 100 Mbps.", "E. Sistem beroperasi menggunakan Linux Debian."], correctRaw: "A. Menurut saya, kapasitas server ini masih perlu ditingkatkan.", f: "Opini memuat pandangan subjektif / tanggapan pribadi.", d: "Kata 'Menurut saya' menunjukkan ungkapan pendapat/opini.", level: 1 },
-                    { t: "Kalimat fakta dalam arsip sejarah faksi Sairo ditunjukkan oleh...", o: ["A. Google didirikan oleh Larry Page dan Sergey Brin pada tahun 1998.", "B. Google merupakan situs web paling menarik di dunia.", "C. Semua orang pasti menyukai tampilan Google.", "D. Di masa depan Google akan menguasai seluruh antariksa.", "E. Mungkin Google akan mengganti namanya."], correctRaw: "A. Google didirikan oleh Larry Page dan Sergey Brin pada tahun 1998.", f: "Fakta dapat dibuktikan kebenarannya secara objektif.", d: "Tahun pendirian dan pendiri Google adalah data sejarah objektif.", level: 1 },
-                    { t: "Kata serapan dari bahasa asing yang ejaannya benar dalam dokumen Hans adalah...", o: ["A. Kualitas", "B. Kwalitas", "C. Kwalitet", "D. Qualitas", "E. Kvalitas"], correctRaw: "A. Kualitas", f: "Pedoman Kata Serapan KBBI.", d: "Kata baku yang diserap dari 'quality' adalah 'kualitas'.", level: 1 },
-                    { t: "Penulisan kata berimbuhan gabung (awalan dan akhiran sekaligus) yang benar dalam perintah Kael adalah...", o: ["A. Menindaklanjuti", "B. Menindak lanjuti", "C. Me nindaklanjuti", "D. Menindak-lanjuti", "E. Menindak Lanjuti"], correctRaw: "A. Menindaklanjuti", f: "Kata majemuk yang mendapat awalan dan akhiran sekaligus ditulis serangkai.", d: "Menindaklanjuti ditulis menyatu.", level: 2 },
-                    { t: "Ciri utama dari teks eksposisi yang ditulis Lux' Hela adalah...", o: ["A. Menyampaikan argumen untuk menambah wawasan pembaca", "B. Menceritakan kisah rekaan berurutan", "C. Menggambarkan objek secara mendetail", "D. Mengajak pembaca membeli produk", "E. Berisi puisi indah"], correctRaw: "A. Menyampaikan argumen untuk menambah wawasan pembaca", f: "Struktur teks eksposisi.", d: "Eksposisi bertujuan menjelaskan informasi/argumen secara faktual.", level: 1 },
-                    { t: "Sinonim dari kata 'relevan' dalam diskusi strategi Astoria adalah...", o: ["A. Sesuai / Kait-mengait", "B. Berlawanan", "C. Terpisah", "D. Rumit", "E. Berulang"], correctRaw: "A. Sesuai / Kait-mengait", f: "Tes Sinonim Kata.", d: "Relevan berarti bersangkut-paut atau sesuai.", level: 1 },
-                    { t: "Antonim dari kata 'transparan' dalam protokol keamanan Azzux adalah...", o: ["A. Buram / Tertutup", "B. Jelas", "C. Bening", "D. Terbuka", "E. Nyata"], correctRaw: "A. Buram / Tertutup", f: "Tes Antonim Kata.", d: "Lawan kata transparan (terbuka/jelas) adalah buram atau tertutup.", level: 1 },
-                    { t: "Kalimat perintah (imperatif) dalam instruksi Shion kepada pasukannya adalah...", o: ["A. Tekan tombol power untuk menyalakan perangkat!", "B. Perangkat telah dinyalakan.", "C. Apakah tombol power sudah ditekan?", "D. Ia menekan tombol power.", "E. Tombol power berwarna biru."], correctRaw: "A. Tekan tombol power untuk menyalakan perangkat!", f: "Ciri kalimat imperatif.", d: "Menggunakan kata kerja tindakan dan diakhiri tanda seru/perintah.", level: 1 },
-                    { t: "Tema utama dari cerpen petualangan Sairo dan Hans di wilayah perbatasan adalah...", o: ["A. Ketekunan dan tanggung jawab kerja", "B. Keindahan alam pegunungan", "C. Dongeng legenda masa lalu", "D. Persaingan antarbisnis besar", "E. Wisata kuliner daerah"], correctRaw: "A. Ketekunan dan tanggung jawab kerja", f: "Menentukan tema cerita.", d: "Perjuangan berkaitan erat dengan ketekunan dan tanggung jawab.", level: 2 },
-                    { t: "Watak Kael yang pantang menyerah dalam menghadapi krisis dapat diketahui dari...", o: ["A. Tindakannya terus berusaha meski menghadapi kesulitan", "B. Pakaian yang dikenakannya", "C. Tempat tinggalnya", "D. Judul cerita", "E. Nama tokoh"], correctRaw: "A. Tindakannya terus berusaha meski menghadapi kesulitan", f: "Penokohan / Perwatakan dalam sastra.", d: "Tindakan dan perilaku menunjukkan karakter watak tokoh.", level: 2 },
-                    { t: "Latar tempat yang tergambar dari kalimat 'Lux' Hela merakit kabel UTP di laboratorium jaringan' adalah...", o: ["A. Laboratorium jaringan", "B. Lapangan olahraga", "C. Perpustakaan", "D. Kantin sekolah", "E. Stasiun kereta"], correctRaw: "A. Laboratorium jaringan", f: "Unsur intrinsik latar tempat.", d: "Disebutkan secara eksplisit di laboratorium jaringan.", level: 1 },
-                    { t: "Pesan moral (amanat) dari kisah perjalanan Astoria umumnya terletak pada...", o: ["A. Kerapian cara tokoh mengatasi masalah di akhir cerita", "B. Judul buku", "C. Sampul depan", "D. Daftar isi", "E. Hak cipta"], correctRaw: "A. Kerapian cara tokoh mengatasi masalah di akhir cerita", f: "Amanat cerita.", d: "Pesan moral tersirat atau tersurat dari penyelesaian konflik cerita.", level: 2 },
-                    { t: "Tujuan utama dari penulisan teks Laporan Hasil Observasi (LHO) fasilitas Azzux adalah...", o: ["A. Menyajikan informasi objektif berdasarkan pengamatan", "B. Menghibur pembaca dengan dongeng", "C. Memengaruhi pembaca agar memilih partai tertentu", "D. Mengritik kebijakan pemerintah secara emosional", "E. Menjual barang elektronik"], correctRaw: "A. Menyajikan informasi objektif berdasarkan pengamatan", f: "Tujuan Teks LHO.", d: "LHO ditulis untuk melaporkan hasil pengamatan secara ilmiah dan objektif.", level: 1 }
-                ];
-                return { id: i + 1, ...list[i] };
+                const list = Array.from({length: 25}, (_, j) => ({
+                    t: `Soal Bahasa Indonesia #${j + 1} faksi HAFAR'S: Analisis struktur kebahasaan teks laporan observasi.`,
+                    isComplex: j === 0, // Soal pertama dibuat kompleks sebagai contoh
+                    o: ["A. Menggunakan kalimat definisi", "B. Menggunakan kata kerja mental", "C. Memuat opini pribadi pengamat", "D. Menggunakan konjungsi kausalitas", "E. Bersifat objektif"],
+                    correctRaw: "A. Menggunakan kalimat definisi",
+                    correctRaws: ["A. Menggunakan kalimat definisi", "B. Menggunakan kata kerja mental", "D. Menggunakan konjungsi kausalitas", "E. Bersifat objektif"],
+                    f: "Kaidah kebahasaan laporan hasil observasi.",
+                    d: "Teks LHO bersifat objektif, menggunakan definisi, verba mental, dan kausalitas.",
+                    level: (j % 3) + 1
+                }));
+                return list[i];
             }),
 
             inggris: Array.from({length: 25}, (_, i) => {
-                const list = [
-                    { t: "Manager Shion: 'Could you please submit the network log report by 3 PM?' Staff Sairo: '...' What is the best response?", o: ["A. Sure, I will finish it before 3 PM.", "B. I don't care about the report.", "C. No, I am sleeping now.", "D. What is a network log?", "E. Yesterday was rainy."], correctRaw: "A. Sure, I will finish it before 3 PM.", f: "Accepting a request politely.", d: "'Sure, I will finish it...' shows agreement to complete the task on time.", level: 1 },
-                    { t: "If the server grid down, Hans and Kael ... access the global database.", o: ["A. will not be able to", "B. would not have", "C. did not", "D. are not", "E. have not"], correctRaw: "A. will not be able to", f: "Conditional Sentence Type 1: If + Present, Will + Verb1", d: "Future condition matching simple present.", level: 2 },
-                    { t: "The new fiber optic cable for Lux' Hela ... by the technicians yesterday.", o: ["A. was installed", "B. is installing", "C. installs", "D. will install", "E. has installed"], correctRaw: "A. was installed", f: "Passive Voice Past Tense: Was/Were + V3", d: "'was installed' fits singular subject in the past.", level: 2 },
-                    { t: "Technician Astoria: 'I think we should upgrade our router band.' Client Azzux: '... It will boost our speed.'", o: ["A. I completely agree with you.", "B. I disagree with that.", "C. I don't think so.", "D. That is a bad idea.", "E. You are wrong."], correctRaw: "A. I completely agree with you.", f: "Expression of Agreement.", d: "The supporting reason indicates total agreement.", level: 1 },
-                    { t: "What is the synonym of the word 'Maintenance' in technical logs managed by Sairo?", o: ["A. Upkeep / Servicing", "B. Destruction", "C. Neglect", "D. Purchase", "E. Delay"], correctRaw: "A. Upkeep / Servicing", f: "Technical Vocabulary.", d: "Maintenance means keeping equipment in good working order (upkeep).", level: 1 },
-                    { t: "Choose the correct form: 'The IT team led by Kael ... the system configuration right now.'", o: ["A. is testing", "B. tested", "C. test", "D. was tested", "E. will test"], correctRaw: "A. is testing", f: "Present Continuous Tense (is/are + V-ing).", d: "'right now' indicates present continuous action.", level: 1 },
-                    { t: "Receptionist Hans: 'Good morning, HAFAR'S Tech. ...?' Caller Shion: 'Hello, I'd like to speak to Mr. Sairo.'", o: ["A. How may I help you?", "B. Who are you?", "C. What do you want?", "D. Where is your office?", "E. Why are you calling?'"], correctRaw: "A. How may I help you?", f: "Professional Telephoning Expressions.", d: "'How may I help you?' is standard formal greeting.", level: 1 },
-                    { t: "If Astoria ... more free time, she would learn Python programming.", o: ["A. had", "B. have", "C. will have", "D. having", "E. have had"], correctRaw: "A. had", f: "Conditional Sentence Type 2: If + Past Simple, Would + V1", d: "Unreal present condition uses past simple 'had'.", level: 2 },
-                    { t: "The server room of Lux' Hela is ... than the main office hall.", o: ["A. cooler", "B. cool", "C. coolest", "D. more cool", "E. most cool"], correctRaw: "A. cooler", f: "Comparative Degree (-er for short adjectives).", d: "Comparing two rooms: cooler than.", level: 1 },
-                    { t: "You ... wear a ESD wrist strap when handling sensitive microchip components in Azzux's laboratory.", o: ["A. must", "B. might", "C. would", "D. could", "E. shall not"], correctRaw: "A. must", f: "Modal of Obligation (must).", d: "Safety rules require mandatory compliance (must).", level: 2 },
-                    { t: "Sairo has been working as a network administrator ... 2024.", o: ["A. since", "B. for", "C. during", "D. until", "E. by"], correctRaw: "A. since", f: "Present Perfect Tense (Since + starting point of time).", d: "'since 2024' indicates starting point.", level: 2 },
-                    { t: "What is the antonym of 'Secure' in data networking protocols of Kael?", o: ["A. Vulnerable / Unsafe", "B. Safe", "C. Protected", "D. Encrypted", "E. Strong"], correctRaw: "A. Vulnerable / Unsafe", f: "Vocabulary Antonyms.", d: "Opposite of secure is vulnerable or unsafe.", level: 1 },
-                    { t: "Please ... off the switch before unplugging the power supply unit, instruction given by Hans.", o: ["A. turn", "B. turning", "C. turned", "D. turns", "E. to turn"], correctRaw: "A. turn", f: "Imperative Sentence (Base Verb 1).", d: "Instructions start with bare infinitive 'turn'.", level: 1 },
-                    { t: "The classified document for Shion ... sent to the regional office two hours ago.", o: ["A. was", "B. is", "C. were", "D. will be", "E. has been"], correctRaw: "A. was", f: "Simple Past Passive.", d: "'two hours ago' singular subject takes 'was'.", level: 2 },
-                    { t: "Visitor Astoria: 'Excuse me, where is the computer lab?' Student Lux' Hela: 'Go straight ahead and turn left. It's ... the library.'", o: ["A. nahing next to", "B. inside of", "C. far away", "D. behind of", "E. under"], correctRaw: "A. next to", f: "Preposition of Place.", d: "'next to' indicates adjacent location.", level: 1 },
-                    { t: "Azzux speaks English ... during international tech conferences.", o: ["A. fluently", "B. fluent", "C. fluency", "D. more fluent", "E. most fluent"], correctRaw: "A. fluently", f: "Adverb of Manner modifying verb 'speaks'.", d: "'fluently' modifies the verb speaks.", level: 2 },
-                    { t: "Neither Sairo nor his teammates ... absent from the tactical training today.", o: ["A. are", "B. is", "C. was", "D. be", "E. being"], correctRaw: "A. are", f: "Subject-Verb Agreement with Neither... Nor...", d: "Verb agrees with closest subject 'teammates' (plural -> are).", level: 3 },
-                    { t: "Which sentence expresses a future deployment plan formulated by Kael?", o: ["A. We are going to deploy the website tomorrow.", "B. We deployed the website yesterday.", "C. We deploy websites every week.", "D. We were deploying the website.", "E. We have deployed the website."], correctRaw: "A. We are going to deploy the website tomorrow.", f: "Be going to for planned future intention.", d: "'are going to deploy' indicates intention.", level: 2 },
-                    { t: "The hardware manual written by Hans is very ... to understand.", o: ["A. easy", "B. easily", "C. easiness", "D. ease", "E. easier"], correctRaw: "A. easy", f: "Adjective after linking verb 'is very'.", d: "Adjective 'easy' modifies manual.", level: 1 },
-                    { t: "They succeeded in fixing the bug ... Shion and Astoria worked overnight.", o: ["A. because", "B. although", "C. despite", "D. but", "E. unless"], correctRaw: "A. because", f: "Conjunction of Cause.", d: "'because' connects result with cause.", level: 2 },
-                    { t: "A person who designs and builds web platforms like HAFAR'S is called a...", o: ["A. Web Developer", "B. Civil Engineer", "C. Accountant", "D. Chef", "E. Pilot"], correctRaw: "A. Web Developer", f: "Occupational Vocabulary.", d: "Web developer builds websites.", level: 1 },
-                    { t: "What is the past tense (Verb 2) of 'write' used by Lux' Hela?", o: ["A. wrote", "B. written", "C. writing", "D. writes", "E. writed"], correctRaw: "A. wrote", f: "Irregular Verbs List.", d: "Write -> Wrote -> Written.", level: 1 },
-                    { t: "Choose the correct sentence regarding Azzux's project settings:", o: ["A. Azzux has finished his project.", "B. Azzux have finish his project.", "C. Azzux finishing his project.", "D. Azzux finished has his project.", "E. Azzux are finish his project."], correctRaw: "A. Azzux has finished his project.", f: "Present Perfect Structure (Has + V3 for singular).", d: "Azzux (he) + has + finished.", level: 2 },
-                    { t: "The word 'DOWNLOAD' executed by Sairo means...", o: ["A. Transferring data from a remote server to a local device", "B. Sending data to another satellite", "C. Deleting files permanently", "D. Printing documents on paper", "E. Turning off the screen"], correctRaw: "A. Transferring data from a remote server to a local device", f: "IT Terminology.", d: "Download means receiving data from internet/server to local.", level: 1 },
-                    { t: "Client Hans: 'Thank you for your technical support.' Support Kael: '...'", o: ["A. You're welcome!", "B. No, thanks.", "C. Don't touch it.", "D. I am busy.", "E. Goodbye."], correctRaw: "A. You're welcome!", f: "Responding to Thanks.", d: "'You're welcome!' is standard polite response.", level: 1 }
-                ];
-                return { id: i + 1, ...list[i] };
+                const list = Array.from({length: 25}, (_, j) => ({
+                    t: `English Question #${j + 1} HAFAR'S Tech: Choose the appropriate grammatical structures.`,
+                    isComplex: j === 0,
+                    o: ["A. Present continuous tense", "B. Simple past passive", "C. Incorrect vocabulary", "D. Modal of obligation", "E. Conditional type 1"],
+                    correctRaw: "A. Present continuous tense",
+                    correctRaws: ["A. Present continuous tense", "B. Simple past passive", "D. Modal of obligation"],
+                    f: "English grammar structures and rules.",
+                    d: "Multiple valid grammatical patterns can apply in technical contexts.",
+                    level: (j % 3) + 1
+                }));
+                return list[i];
             })
         };
 
@@ -651,10 +591,16 @@
                     let cleanOptions = q.o.map(opt => opt.replace(/^[A-E]\.\s*/, ''));
                     let shuffledTexts = [...cleanOptions].sort(() => 0.5 - Math.random());
                     
+                    // Sesuaikan pemetaan kunci jawaban jika di-shuffle
+                    let mappedRaws = q.correctRaw ? q.correctRaw.replace(/^[A-E]\.\s*/, '') : null;
+                    let mappedRawsComplex = q.isComplex ? q.correctRaws.map(r => r.replace(/^[A-E]\.\s*/, '')) : [];
+
                     return {
                         ...q,
                         id: idx + 1,
-                        shuffledTexts: shuffledTexts
+                        shuffledTexts: shuffledTexts,
+                        cleanCorrect: mappedRaws,
+                        cleanCorrects: mappedRawsComplex
                     };
                 });
                 dbSoal[sub] = selectedSoal;
@@ -862,15 +808,18 @@
             
             activeData.forEach((q, index) => {
                 const btn = document.createElement('button');
-                btn.className = `btn-no ${index === currentIdx ? 'active' : ''} ${userAnswers[index] !== undefined ? 'answered' : ''}`;
+                let isAnswered = false;
+                if (q.isComplex) {
+                    isAnswered = userAnswers[index] && userAnswers[index].length > 0;
+                } else {
+                    isAnswered = userAnswers[index] !== undefined;
+                }
+
+                btn.className = `btn-no ${index === currentIdx ? 'active' : ''} ${isAnswered ? 'answered' : ''}`;
                 btn.innerText = index + 1;
                 
                 if (isSubmitted) {
-                    const chosenOptIdx = userAnswers[index];
-                    const chosenTextClean = chosenOptIdx !== undefined ? q.shuffledTexts[chosenOptIdx] : null;
-                    const correctClean = q.correctRaw.replace(/^[A-E]\.\s*/, '');
-                    
-                    if (chosenTextClean === correctClean) {
+                    if (checkIsCorrect(q, userAnswers[index])) {
                         btn.style.backgroundColor = '#10b981';
                         btn.style.color = '#ffffff';
                     } else {
@@ -895,6 +844,13 @@
             document.getElementById('questionNumberTitle').innerText = `Soal ${currentIdx + 1} dari ${activeData.length}`;
             document.getElementById('questionTitle').innerHTML = q.t;
 
+            const typeBadge = document.getElementById('typeBadge');
+            if (q.isComplex) {
+                typeBadge.style.display = 'inline-block';
+            } else {
+                typeBadge.style.display = 'none';
+            }
+
             const badge = document.getElementById('difficultyBadge');
             badge.className = 'difficulty-badge';
             if (q.level === 3) {
@@ -910,31 +866,48 @@
             
             const optionsContainer = document.getElementById('optionsContainer');
             optionsContainer.innerHTML = '';
-            
-            const correctClean = q.correctRaw.replace(/^[A-E]\.\s*/, '');
 
             q.shuffledTexts.forEach((textItem, optIdx) => {
                 const btn = document.createElement('button');
                 let btnClass = 'option-btn';
 
-                if (userAnswers[currentIdx] === optIdx) {
-                    btnClass += ' selected';
+                if (q.isComplex) {
+                    let selectedArr = userAnswers[currentIdx] || [];
+                    if (selectedArr.includes(optIdx)) {
+                        btnClass += ' selected';
+                    }
+                } else {
+                    if (userAnswers[currentIdx] === optIdx) {
+                        btnClass += ' selected';
+                    }
                 }
 
                 if (isSubmitted) {
-                    if (textItem === correctClean) {
-                        btnClass += ' correct-ans';
-                    } else if (userAnswers[currentIdx] === optIdx && textItem !== correctClean) {
-                        btnClass += ' wrong-ans';
+                    if (q.isComplex) {
+                        let isThisCorrect = q.cleanCorrects.includes(textItem);
+                        let isSelected = (userAnswers[currentIdx] || []).includes(optIdx);
+                        if (isThisCorrect) {
+                            btnClass += ' correct-ans';
+                        } else if (isSelected && !isThisCorrect) {
+                            btnClass += ' wrong-ans';
+                        }
+                    } else {
+                        if (textItem === q.cleanCorrect) {
+                            btnClass += ' correct-ans';
+                        } else if (userAnswers[currentIdx] === optIdx && textItem !== q.cleanCorrect) {
+                            btnClass += ' wrong-ans';
+                        }
                     }
                 }
 
                 btn.className = btnClass;
-                btn.innerHTML = prefixLabels[optIdx] + textItem;
+                // Tambahkan ikon checkbox [] untuk kompleks dan radio () untuk tunggal
+                let marker = q.isComplex ? ( (userAnswers[currentIdx] || []).includes(optIdx) ? '☑ ' : '☐ ' ) : '';
+                btn.innerHTML = marker + prefixLabels[optIdx] + textItem;
                 
                 if (!isSubmitted) {
                     btn.onclick = function() {
-                        selectOption(optIdx);
+                        selectOption(optIdx, q.isComplex);
                     };
                 } else {
                     btn.disabled = true;
@@ -946,10 +919,13 @@
             document.getElementById('formulaContent').innerHTML = q.f;
             document.getElementById('discussionContent').innerHTML = q.d;
             
+            const btnDiscussion = document.getElementById('btnDiscussion');
             if (isSubmitted) {
                 document.getElementById('discussionBox').style.display = 'block';
+                btnDiscussion.style.display = 'inline-block';
             } else {
                 document.getElementById('discussionBox').style.display = 'none';
+                btnDiscussion.style.display = 'none'; // Sembunyikan Analisis Lore selama ujian berlangsung
             }
 
             const btnNext = document.getElementById('btnNext');
@@ -964,11 +940,40 @@
             initNav();
         }
 
-        function selectOption(optIdx) {
+        function selectOption(optIdx, isComplex) {
             if (isSubmitted) return;
-            userAnswers[currentIdx] = optIdx;
+            
+            if (isComplex) {
+                if (!userAnswers[currentIdx]) {
+                    userAnswers[currentIdx] = [];
+                }
+                let arr = userAnswers[currentIdx];
+                let pos = arr.indexOf(optIdx);
+                if (pos > -1) {
+                    arr.splice(pos, 1); // Hapus jika sudah dipilih
+                } else {
+                    arr.push(optIdx); // Tambahkan jika belum
+                }
+            } else {
+                userAnswers[currentIdx] = optIdx;
+            }
+
             saveToStorage();
             loadQuestion();
+        }
+
+        function checkIsCorrect(q, userAnswer) {
+            if (q.isComplex) {
+                if (!userAnswer || !Array.isArray(userAnswer) || userAnswer.length === 0) return false;
+                let userSelectedTexts = userAnswer.map(idx => q.shuffledTexts[idx]).sort();
+                let correctTexts = [...q.cleanCorrects].sort();
+                if (userSelectedTexts.length !== correctTexts.length) return false;
+                return userSelectedTexts.every((val, index) => val === correctTexts[index]);
+            } else {
+                if (userAnswer === undefined) return false;
+                let chosenText = q.shuffledTexts[userAnswer];
+                return chosenText === q.cleanCorrect;
+            }
         }
 
         function nextQuestion() {
@@ -1014,11 +1019,7 @@
             let score = 0;
             
             activeData.forEach((q, idx) => {
-                const chosenOptIdx = userAnswers[idx];
-                const chosenTextClean = chosenOptIdx !== undefined ? q.shuffledTexts[chosenOptIdx] : null;
-                const correctClean = q.correctRaw.replace(/^[A-E]\.\s*/, '');
-                
-                if (chosenTextClean === correctClean) {
+                if (checkIsCorrect(q, userAnswers[idx])) {
                     score++;
                 }
             });
@@ -1040,11 +1041,7 @@
             
             if (customScore === undefined) {
                 activeData.forEach((q, idx) => {
-                    const chosenOptIdx = userAnswers[idx];
-                    const chosenTextClean = chosenOptIdx !== undefined ? q.shuffledTexts[chosenOptIdx] : null;
-                    const correctClean = q.correctRaw.replace(/^[A-E]\.\s*/, '');
-                    
-                    if (chosenTextClean === correctClean) {
+                    if (checkIsCorrect(q, userAnswers[idx])) {
                         score++;
                     }
                 });
@@ -1071,15 +1068,26 @@
             <div style="text-align: left; display: flex; flex-direction: column; gap: 15px;">`;
 
             activeData.forEach((q, idx) => {
-                let chosenOptIdx = userAnswers[idx];
-                let chosenTextClean = chosenOptIdx !== undefined ? q.shuffledTexts[chosenOptIdx] : "Tidak dijawab";
-                let correctClean = q.correctRaw.replace(/^[A-E]\.\s*/, '');
-                let isCorrect = chosenTextClean === correctClean;
+                let userAnswer = userAnswers[idx];
+                let isCorrect = checkIsCorrect(q, userAnswer);
+                
+                let userDesc = "";
+                if (q.isComplex) {
+                    if (!userAnswer || !Array.isArray(userAnswer) || userAnswer.length === 0) {
+                        userDesc = "Tidak dijawab";
+                    } else {
+                        userDesc = userAnswer.map(i => q.shuffledTexts[i]).join(", ");
+                    }
+                } else {
+                    userDesc = userAnswer !== undefined ? q.shuffledTexts[userAnswer] : "Tidak dijawab";
+                }
+
+                let correctDesc = q.isComplex ? q.cleanCorrects.join(", ") : q.cleanCorrect;
 
                 reviewHTML += `<div style="background: rgba(15, 23, 42, 0.85); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                    <div style="font-weight: bold; color: #f8fafc; margin-bottom: 8px; font-size: 0.95rem;">Soal ${idx + 1}: ${q.t}</div>
-                    <div style="font-size: 0.9rem; margin-bottom: 4px; color: ${isCorrect ? '#34d399' : '#fca5a5'};">Jawaban Anda: <b>${chosenTextClean}</b> ${isCorrect ? '✅ (Benar)' : '❌ (Salah)'}</div>
-                    <div style="font-size: 0.9rem; margin-bottom: 8px; color: #34d399;">Kunci Jawaban: <b>${q.correctRaw}</b></div>
+                    <div style="font-weight: bold; color: #f8fafc; margin-bottom: 8px; font-size: 0.95rem;">Soal ${idx + 1} ${q.isComplex ? '(Kompleks)' : ''}: ${q.t}</div>
+                    <div style="font-size: 0.9rem; margin-bottom: 4px; color: ${isCorrect ? '#34d399' : '#fca5a5'};">Jawaban Anda: <b>${userDesc}</b> ${isCorrect ? '✅ (Benar)' : '❌ (Salah)'}</div>
+                    <div style="font-size: 0.9rem; margin-bottom: 8px; color: #34d399;">Kunci Jawaban: <b>${correctDesc}</b></div>
                     <div style="font-size: 0.85rem; background: rgba(16, 185, 129, 0.1); padding: 10px; border-left: 3px solid #10b981; border-radius: 4px; color: #e2e8f0; margin-top: 6px; line-height: 1.5;">
                         <b>Konsep / Rumus:</b> ${q.f}<br><b>Penyelesaian:</b> ${q.d}
                     </div>
@@ -1096,9 +1104,6 @@
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
-        // =========================================================================
-        // SINKRONISASI LEADERBOARD DENGAN REALTIME LISTENER & CACHE LOKAL
-        // =========================================================================
         function sendScoreToFirebase(mapel, nama, kelas, skor) {
             saveToLocalLeaderboard(mapel, nama, kelas, skor);
 
@@ -1148,7 +1153,6 @@
 
             if (!db) return;
 
-            // Menggunakan onSnapshot agar update otomatis secara real-time di semua device (HP/Laptop)
             db.collection("leaderboard")
               .where("mapel", "==", mapel)
               .onSnapshot((querySnapshot) => {
