@@ -379,7 +379,7 @@
             <div id="startOverlay" class="start-overlay">
                 <h3 style="color: #ffffff; margin-bottom: 8px; font-size: 1.3rem;">Masukkan Identitas Anda</h3>
                 <p style="color: #94a3b8; font-size: 0.85rem; max-width: 500px; margin: 0 auto 20px auto; line-height: 1.5;">
-                    Dengan memasukan identitas mu nama mu akan tertampil di leaderboard.
+                    Dengan memasukkan identitasmu, namamu akan tertampil di leaderboard.
                 </p>
                 
                 <div class="form-group">
@@ -472,16 +472,11 @@
 
     <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html">Privacy & Policy</a></div>
 
-    <!-- ========================================== -->
-    <!-- BAGIAN KODE FIREBASE & SKrip UTAMA        -->
-    <!-- ========================================== -->
-
     <!-- Firebase SDK (Firestore versi Compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
     <script>
-        // 1. Konfigurasi Kredensial Firebase Project HAFAR'S
         const firebaseConfig = {
             apiKey: "AIzaSyD-contoh-api-key-kamu",
             authDomain: "hafar-official.firebaseapp.com",
@@ -491,7 +486,6 @@
             appId: "1:123:web:abc"
         };
 
-        // 2. Inisialisasi Firebase & Firestore Database
         let db = null;
         try {
             if (!firebase.apps.length) {
@@ -500,13 +494,6 @@
             db = firebase.firestore();
         } catch (e) {
             console.warn("Gagal menginisialisasi Firestore:", e);
-        }
-
-        // 3. Pengenalan Device ID Unik (mencegah penumpukan leaderboard oleh device yang sama)
-        let deviceId = localStorage.getItem('hafar_device_id');
-        if (!deviceId) {
-            deviceId = 'dev_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
-            localStorage.setItem('hafar_device_id', deviceId);
         }
 
         const masterSoal = {
@@ -1036,7 +1023,7 @@
         }
 
         // =========================================================================
-        // LOGIKA FIREBASE: Sinkronisasi, Device ID, & Render Leaderboard Publik
+        // SINKRONISASI LEADERBOARD PUBLIK (BERDASARKAN NAMA + KELAS/ASAL)
         // =========================================================================
         function sendScoreToFirebase(mapel, nama, kelas, skor) {
             saveToLocalLeaderboard(mapel, nama, kelas, skor);
@@ -1045,7 +1032,8 @@
 
             db.collection("leaderboard")
               .where("mapel", "==", mapel)
-              .where("deviceId", "==", deviceId)
+              .where("nama", "==", nama)
+              .where("kelas", "==", kelas)
               .get()
               .then((querySnapshot) => {
                   if (!querySnapshot.empty) {
@@ -1053,8 +1041,6 @@
                           let existingData = doc.data();
                           if (skor >= existingData.skor) {
                               db.collection("leaderboard").doc(doc.id).update({
-                                  nama: nama,
-                                  kelas: kelas,
                                   skor: skor,
                                   timestamp: firebase.firestore.FieldValue.serverTimestamp()
                               });
@@ -1066,7 +1052,6 @@
                           nama: nama,
                           kelas: kelas,
                           skor: skor,
-                          deviceId: deviceId,
                           timestamp: firebase.firestore.FieldValue.serverTimestamp()
                       });
                   }
@@ -1128,13 +1113,11 @@
             let localData = JSON.parse(localStorage.getItem('hafar_local_lb') || '{}');
             if (!localData[mapel]) localData[mapel] = [];
             
-            let existing = localData[mapel].find(item => item.deviceId === deviceId);
+            let existing = localData[mapel].find(item => item.nama === nama && item.kelas === kelas);
             if (existing) {
-                existing.nama = nama;
-                existing.kelas = kelas;
                 if (skor > existing.skor) existing.skor = skor;
             } else {
-                localData[mapel].push({ nama, kelas, skor, deviceId });
+                localData[mapel].push({ nama, kelas, skor });
             }
 
             localData[mapel].sort((a, b) => b.skor - a.skor);
