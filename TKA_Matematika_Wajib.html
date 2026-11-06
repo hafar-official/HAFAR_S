@@ -508,12 +508,13 @@
                                 <th style="width: 50px;">Rank</th>
                                 <th>Nama</th>
                                 <th>Asal</th>
+                                <th style="text-align: center;">Waktu Sisa</th>
                                 <th style="text-align: right;">Skor</th>
                             </tr>
                         </thead>
                         <tbody id="leaderboardBody">
                             <tr>
-                                <td colspan="4" style="text-align: center; color: #94a3b8;">Memuat data peringkat...</td>
+                                <td colspan="5" style="text-align: center; color: #94a3b8;">Memuat data peringkat...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -558,29 +559,35 @@
                 const list = [
                     { t: "Sairo mendeteksi titik koordinat anomali waktu P(4, 6). Dilatasi dengan k = 3 pusat A(2, 1), dilanjutkan manipulasi distorsi 90° berlawanan arah jarum jam pusat (0,0). Posisi akhir temporal P'' adalah...", isComplex: false, isTrueFalse: false, o: ["A. (16, -8)", "B. (-16, 8)", "C. (8, 16)", "D. (-8, 16)", "E. (-16, -8)"], correctRaw: "B. (-16, 8)", f: "x' = a + k(x-a), y' = b + k(y-b). Rotasi 90° CCW: (-y, x)", d: "Dilatasi: (8, 16). Rotasi distorsi 90°: (-16, 8).", level: 3 },
                     { 
-                        t: "Tentukan kebenaran dari pernyataan-pernyataan transformasi geometri berikut:", 
+                        t: "Tentukan kebenaran dari pernyataan-pernyataan sifat transformasi geometri berikut:", 
                         isComplex: false, 
                         isTrueFalse: true, 
                         tfRows: [
-                            { stmt: "Hasil refleksi titik A(3, 4) terhadap garis y = x adalah (4, 3).", correct: "Benar" },
-                            { stmt: "Translasi titik B(2, 5) dengan vektor T(-1, 3) menghasilkan koordinat (2, 8).", correct: "Salah" }
+                            { stmt: "Hasil refleksi titik A(3, 4) terhadap garis y = x adalah koordinat (4, 3).", correct: "Benar" },
+                            { stmt: "Translasi titik B(2, 5) dengan vektor pergeseran T(-1, 3) menghasilkan koordinat (2, 8).", correct: "Salah" },
+                            { stmt: "Rotasi sejauh 180° terhadap titik pusat (0,0) mengubah titik (x, y) menjadi (-x, -y).", correct: "Benar" },
+                            { stmt: "Dilatasi dengan faktor skala k=-2 pada titik (1, -1) menghasilkan koordinat pusat ( -2, 2 ).", correct: "Benar" },
+                            { stmt: "Pencerminan terhadap sumbu X mentransformasikan ordinat y menjadi positif tetap (y).", correct: "Salah" }
                         ],
-                        f: "Evaluasi matriks pernyataan sifat transformasi geometri.", 
-                        d: "Refleksi y=x menukar koordinat (4,3). Translasi B(2-1, 5+3) = (1,8), bukan (2,8).", 
+                        f: "Evaluasi matriks pernyataan sifat transformasi geometri (Refleksi, Translasi, Rotasi, dan Dilatasi).", 
+                        d: "Refleksi y=x menukar posisi (4,3). Translasi B(2-1, 5+3) = (1,8) bukan (2,8). Rotasi 180° menghasilkan (-x,-y). Dilatasi k=-2 pada (1,-1) memberikan (-2,2). Pencerminan sumbu X mengubah y menjadi -y.", 
                         level: 2 
                     },
                     { t: "Populasi energi klon kluster Lux' Hela bermula dari 500 unit. Setiap 15 menit mengalami duplikasi ganda 2 kali lipat. Berapa jumlah energi Lux' Hela pada menit ke-90?", isComplex: false, isTrueFalse: false, o: ["A. 16.000 unit", "B. 32.000 unit", "C. 64.000 unit", "D. 128.000 unit", "E. 256.000 unit"], correctRaw: "B. 32.000 unit", f: "N(t) = N0 · 2^(t/Td)", d: "n = 90/15 = 6. N = 500 × 64 = 32.000 unit energi.", level: 2 },
                     { t: "Arus esensi magis Astoria M(t) = 240 · 2^(-t/3). Sisa esensi Astoria setelah 12 jam peluruhan adalah...", isComplex: false, isTrueFalse: false, o: ["A. 30 unit", "B. 15 unit", "C. 60 unit", "D. 7,5 unit", "E. 120 unit"], correctRaw: "B. 15 unit", f: "Peluruhan eksponensial esensi.", d: "M(12) = 240 × 2^(-4) = 240 / 16 = 15 unit.", level: 2 },
                     { 
-                        t: "Analisis sifat fungsi kuadrat f(x) = x² - 4x + 4 di bawah ini:", 
+                        t: "Analisis sifat fungsi kuadrat f(x) = x² - 4x + 4 secara komprehensif:", 
                         isComplex: false, 
                         isTrueFalse: true, 
                         tfRows: [
-                            { stmt: "Nilai diskriminan dari fungsi tersebut bernilai negatif.", correct: "Salah" },
-                            { stmt: "Grafik fungsi kuadrat tersebut menyinggung sumbu X di satu titik.", correct: "Benar" }
+                            { stmt: "Nilai diskriminan dari fungsi kuadrat tersebut bernilai negatif.", correct: "Salah" },
+                            { stmt: "Grafik fungsi kuadrat tersebut menyinggung sumbu X persis di satu titik.", correct: "Benar" },
+                            { stmt: "Titik puncak (balik) dari fungsi kuadrat tersebut berada pada koordinat (2, 0).", correct: "Benar" },
+                            { stmt: "Nilai minimum fungsi kuadrat tersebut adalah 4.", correct: "Salah" },
+                            { stmt: "Kurva parabola terbuka ke arah bawah karena koefisien x² bernilai negatif.", correct: "Salah" }
                         ],
-                        f: "Analisis diskriminan D = b² - 4ac pada fungsi kuadrat.", 
-                        d: "D = 0, artinya grafik menyinggung sumbu X di satu titik dan tidak bernilai negatif.", 
+                        f: "Analisis diskriminan D = b² - 4ac, titik puncak, dan sifat kurva parabola.", 
+                        d: "D = 0 (menyinggung 1 titik di sumbu X). Puncak (-b/2a, f(-b/2a)) = (2,0). Nilai minimumnya adalah 0, bukan 4. Kurva terbuka ke atas karena koefisien a = 1 positif.", 
                         level: 2 
                     },
                     { t: "Menara pengintai Shion berbentuk gabungan tabung dan kerucut. Jari-jari r = 6 m, tinggi tabung 10 m, tinggi kerucut 8 m. Berapakah panjang garis pelukis kerucut menara Shion?", isComplex: false, isTrueFalse: false, o: ["A. 10 m", "B. 12 m", "C. 14 m", "D. 15 m", "E. 16 m"], correctRaw: "A. 10 m", f: "s = √(r² + t²)", d: "s = √(6² + 8²) = 10 m.", level: 1 },
@@ -634,12 +641,14 @@
                         passage: item.p,
                         t: "Tentukan kebenaran dari pernyataan-pernyataan berikut berdasarkan wacana di atas:",
                         tfRows: [
-                            { stmt: "Proyek infrastruktur dikerjakan untuk mengatasi kesenjangan akses informasi digital.", correct: "Benar" },
-                            { stmt: "Proyek tidak menghadapi kendala geografis sama sekali di lapangan.", correct: "Salah" },
-                            { stmt: "Sistem teknologi yang diterapkan dirancang untuk mendukung efisiensi dan pemerataan.", correct: "Benar" }
+                            { stmt: "Proyek infrastruktur atau sistem yang dibahas dikerjakan untuk mengatasi kesenjangan atau tantangan mendasar.", correct: "Benar" },
+                            { stmt: "Pelaksanaan di lapangan sama sekali tidak menemui hambatan geografis maupun teknis.", correct: "Salah" },
+                            { stmt: "Penerapan teknologi atau inovasi tersebut dirancang untuk mendukung efisiensi serta pemerataan yang luas.", correct: "Benar" },
+                            { stmt: "Pihak pengelola mengabaikan standar operasional dan tidak melibatkan kerja sama eksternal.", correct: "Salah" },
+                            { stmt: "Hasil akhir dari program strategis tersebut membawa dampak positif bagi sektor terkait.", correct: "Benar" }
                         ],
-                        f: "Evaluasi matriks pernyataan benar-salah berdasarkan wacana.",
-                        d: "Pernyataan pertama dan ketiga terbukti benar sesuai teks, sedangkan pernyataan kedua salah karena teks menyebutkan adanya tantangan geografis ekstrim.",
+                        f: "Evaluasi matriks pernyataan benar-salah berdasarkan isi wacana.",
+                        d: "Pernyataan 1, 3, dan 5 sesuai dengan isi teks wacana, sedangkan pernyataan 2 dan 4 bertentangan dengan rincian informasi di dalam teks.",
                         level: 2
                     };
                 } else if (typeSelector === 1) {
@@ -714,12 +723,14 @@
                         passage: itemEN.p,
                         t: "Determine whether the following statements are True or False based on the passage:",
                         tfRows: [
-                            { stmt: "The technology helps reduce maintenance costs and improves overall system security.", correct: "Benar" },
+                            { stmt: "The technology helps reduce maintenance costs and improves overall system security standards.", correct: "Benar" },
                             { stmt: "Companies continue to rely exclusively on outdated physical local servers without remote networks.", correct: "Salah" },
-                            { stmt: "Advanced systems optimize digital resource management and operational performance.", correct: "Benar" }
+                            { stmt: "Advanced systems optimize digital resource management and operational performance dynamically.", correct: "Benar" },
+                            { stmt: "The implementation causes complete system failures and increases operational vulnerabilities.", correct: "Salah" },
+                            { stmt: "Organizations adopt these modern frameworks to achieve greater efficiency and protection.", correct: "Benar" }
                         ],
                         f: "Reading comprehension True/False matrix evaluation in English.",
-                        d: "Statements 1 and 3 are correct based on the text, while statement 2 contradicts the shift to cloud/remote networks.",
+                        d: "Statements 1, 3, and 5 are correct according to the text, while statements 2 and 4 directly contradict the passage.",
                         level: 2
                     };
                 } else if (typeSelectorEN === 1) {
@@ -1085,7 +1096,6 @@
             optionsContainer.innerHTML = '';
 
             if (q.isTrueFalse) {
-                // Render Tipe Benar-Salah bentuk Matriks Tabel
                 let tableHTML = `<table class="tf-matrix-table">
                     <thead>
                         <tr>
@@ -1111,7 +1121,6 @@
                 tableHTML += `</tbody></table>`;
                 optionsContainer.innerHTML = tableHTML;
             } else {
-                // Render Pilihan Ganda Biasa atau Kompleks
                 q.shuffledTexts.forEach((textItem, optIdx) => {
                     const btn = document.createElement('button');
                     let btnClass = 'option-btn';
@@ -1274,6 +1283,12 @@
             box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
         }
 
+        function formatTimeRemaining(seconds) {
+            let m = Math.floor(seconds / 60);
+            let s = seconds % 60;
+            return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
         function submitQuiz() {
             if (timerInterval) clearInterval(timerInterval);
             isSubmitted = true;
@@ -1289,9 +1304,10 @@
             });
 
             const totalScore = (score / activeData.length) * 100;
+            const remainingTimeSeconds = timeLeft;
 
             if (currentUser.mode === 'ujian') {
-                sendScoreToFirebase(currentSubject, currentUser.name, currentUser.kelas, Math.round(totalScore));
+                sendScoreToFirebase(currentSubject, currentUser.name, currentUser.kelas, Math.round(totalScore), remainingTimeSeconds);
             }
 
             showResultView(score, activeData.length);
@@ -1318,10 +1334,10 @@
             const reviewContainer = document.getElementById('reviewContainer');
             const totalScore = (score / total) * 100;
 
-            scoreText.innerText = `Nama: ${currentUser.name} (${currentUser.kelas}) — Skor: ${Math.round(totalScore)} / 100 (${score} Benar dari ${total})`;
+            scoreText.innerText = `Nama: ${currentUser.name} (${currentUser.kelas}) — Skor: ${Math.round(totalScore)} / 100 (${score} Benar dari ${total}) | Sisa Waktu: ${formatTimeRemaining(timeLeft)}`;
             
             if (currentUser.mode === 'ujian') {
-                lbStatusText.innerText = "Skor Anda telah berhasil dikirim dan ditampilkan di Leaderboard.";
+                lbStatusText.innerText = "Skor dan waktu penyelesaian Anda telah berhasil dikirim ke Leaderboard.";
                 lbStatusText.style.color = "#34d399";
             } else {
                 lbStatusText.innerText = "Mode Latihan (Uji Coba 5 Soal): Skor tidak dicatat ke Leaderboard.";
@@ -1391,8 +1407,8 @@
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
-        function sendScoreToFirebase(mapel, nama, kelas, skor) {
-            saveToLocalLeaderboard(mapel, nama, kelas, skor);
+        function sendScoreToFirebase(mapel, nama, kelas, skor, waktuSisa) {
+            saveToLocalLeaderboard(mapel, nama, kelas, skor, waktuSisa);
 
             if (!db) return;
 
@@ -1405,9 +1421,10 @@
                   if (!querySnapshot.empty) {
                       querySnapshot.forEach((doc) => {
                           let existingData = doc.data();
-                          if (skor >= existingData.skor) {
+                          if (skor > existingData.skor || (skor === existingData.skor && waktuSisa > (existingData.waktuSisa || 0))) {
                               db.collection("leaderboard").doc(doc.id).update({
                                   skor: skor,
+                                  waktuSisa: waktuSisa,
                                   timestamp: firebase.firestore.FieldValue.serverTimestamp()
                               });
                           }
@@ -1418,6 +1435,7 @@
                           nama: nama,
                           kelas: kelas,
                           skor: skor,
+                          waktuSisa: waktuSisa,
                           timestamp: firebase.firestore.FieldValue.serverTimestamp()
                       });
                   }
@@ -1451,13 +1469,23 @@
                   let mergedMap = new Map();
                   [...localList, ...firebaseList].forEach(item => {
                       let key = item.nama + "_" + item.kelas;
-                      if (!mergedMap.has(key) || item.skor > mergedMap.get(key).skor) {
+                      if (!mergedMap.has(key)) {
                           mergedMap.set(key, item);
+                      } else {
+                          let existing = mergedMap.get(key);
+                          if (item.skor > existing.skor || (item.skor === existing.skor && (item.waktuSisa || 0) > (existing.waktuSisa || 0))) {
+                              mergedMap.set(key, item);
+                          }
                       }
                   });
 
                   let combinedList = Array.from(mergedMap.values());
-                  combinedList.sort((a, b) => b.skor - a.skor);
+                  combinedList.sort((a, b) => {
+                      if (b.skor !== a.skor) {
+                          return b.skor - a.skor;
+                      }
+                      return (b.waktuSisa || 0) - (a.waktuSisa || 0);
+                  });
 
                   if (combinedList.length > 0) {
                       renderTableData(combinedList, tbody);
@@ -1469,37 +1497,53 @@
 
         function renderTableData(list, tbody) {
             tbody.innerHTML = '';
+            
+            list.sort((a, b) => {
+                if (b.skor !== a.skor) {
+                    return b.skor - a.skor;
+                }
+                return (b.waktuSisa || 0) - (a.waktuSisa || 0);
+            });
+
             let top10 = list.slice(0, 10);
 
             if (top10.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8;">Belum ada data peringkat. Jadilah yang pertama di Mode Ujian!</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #94a3b8;">Belum ada data peringkat. Jadilah yang pertama di Mode Ujian!</td></tr>`;
                 return;
             }
 
             top10.forEach((item, index) => {
                 let rankClass = index === 0 ? 'rank-1' : (index === 1 ? 'rank-2' : (index === 2 ? 'rank-3' : ''));
+                let timeStr = item.waktuSisa !== undefined ? formatTimeRemaining(item.waktuSisa) : "-";
                 let row = `<tr>
                     <td class="${rankClass}">#${index + 1}</td>
                     <td style="font-weight: 500; color: #fff;">${item.nama}</td>
                     <td>${item.kelas}</td>
+                    <td style="text-align: center; font-family: monospace; color: #94a3b8;">${timeStr}</td>
                     <td style="text-align: right; font-weight: bold; color: #38bdf8;">${item.skor}</td>
                 </tr>`;
                 tbody.innerHTML += row;
             });
         }
 
-        function saveToLocalLeaderboard(mapel, nama, kelas, skor) {
+        function saveToLocalLeaderboard(mapel, nama, kelas, skor, waktuSisa) {
             let localData = JSON.parse(localStorage.getItem('hafar_local_lb') || '{}');
             if (!localData[mapel]) localData[mapel] = [];
             
             let existing = localData[mapel].find(item => item.nama === nama && item.kelas === kelas);
             if (existing) {
-                if (skor > existing.skor) existing.skor = skor;
+                if (skor > existing.skor || (skor === existing.skor && waktuSisa > (existing.waktuSisa || 0))) {
+                    existing.skor = skor;
+                    existing.waktuSisa = waktuSisa;
+                }
             } else {
-                localData[mapel].push({ nama, kelas, skor });
+                localData[mapel].push({ nama, kelas, skor, waktuSisa });
             }
 
-            localData[mapel].sort((a, b) => b.skor - a.skor);
+            localData[mapel].sort((a, b) => {
+                if (b.skor !== a.skor) return b.skor - a.skor;
+                return (b.waktuSisa || 0) - (a.waktuSisa || 0);
+            });
             localData[mapel] = localData[mapel].slice(0, 10);
 
             localStorage.setItem('hafar_local_lb', JSON.stringify(localData));
