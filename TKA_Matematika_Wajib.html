@@ -486,7 +486,6 @@
                     </table>
                 </div>
 
-                <!-- Tombol Pembersih Cache Lokal untuk Mencegah Data Tersangkut -->
                 <div style="text-align: center; margin-top: 20px;">
                     <button onclick="clearLocalCache()" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: bold; transition: all 0.2s;">🗑️ Bersihkan Cache Peringkat Lokal</button>
                 </div>
@@ -497,7 +496,6 @@
 
     <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html">Privacy & Policy</a></div>
 
-    <!-- Firebase SDK (Firestore versi Compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
@@ -556,107 +554,297 @@
 
             indo: Array.from({length: 25}, (_, i) => {
                 const passages = [
-                    "Pembangunan infrastruktur jaringan serat optik di wilayah terpencil nusantara terus dikebut oleh pemerintah bekerja sama dengan faksi teknisi swasta. Langkah ini diambil guna mengatasi kesenjangan akses informasi digital yang selama ini dirasakan oleh masyarakat daerah. Kendati menghadapi tantangan geografis yang cukup ekstrim seperti pegunungan terjal dan cuaca buruk, proyek ini diproyeksikan selesai tepat waktu demi pemerataan teknologi.",
-                    "Sistem keamanan siber berbasis kecerdasan buatan kini menjadi benteng utama dalam melindungi data vital instansi pemerintahan dari ancaman peretasan global. Dengan kemampuan mendeteksi anomali secara mandiri dalam hitungan milidetik, sistem ini mampu mengisolasi jaringan yang terinfeksi tanpa mengganggu aktivitas operasional sistem utama.",
-                    "Pemanfaatan energi surya terbarukan di kawasan industri modern terbukti mampu menekan biaya operasional hingga 40 persen sekaligus mengurangi emisi karbon secara signifikan. Transisi energi hijau ini tidak hanya berdampak positif bagi kelestarian lingkungan ekologis, tetapi juga meningkatkan citra perusahaan di mata global."
+                    {
+                        p: "Pembangunan infrastruktur jaringan serat optik di wilayah terpencil nusantara terus dikebut oleh pemerintah bekerja sama dengan faksi teknisi swasta. Langkah ini diambil guna mengatasi kesenjangan akses informasi digital yang selama ini dirasakan oleh masyarakat daerah. Kendati menghadapi tantangan geografis yang cukup ekstrim seperti pegunungan terjal dan cuaca buruk, proyek ini diproyeksikan selesai tepat waktu demi pemerataan teknologi.",
+                        topic: "Infrastruktur Serat Optik"
+                    },
+                    {
+                        p: "Sistem keamanan siber berbasis kecerdasan buatan kini menjadi benteng utama dalam melindungi data vital instansi pemerintahan dari ancaman peretasan global. Dengan kemampuan mendeteksi anomali secara mandiri dalam hitungan milidetik, sistem ini mampu mengisolasi jaringan yang terinfeksi tanpa mengganggu aktivitas operasional sistem utama.",
+                        topic: "Keamanan Siber & AI"
+                    },
+                    {
+                        p: "Pemanfaatan energi surya terbarukan di kawasan industri modern terbukti mampu menekan biaya operasional hingga 40 persen sekaligus mengurangi emisi karbon secara signifikan. Transisi energi hijau ini tidak hanya berdampak positif bagi kelestarian lingkungan ekologis, tetapi juga meningkatkan citra perusahaan di mata global.",
+                        topic: "Energi Surya Industri"
+                    }
                 ];
                 
-                const p = passages[i % passages.length];
+                const item = passages[i % passages.length];
                 const isComp = (i % 2 === 0);
 
-                if (isComp) {
-                    return {
-                        id: i + 1,
-                        isComplex: true,
-                        passage: p,
-                        t: "Berdasarkan wacana di atas, manakah pernyataan-pernyataan berikut yang SESUAI dengan isi teks? (Pilih semua pernyataan yang benar)",
-                        o: [
-                            "A. Proyek infrastruktur bertujuan mengatasi kesenjangan akses informasi digital di daerah.",
-                            "B. Tantangan geografis yang dihadapi dalam proyek mencakup wilayah pegunungan dan cuaca buruk.",
-                            "C. Sistem keamanan siber membutuhkan waktu berhari-hari untuk mendeteksi anomali.",
-                            "D. Pemanfaatan energi surya mampu menekan biaya operasional perusahaan.",
-                            "E. Transisi energi hijau berdampak negatif terhadap kelestarian lingkungan."
-                        ],
-                        correctRaws: [
-                            "A. Proyek infrastruktur bertujuan mengatasi kesenjangan akses informasi digital di daerah.",
-                            "B. Tantangan geografis yang dihadapi dalam proyek mencakup wilayah pegunungan dan cuaca buruk.",
-                            "D. Pemanfaatan energi surya mampu menekan biaya operasional perusahaan."
-                        ],
-                        f: "Analisis informasi tersurat dan kesesuaian pernyataan dalam teks wacana.",
-                        d: "Pernyataan A, B, dan D secara langsung didukung oleh kalimat-kalimat di dalam teks bacaan.",
-                        level: 2
-                    };
+                if (item.topic === "Infrastruktur Serat Optik") {
+                    if (isComp) {
+                        return {
+                            id: i + 1,
+                            isComplex: true,
+                            passage: item.p,
+                            t: "Berdasarkan wacana serat optik di atas, manakah pernyataan-pernyataan yang SESUAI? (Pilih semua yang benar)",
+                            o: [
+                                "A. Pembangunan jaringan serat optik bertujuan mengatasi kesenjangan akses informasi digital.",
+                                "B. Proyek serat optik menghadapi tantangan geografis pegunungan terjal dan cuaca buruk.",
+                                "C. Proyek serat optik diproyeksikan selesai tepat waktu demi pemerataan teknologi.",
+                                "D. Serat optik telah melumpuhkan seluruh akses komunikasi di wilayah perkotaan.",
+                                "E. Pemerintah menolak bantuan faksi swasta dalam proyek infrastruktur serat optik ini."
+                            ],
+                            correctRaws: [
+                                "A. Pembangunan jaringan serat optik bertujuan mengatasi kesenjangan akses informasi digital.",
+                                "B. Proyek serat optik menghadapi tantangan geografis pegunungan terjal dan cuaca buruk.",
+                                "C. Proyek serat optik diproyeksikan selesai tepat waktu demi pemerataan teknologi."
+                            ],
+                            f: "Analisis fakta tersurat wacana serat optik.",
+                            d: "Pernyataan A, B, dan C secara langsung didukung teks wacana infrastruktur serat optik.",
+                            level: 2
+                        };
+                    } else {
+                        return {
+                            id: i + 1,
+                            isComplex: false,
+                            passage: item.p,
+                            t: "Apakah gagasan utama (ide pokok) yang paling tepat untuk wacana tentang serat optik di atas?",
+                            o: [
+                                "A. Tantangan cuaca buruk dan pegunungan terjal di wilayah terpencil.",
+                                "B. Pembangunan infrastruktur jaringan serat optik untuk mengatasi kesenjangan akses digital.",
+                                "C. Pembatalan kerja sama proyek antara pemerintah dengan teknisi swasta.",
+                                "D. Kegagalan teknologi serat optik dalam menjangkau masyarakat pelosok.",
+                                "E. Prosedur pemotongan kabel serat optik di area perkotaan."
+                            ],
+                            correctRaw: "B. Pembangunan infrastruktur jaringan serat optik untuk mengatasi kesenjangan akses digital.",
+                            f: "Gagasan utama wacana infrastruktur serat optik.",
+                            d: "Inti wacana secara utuh membahas percepatan serat optik demi pemerataan informasi digital.",
+                            level: 1
+                        };
+                    }
+                } else if (item.topic === "Keamanan Siber & AI") {
+                    if (isComp) {
+                        return {
+                            id: i + 1,
+                            isComplex: true,
+                            passage: item.p,
+                            t: "Berdasarkan wacana keamanan siber di atas, manakah fakta yang SESUAI? (Pilih semua yang benar)",
+                            o: [
+                                "A. Kecerdasan buatan menjadi benteng utama perlindungan data vital pemerintahan.",
+                                "B. Sistem AI mampu mendeteksi anomali secara mandiri dalam hitungan milidetik.",
+                                "C. Sistem mampu mengisolasi jaringan terinfeksi tanpa mengganggu operasional utama.",
+                                "D. Peretasan global telah menghancurkan seluruh data vital pemerintah tanpa sisa.",
+                                "E. Sistem keamanan siber mewajibkan matinya operasional utama saat terjadi infeksi."
+                            ],
+                            correctRaws: [
+                                "A. Kecerdasan buatan menjadi benteng utama perlindungan data vital pemerintahan.",
+                                "B. Sistem AI mampu mendeteksi anomali secara mandiri dalam hitungan milidetik.",
+                                "C. Sistem mampu mengisolasi jaringan terinfeksi tanpa mengganggu operasional utama."
+                            ],
+                            f: "Analisis fakta siber AI.",
+                            d: "A, B, dan C sesuai dengan informasi yang ada pada wacana keamanan siber.",
+                            level: 2
+                        };
+                    } else {
+                        return {
+                            id: i + 1,
+                            isComplex: false,
+                            passage: item.p,
+                            t: "Gagasan utama wacana keamanan siber di atas adalah...",
+                            o: [
+                                "A. Dampak buruk peretasan terhadap sistem operasional pemerintahan.",
+                                "B. Penerapan sistem keamanan siber berbasis AI untuk melindungi data vital pemerintah.",
+                                "C. Penghentian seluruh aktivitas jaringan utama demi pencegahan infeksi.",
+                                "D. Kerusakan infrastruktur fisik akibat serangan peretasan global.",
+                                "E. Prosedur manual dalam mengisolasi berkas instansi pemerintahan."
+                            ],
+                            correctRaw: "B. Penerapan sistem keamanan siber berbasis AI untuk melindungi data vital pemerintah.",
+                            f: "Gagasan utama wacana siber.",
+                            d: "Teks menitikberatkan peran AI sebagai benteng keamanan siber pemerintah.",
+                            level: 1
+                        };
+                    }
                 } else {
-                    return {
-                        id: i + 1,
-                        isComplex: false,
-                        passage: p,
-                        t: "Apakah gagasan utama (ide pokok) yang paling tepat untuk paragraf wacana di atas?",
-                        o: [
-                            "A. Hambatan cuaca buruk di wilayah pegunungan terjal nusantara.",
-                            "B. Percepatan pembangunan infrastruktur jaringan dan teknologi digital untuk mengatasi kesenjangan.",
-                            "C. Kerja sama antara pemerintah dan pihak swasta dalam bidang ekonomi.",
-                            "D. Pentingnya peretasan global bagi instansi pemerintahan.",
-                            "E. Proyek pembangunan jalan tol lintas daerah."
-                        ],
-                        correctRaw: "B. Percepatan pembangunan infrastruktur jaringan dan teknologi digital untuk mengatasi kesenjangan.",
-                        f: "Menentukan gagasan pokok / ide utama paragraf teks wacana.",
-                        d: "Gagasan utama mencakup keseluruhan inti pembahasan teks tentang pemerataan akses digital melalui pembangunan infrastruktur.",
-                        level: 1
-                    };
+                    if (isComp) {
+                        return {
+                            id: i + 1,
+                            isComplex: true,
+                            passage: item.p,
+                            t: "Berdasarkan teks energi surya industri di atas, manakah pernyataan yang BENAR? (Pilih semua yang benar)",
+                            o: [
+                                "A. Pemanfaatan energi surya menekan biaya operasional industri hingga 40 persen.",
+                                "B. Transisi energi hijau mengurangi emisi karbon secara signifikan.",
+                                "C. Energi surya meningkatkan citra positif perusahaan di mata publik global.",
+                                "D. Energi surya menyebabkan pembengkakan emisi karbon pada kawasan industri.",
+                                "E. Perusahaan modern menolak penggunaan transisi energi hijau."
+                            ],
+                            correctRaws: [
+                                "A. Pemanfaatan energi surya menekan biaya operasional industri hingga 40 persen.",
+                                "B. Transisi energi hijau mengurangi emisi karbon secara signifikan.",
+                                "C. Energi surya meningkatkan citra positif perusahaan di mata publik global."
+                            ],
+                            f: "Analisis teks energi surya.",
+                            d: "A, B, dan C didukung penuh oleh teks wacana energi surya terbarukan.",
+                            level: 2
+                        };
+                    } else {
+                        return {
+                            id: i + 1,
+                            isComplex: false,
+                            passage: item.p,
+                            t: "Ide pokok dari paragraf energi surya industri tersebut adalah...",
+                            o: [
+                                "A. Kerugian finansial industri akibat peralihan ke energi hijau terbarukan.",
+                                "B. Manfaat pemanfaatan energi surya dalam efisiensi biaya dan kelestarian lingkungan industri.",
+                                "C. Peningkatan emisi karbon pada sektor manufaktur modern.",
+                                "D. Penurunan citra perusahaan global yang menggunakan energi surya.",
+                                "E. Kegagalan teknologi panel surya di kawasan industri."
+                            ],
+                            correctRaw: "B. Manfaat pemanfaatan energi surya dalam efisiensi biaya dan kelestarian lingkungan industri.",
+                            f: "Ide pokok wacana energi industri.",
+                            d: "Teks secara menyeluruh menjelaskan efisiensi biaya dan manfaat lingkungan dari energi surya.",
+                            level: 1
+                        };
+                    }
                 }
             }),
 
             inggris: Array.from({length: 25}, (_, i) => {
                 const passagesEN = [
-                    "Cloud computing has fundamentally revolutionized how global enterprises store, manage, and process massive volumes of operational data. Instead of relying heavily on physical on-premise servers, companies can now scale their digital resources dynamically via secure remote networks. This technological shift drastically reduces hardware maintenance costs while maximizing system uptime and data security standards.",
-                    "Artificial Intelligence and machine learning algorithms are reshaping modern cybersecurity frameworks. These advanced systems autonomously monitor network traffic patterns, instantly identifying potential breaches and malicious intrusions before human operators can even notice. Consequently, digital assets remain exceptionally protected against sophisticated cyberattacks.",
-                    "Renewable energy integration is no longer optional for forward-thinking industrial sectors. Solar panels, wind turbines, and smart microgrids are actively replacing fossil-fuel dependencies, paving the way toward a sustainable ecological future and drastically lower carbon footprints worldwide."
+                    {
+                        p: "Cloud computing has fundamentally revolutionized how global enterprises store, manage, and process massive volumes of operational data. Instead of relying heavily on physical on-premise servers, companies can now scale their digital resources dynamically via secure remote networks. This technological shift drastically reduces hardware maintenance costs while maximizing system uptime and data security standards.",
+                        topic: "Cloud Computing"
+                    },
+                    {
+                        p: "Artificial Intelligence and machine learning algorithms are reshaping modern cybersecurity frameworks. These advanced systems autonomously monitor network traffic patterns, instantly identifying potential breaches and malicious intrusions before human operators can even notice. Consequently, digital assets remain exceptionally protected against sophisticated cyberattacks.",
+                        topic: "AI Cybersecurity"
+                    },
+                    {
+                        p: "Renewable energy integration is no longer optional for forward-thinking industrial sectors. Solar panels, wind turbines, and smart microgrids are actively replacing fossil-fuel dependencies, paving the way toward a sustainable ecological future and drastically lower carbon footprints worldwide.",
+                        topic: "Renewable Industrial Energy"
+                    }
                 ];
 
-                const pEN = passagesEN[i % passagesEN.length];
+                const itemEN = passagesEN[i % passagesEN.length];
                 const isCompEN = (i % 2 === 0);
 
-                if (isCompEN) {
-                    return {
-                        id: i + 1,
-                        isComplex: true,
-                        passage: pEN,
-                        t: "Based on the passage above, which of the following statements are TRUE? (Choose all correct answers)",
-                        o: [
-                            "A. Cloud computing allows enterprises to scale digital resources dynamically.",
-                            "B. Companies still rely exclusively on heavy physical on-premise servers.",
-                            "C. Cloud computing helps reduce hardware maintenance costs.",
-                            "D. AI algorithms can autonomously monitor network traffic and detect intrusions.",
-                            "E. Renewable energy increases fossil-fuel dependency."
-                        ],
-                        correctRaws: [
-                            "A. Cloud computing allows enterprises to scale digital resources dynamically.",
-                            "C. Cloud computing helps reduce hardware maintenance costs.",
-                            "D. AI algorithms can autonomously monitor network traffic and detect intrusions."
-                        ],
-                        f: "Reading comprehension and factual information extraction in English.",
-                        d: "Statements A, C, and D accurately reflect the core facts stated explicitly in the reading passages.",
-                        level: 2
-                    };
+                if (itemEN.topic === "Cloud Computing") {
+                    if (isCompEN) {
+                        return {
+                            id: i + 1,
+                            isComplex: true,
+                            passage: itemEN.p,
+                            t: "Based on the Cloud Computing passage, which statements are TRUE? (Choose all correct answers)",
+                            o: [
+                                "A. Cloud computing allows enterprises to scale digital resources dynamically.",
+                                "B. Cloud computing drastically reduces physical hardware maintenance costs.",
+                                "C. System uptime and data security standards are maximized by cloud infrastructure.",
+                                "D. Cloud computing forces all companies to buy more physical local servers.",
+                                "E. Remote network security is completely destroyed by cloud implementation."
+                            ],
+                            correctRaws: [
+                                "A. Cloud computing allows enterprises to scale digital resources dynamically.",
+                                "B. Cloud computing drastically reduces physical hardware maintenance costs.",
+                                "C. System uptime and data security standards are maximized by cloud infrastructure."
+                            ],
+                            f: "Factual evaluation of Cloud Computing reading passage.",
+                            d: "Statements A, B, and C directly match the facts provided in the Cloud text.",
+                            level: 2
+                        };
+                    } else {
+                        return {
+                            id: i + 1,
+                            isComplex: false,
+                            passage: itemEN.p,
+                            t: "What is the primary main idea of the Cloud Computing passage?",
+                            o: [
+                                "A. The high cost and failure rate of physical server maintenance.",
+                                "B. The revolutionary impact of cloud computing on enterprise data management and scalability.",
+                                "C. The total breakdown of remote networks in global companies.",
+                                "D. Procedures for shutting down cloud server networks manually.",
+                                "E. The history of physical hard drive manufacturing."
+                            ],
+                            correctRaw: "B. The revolutionary impact of cloud computing on enterprise data management and scalability.",
+                            f: "Main idea identification for Cloud text.",
+                            d: "The entire passage describes how Cloud computing transforms enterprise data operations.",
+                            level: 1
+                        };
+                    }
+                } else if (itemEN.topic === "AI Cybersecurity") {
+                    if (isCompEN) {
+                        return {
+                            id: i + 1,
+                            isComplex: true,
+                            passage: itemEN.p,
+                            t: "Based on the AI Cybersecurity passage, which statements are TRUE? (Choose all correct answers)",
+                            o: [
+                                "A. AI systems autonomously monitor network traffic patterns for potential breaches.",
+                                "B. Malicious intrusions can be identified instantly before human operators notice.",
+                                "C. Digital assets gain exceptional protection against sophisticated cyberattacks.",
+                                "D. Machine learning algorithms require manual human authorization for every check.",
+                                "E. Network traffic monitoring is rendered useless by modern AI frameworks."
+                            ],
+                            correctRaws: [
+                                "A. AI systems autonomously monitor network traffic patterns for potential breaches.",
+                                "B. Malicious intrusions can be identified instantly before human operators notice.",
+                                "C. Digital assets gain exceptional protection against sophisticated cyberattacks."
+                            ],
+                            f: "AI Cybersecurity text evaluation.",
+                            d: "Options A, B, and C strictly conform to the details given in the AI Cybersecurity text.",
+                            level: 2
+                        };
+                    } else {
+                        return {
+                            id: i + 1,
+                            isComplex: false,
+                            passage: itemEN.p,
+                            t: "What is the primary purpose of the AI Cybersecurity passage?",
+                            o: [
+                                "A. To highlight the vulnerability of human operators during cyber intrusion.",
+                                "B. To explain how AI algorithms transform and strengthen modern cybersecurity frameworks.",
+                                "C. To advocate for the complete removal of digital security barriers.",
+                                "D. To describe how cyberattacks are manually coded by intruders.",
+                                "E. To compare old hardware firewalls with legacy routers."
+                            ],
+                            correctRaw: "B. To explain how AI algorithms transform and strengthen modern cybersecurity frameworks.",
+                            f: "Passage purpose identification.",
+                            d: "The text focuses on AI's proactive role in protecting network infrastructures.",
+                            level: 1
+                        };
+                    }
                 } else {
-                    return {
-                        id: i + 1,
-                        isComplex: false,
-                        passage: pEN,
-                        t: "What is the primary main idea or purpose of the passage?",
-                        o: [
-                            "A. To explain how modern technologies like cloud computing and AI transform enterprise operations.",
-                            "B. To discuss the financial disadvantages of maintaining physical hardware.",
-                            "C. To critique the inefficiency of renewable energy sources in industries.",
-                            "D. To outline manual methods of preventing cyberattacks.",
-                            "E. To describe the history of computer programming languages."
-                        ],
-                        correctRaw: "A. To explain how modern technologies like cloud computing and AI transform enterprise operations.",
-                        f: "Identifying the main idea/primary purpose of an informational text.",
-                        d: "The text outlines the transformative impact of cloud computing, AI security, and green energy on modern infrastructure.",
-                        level: 1
-                    };
+                    if (isCompEN) {
+                        return {
+                            id: i + 1,
+                            isComplex: true,
+                            passage: itemEN.p,
+                            t: "Based on the Renewable Energy passage, which statements are TRUE? (Choose all correct answers)",
+                            o: [
+                                "A. Solar panels, wind turbines, and microgrids are actively replacing fossil fuels.",
+                                "B. Renewable energy integration lowers carbon footprints worldwide.",
+                                "C. Renewable energy paves the way toward a sustainable ecological future.",
+                                "D. Forward-thinking industries are increasing their reliance on fossil fuels.",
+                                "E. Solar microgrids have been banned across industrial sectors."
+                            ],
+                            correctRaws: [
+                                "A. Solar panels, wind turbines, and microgrids are actively replacing fossil fuels.",
+                                "B. Renewable energy integration lowers carbon footprints worldwide.",
+                                "C. Renewable energy paves the way toward a sustainable ecological future."
+                            ],
+                            f: "Renewable Energy passage fact check.",
+                            d: "Options A, B, and C are explicitly supported by the green energy reading passage.",
+                            level: 2
+                        };
+                    } else {
+                        return {
+                            id: i + 1,
+                            isComplex: false,
+                            passage: itemEN.p,
+                            t: "What is the main topic of the Renewable Energy passage?",
+                            o: [
+                                "A. The inevitable expansion of fossil fuel power plants in industry.",
+                                "B. The crucial role of renewable energy integration in reducing industrial carbon footprints.",
+                                "C. The high financial costs of installing wind turbines in cities.",
+                                "D. The complete shutdown of smart microgrid development.",
+                                "E. A comparison between oil drilling and coal mining techniques."
+                            ],
+                            correctRaw: "B. The crucial role of renewable energy integration in reducing industrial carbon footprints.",
+                            f: "Main topic identification.",
+                            d: "The text explains how renewable energy technologies replace fossil fuels for ecological sustainability.",
+                            level: 1
+                        };
+                    }
                 }
             })
         };
