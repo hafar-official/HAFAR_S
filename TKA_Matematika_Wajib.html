@@ -213,6 +213,7 @@
         .diff-2 { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.4); }
         .diff-3 { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
         .type-complex { background: rgba(139, 92, 246, 0.2); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.4); margin-left: 8px; }
+        .type-truefalse { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(96, 165, 250, 0.4); margin-left: 8px; }
 
         .question-title {
             font-size: 1.05rem;
@@ -422,7 +423,8 @@
                     <div class="question-header-info">
                         <div>
                             <span id="questionNumberTitle" style="font-weight: bold; color: #38bdf8;">Soal 1 dari 25</span>
-                            <span id="typeBadge" class="difficulty-badge type-complex" style="display:none;">Pilihan Ganda Kompleks (Pilih > 1)</span>
+                            <span id="typeBadge" class="difficulty-badge type-complex" style="display:none;">Pilihan Ganda Kompleks</span>
+                            <span id="typeTFBadge" class="difficulty-badge type-truefalse" style="display:none;">Benar / Salah</span>
                         </div>
                         <div id="difficultyBadge" class="difficulty-badge diff-1">Level 1 (Mudah)</div>
                     </div>
@@ -523,31 +525,31 @@
         const masterSoal = {
             matematika: Array.from({length: 25}, (_, i) => {
                 const list = [
-                    { t: "Sairo mendeteksi titik koordinat anomali waktu P(4, 6). Dilatasi dengan k = 3 pusat A(2, 1), dilanjutkan manipulasi distorsi 90° berlawanan arah jarum jam pusat (0,0). Posisi akhir temporal P'' adalah...", isComplex: false, o: ["A. (16, -8)", "B. (-16, 8)", "C. (8, 16)", "D. (-8, 16)", "E. (-16, -8)"], correctRaw: "B. (-16, 8)", f: "x' = a + k(x-a), y' = b + k(y-b). Rotasi 90° CCW: (-y, x)", d: "Dilatasi: (8, 16). Rotasi distorsi 90°: (-16, 8).", level: 3 },
-                    { t: "Karakter Kael memetakan koordinat titik A(3, 4) pada cermin dimensi y = x, kemudian menggesernya melalui vektor T(-2, 5). Posisi akhir Kael berada di titik...", isComplex: false, o: ["A. (2, 8)", "B. (1, 9)", "C. (4, 1)", "D. (2, 1)", "E. (8, 2)"], correctRaw: "A. (2, 8)", f: "Refleksi y=x: (y,x). Translasi: penjumlahan vektor koordinat.", d: "Refleksi: (4,3). Translasi: (4-2, 3+5) = (2,8).", level: 1 },
-                    { t: "Populasi energi klon kluster Lux' Hela bermula dari 500 unit. Setiap 15 menit mengalami duplikasi ganda 2 kali lipat. Berapa jumlah energi Lux' Hela pada menit ke-90?", isComplex: false, o: ["A. 16.000 unit", "B. 32.000 unit", "C. 64.000 unit", "D. 128.000 unit", "E. 256.000 unit"], correctRaw: "B. 32.000 unit", f: "N(t) = N0 · 2^(t/Td)", d: "n = 90/15 = 6. N = 500 × 64 = 32.000 unit energi.", level: 2 },
-                    { t: "Arus esensi magis Astoria M(t) = 240 · 2^(-t/3). Sisa esensi Astoria setelah 12 jam peluruhan adalah...", isComplex: false, o: ["A. 30 unit", "B. 15 unit", "C. 60 unit", "D. 7,5 unit", "E. 120 unit"], correctRaw: "B. 15 unit", f: "Peluruhan eksponensial esensi.", d: "M(12) = 240 × 2^(-4) = 240 / 16 = 15 unit.", level: 2 },
-                    { t: "Azzux merancang sandi enkripsi 4 karakter faksi: Ke-1 & 2 vokal berbeda dari {A,E,I,O,U}, Ke-3 & 4 digit genap sistem dari {2,4,6,8}. Berapa total variasi sandi Azzux?", isComplex: false, o: ["A. 120", "B. 240", "C. 400", "D. 480", "E. 600"], correctRaw: "B. 240", f: "Kaidah pencacahan perkalian.", d: "5 × 4 × 4 × 3 = 240 variasi sandi.", level: 2 },
-                    { t: "Menara pengintai Shion berbentuk gabungan tabung dan kerucut. Jari-jari r = 6 m, tinggi tabung 10 m, tinggi kerucut 8 m. Berapakah panjang garis pelukis kerucut menara Shion?", isComplex: false, o: ["A. 10 m", "B. 12 m", "C. 14 m", "D. 15 m", "E. 16 m"], correctRaw: "A. 10 m", f: "s = √(r² + t²)", d: "s = √(6² + 8²) = 10 m.", level: 1 },
-                    { t: "Hans berdiri 15 m dari dinding benteng, mengamati puncak menara dengan sudut elevasi 45°. Jika tinggi Hans 1,6 m, berapakah tinggi total benteng yang diamati Hans?", isComplex: false, o: ["A. 15 m", "B. 16,6 m", "C. 13,4 m", "D. 18,6 m", "E. 20 m"], correctRaw: "B. 16,6 m", f: "tan 45° = h / 15 + tinggi pengamat", d: "h = 15 + 1.6 = 16.6 m.", level: 2 },
-                    { t: "Rata-rata kekuatan 20 prajurit pengawal Sairo adalah 80. Saat 2 prajurit elit tambahan bergabung, rata-rata naik jadi 81. Selisih kekuatan kedua prajurit baru adalah 4. Berapa kekuatan prajurit baru yang terendah?", isComplex: false, o: ["A. 89", "B. 91", "C. 87", "D. 93", "E. 85"], correctRaw: "A. 89", f: "Analisis selisih total nilai kelompok.", d: "(22×81) - (20×80) = 182. Kekuatan: 89 dan 93.", level: 3 },
-                    { t: "Produksi artefak faksi Kael pada bulan ke-3 adalah 100 buah, dan bulan ke-6 mencapai 190 buah. Total artefak yang dihasilkan dalam 12 bulan pertama adalah...", isComplex: false, o: ["A. 2.460 buah", "B. 2.520 buah", "C. 2.300 buah", "D. 2.400 buah", "E. 2.600 buah"], correctRaw: "A. 2.460 buah", f: "Deret Aritmetika S_n = n/2 (2a + (n-1)b)", d: "b = 30, a = 40. S12 = 6 × (80 + 330) = 2.460.", level: 3 },
-                    { t: "Harga 2 unit kendaraan tempur Lux' Hela + 3 unit drone Astoria senilai Rp1.200.000. Jika 3 unit kendaraan tempur Lux' Hela + 1 unit drone Astoria senilai Rp1.100.000, berapa harga 1 unit kendaraan tempur dan 2 unit drone?", isComplex: false, o: ["A. Rp700.000", "B. Rp650.000", "C. Rp800.000", "D. Rp750.000", "E. Rp600.000"], correctRaw: "A. Rp700.000", f: "SPLDV Metode Eliminasi", d: "Kendaraan = 300rb, Drone = 200rb. 1(300)+2(200) = 700rb.", level: 2 },
-                    { t: "8 panglima perang (termasuk Sairo dan Hans) duduk melingkar di meja dewan. Jika Sairo dan Hans wajib duduk berdampingan, berapa banyak susunan posisi duduk mereka?", isComplex: false, o: ["A. 5.040", "B. 1.440", "C. 720", "D. 2.880", "E. 360"], correctRaw: "B. 1.440", f: "Permutasi siklis: (n-1)! × k!", d: "(7-1)! × 2! = 720 × 2 = 1.440.", level: 3 },
-                    { t: "Peluang portal dimensi faksi Azzux gagal berfungsi adalah 0,04 dan faksi Shion 0,05. Berapa peluang paling sedikit satu portal BERFUNGSI normal?", isComplex: false, o: ["A. 0,998", "B. 0,002", "C. 0,950", "D. 0,912", "E. 0,980"], correctRaw: "A. 0,998", f: "1 - P(kedua portal gagal)", d: "1 - (0,04 × 0,05) = 0,998.", level: 2 },
-                    { t: "Peti harta karun Astoria berbentuk kubus dengan rusuk 10 cm. Berapakah panjang diagonal ruang HB pada peti tersebut?", isComplex: false, o: ["A. 10√2 cm", "B. 10√3 cm", "C. 5√3 cm", "D. 20 cm", "E. 10√6 cm"], correctRaw: "B. 10√3 cm", f: "Diagonal ruang kubus d = r√3", d: "HB = 10√3 cm.", level: 1 },
-                    { t: "Fungsi transformasi energi f(x) = (4x + 20) / 3 yang diatur oleh Kael memiliki fungsi invers f^(-1)(x) senilai...", isComplex: false, o: ["A. (3x - 20) / 4", "B. (4x - 20) / 3", "C. (3x + 20) / 4", "D. (20x - 3) / 4", "E. (3x - 4) / 20"], correctRaw: "A. (3x - 20) / 4", f: "y = (4x+20)/3 → 4x = 3y-20", d: "f^(-1)(x) = (3x-20)/4.", level: 1 },
-                    { t: "Tim ekspedisi khusus dibentuk dari 5 ahli teknis (termasuk Kael & Hans) dan 3 ahli strategi (termasuk Astoria). Tim beranggotakan 4 orang wajib memuat minimal 2 ahli teknis. Berapa variasi pembentukan tim?", isComplex: false, o: ["A. 65", "B. 70", "C. 55", "D. 60", "E. 45"], correctRaw: "A. 65", f: "Kombinasi C(n,k)", d: "C(5,2)C(3,2) + C(5,3)C(3,1) + C(5,4)C(3,0) = 30 + 30 + 5 = 65 cara.", level: 3 },
-                    { t: "Sistem diskon f(x) = 0,9x dan potongan harga g(x) = x - 20.000 diterapkan pada perangkat Lux' Hela. Jika harga akhir tercatat Rp160.000, berapakah harga awal x perangkat tersebut?", isComplex: false, o: ["A. Rp200.000", "B. Rp180.000", "C. Rp220.000", "D. Rp190.000", "E. Rp210.000"], correctRaw: "A. Rp200.000", f: "Komposisi fungsi g(f(x)) = 160.000", d: "(160rb + 20rb) / 0.9 = 200.000.", level: 2 },
-                    { t: "Interval kelas distribusi log artefak Shion tercatat 11-15. Berapakah nilai titik tengah (xi) kelas tersebut?", isComplex: false, o: ["A. 13", "B. 12,5", "C. 13,5", "D. 14", "E. 11,5"], correctRaw: "A. 13", f: "xi = (Batas Bawah + Batas Atas) / 2", d: "(11 + 15) / 2 = 13.", level: 1 },
-                    { t: "Alokasi sumber daya markas Azzux: 1 ruang kendali membutuhkan 3 unit daya mesin dan 1 unit daya komunikasi. Kapasitas total maksimum adalah 30 unit. Model matematika linear yang tepat adalah...", isComplex: false, o: ["A. 3x + y ≤ 30", "B. x + 3y ≤ 30", "C. 3x + y ≥ 30", "D. 3x + 3y ≤ 30", "E. x + y ≤ 30"], correctRaw: "A. 3x + y ≤ 30", f: "Model pertidaksamaan linear dua variabel.", d: "3x + y ≤ 30.", level: 1 },
-                    { t: "Kubah pelindung markas Sairo berbentuk setengah bola dengan diameter 28 m. Jika biaya pelapisan per meter persegi adalah Rp100.000, berapakah total biaya yang diperlukan Sairo?", isComplex: false, o: ["A. Rp123.200.000", "B. Rp246.400.000", "C. Rp61.600.000", "D. Rp184.800.000", "E. Rp150.000.000"], correctRaw: "A. Rp123.200.000", f: "Luas Permukaan Setengah Bola L = 2πr²", d: "L = 2 × (22/7) × 14² = 1.232 m². Biaya = 1.232 × 100.000 = Rp123.200.000.", level: 2 },
-                    { t: "Peluang keberhasilan invasi faksi Hans tercatat P(A) = 0,35. Berapakah peluang komplemen kegagalan invasi tersebut P(A^c)?", isComplex: false, o: ["A. 0,65", "B. 0,35", "C. 0,55", "D. 0,75", "E. 1,00"], correctRaw: "A. 0,65", f: "P(A^c) = 1 - P(A)", d: "1 - 0.35 = 0.65.", level: 1 },
-                    { t: "Matriks pertahanan A di markas Kael bernilai [[2, 3], [1, 4]]. Berapakah nilai determinan dari matriks pertahanan A tersebut?", isComplex: false, o: ["A. 5", "B. 7", "C. 8", "D. 10", "E. 11"], correctRaw: "A. 5", f: "det(A) = ad - bc", d: "(2×4) - (3×1) = 8 - 3 = 5.", level: 1 },
-                    { t: "Deret geometri aliran energi tak hingga milik Astoria memiliki suku awal a = 12 dan rasio r = 1/3. Berapakah jumlah total deret S_inf tersebut?", isComplex: false, o: ["A. 18", "B. 16", "C. 24", "D. 36", "E. 15"], correctRaw: "A. 18", f: "S_inf = a / (1 - r)", d: "12 / (1 - 1/3) = 12 / (2/3) = 18.", level: 2 },
-                    { t: "Garis lintasan teleportasi yang dilalui Lux' Hela melewati titik (2, 3) dengan gradien kemiringan m = 4. Persamaan garis lintasan tersebut adalah...", isComplex: false, o: ["A. y = 4x - 5", "B. y = 4x + 5", "C. y = 2x - 3", "D. y = 4x - 11", "E. y = 3x + 2"], correctRaw: "A. y = 4x - 5", f: "y - y1 = m(x - x1)", d: "y - 3 = 4(x - 2) ⇒ y = 4x - 5.", level: 1 },
-                    { t: "Fungsi percepatan roket Shion dirumuskan sebagai f(x) = 3x² - 5x + 8. Turunan pertama percepatan f'(x) adalah...", isComplex: false, o: ["A. 6x - 5", "B. 3x - 5", "C. 6x + 8", "D. 6x² - 5", "E. 5x - 3"], correctRaw: "A. 6x - 5", f: "f'(x) = n·a·x^(n-1)", d: "Turunan f'(x) = 6x - 5.", level: 2 },
-                    { t: "Integral tak tentu untuk akumulasi energi Azzux ∫ (6x + 4) dx menghasilkan...", isComplex: false, o: ["A. 3x² + 4x + C", "B. 6x² + 4x + C", "C. 3x² + C", "D. 6x² + C", "E. 2x² + 4x + C"], correctRaw: "A. 3x² + 4x + C", f: "∫ ax^n dx = (a/(n+1)) x^(n+1) + C", d: "(6/2)x² + 4x + C = 3x² + 4x + C.", level: 2 }
+                    { t: "Sairo mendeteksi titik koordinat anomali waktu P(4, 6). Dilatasi dengan k = 3 pusat A(2, 1), dilanjutkan manipulasi distorsi 90° berlawanan arah jarum jam pusat (0,0). Posisi akhir temporal P'' adalah...", isComplex: false, isTrueFalse: false, o: ["A. (16, -8)", "B. (-16, 8)", "C. (8, 16)", "D. (-8, 16)", "E. (-16, -8)"], correctRaw: "B. (-16, 8)", f: "x' = a + k(x-a), y' = b + k(y-b). Rotasi 90° CCW: (-y, x)", d: "Dilatasi: (8, 16). Rotasi distorsi 90°: (-16, 8).", level: 3 },
+                    { t: "Pernyataan Matematika: Hasil refleksi titik A(3, 4) terhadap garis y = x adalah (4, 3).", isComplex: false, isTrueFalse: true, o: ["Benar", "Salah"], correctRaw: "Benar", f: "Sifat dasar refleksi koordinat terhadap garis y = x.", d: "Titik (x, y) dicerminkan terhadap y = x akan menghasilkan koordinat (y, x).", level: 1 },
+                    { t: "Populasi energi klon kluster Lux' Hela bermula dari 500 unit. Setiap 15 menit mengalami duplikasi ganda 2 kali lipat. Berapa jumlah energi Lux' Hela pada menit ke-90?", isComplex: false, isTrueFalse: false, o: ["A. 16.000 unit", "B. 32.000 unit", "C. 64.000 unit", "D. 128.000 unit", "E. 256.000 unit"], correctRaw: "B. 32.000 unit", f: "N(t) = N0 · 2^(t/Td)", d: "n = 90/15 = 6. N = 500 × 64 = 32.000 unit energi.", level: 2 },
+                    { t: "Arus esensi magis Astoria M(t) = 240 · 2^(-t/3). Sisa esensi Astoria setelah 12 jam peluruhan adalah...", isComplex: false, isTrueFalse: false, o: ["A. 30 unit", "B. 15 unit", "C. 60 unit", "D. 7,5 unit", "E. 120 unit"], correctRaw: "B. 15 unit", f: "Peluruhan eksponensial esensi.", d: "M(12) = 240 × 2^(-4) = 240 / 16 = 15 unit.", level: 2 },
+                    { t: "Pernyataan Logika: Nilai diskriminan dari fungsi kuadrat f(x) = x² - 4x + 4 adalah bernilai negatif.", isComplex: false, isTrueFalse: true, o: ["Benar", "Salah"], correctRaw: "Salah", f: "Rumus diskriminan D = b² - 4ac", d: "D = (-4)² - 4(1)(4) = 16 - 16 = 0 (bernilai nol, bukan negatif).", level: 2 },
+                    { t: "Menara pengintai Shion berbentuk gabungan tabung dan kerucut. Jari-jari r = 6 m, tinggi tabung 10 m, tinggi kerucut 8 m. Berapakah panjang garis pelukis kerucut menara Shion?", isComplex: false, isTrueFalse: false, o: ["A. 10 m", "B. 12 m", "C. 14 m", "D. 15 m", "E. 16 m"], correctRaw: "A. 10 m", f: "s = √(r² + t²)", d: "s = √(6² + 8²) = 10 m.", level: 1 },
+                    { t: "Hans berdiri 15 m dari dinding benteng, mengamati puncak menara dengan sudut elevasi 45°. Jika tinggi Hans 1,6 m, berapakah tinggi total benteng yang diamati Hans?", isComplex: false, isTrueFalse: false, o: ["A. 15 m", "B. 16,6 m", "C. 13,4 m", "D. 18,6 m", "E. 20 m"], correctRaw: "B. 16,6 m", f: "tan 45° = h / 15 + tinggi pengamat", d: "h = 15 + 1.6 = 16.6 m.", level: 2 },
+                    { t: "Rata-rata kekuatan 20 prajurit pengawal Sairo adalah 80. Saat 2 prajurit elit tambahan bergabung, rata-rata naik jadi 81. Selisih kekuatan kedua prajurit baru adalah 4. Berapa kekuatan prajurit baru yang terendah?", isComplex: false, isTrueFalse: false, o: ["A. 89", "B. 91", "C. 87", "D. 93", "E. 85"], correctRaw: "A. 89", f: "Analisis selisih total nilai kelompok.", d: "(22×81) - (20×80) = 182. Kekuatan: 89 dan 93.", level: 3 },
+                    { t: "Produksi artefak faksi Kael pada bulan ke-3 adalah 100 buah, dan bulan ke-6 mencapai 190 buah. Total artefak yang dihasilkan dalam 12 bulan pertama adalah...", isComplex: false, isTrueFalse: false, o: ["A. 2.460 buah", "B. 2.520 buah", "C. 2.300 buah", "D. 2.400 buah", "E. 2.600 buah"], correctRaw: "A. 2.460 buah", f: "Deret Aritmetika S_n = n/2 (2a + (n-1)b)", d: "b = 30, a = 40. S12 = 6 × (80 + 330) = 2.460.", level: 3 },
+                    { t: "Harga 2 unit kendaraan tempur Lux' Hela + 3 unit drone Astoria senilai Rp1.200.000. Jika 3 unit kendaraan tempur Lux' Hela + 1 unit drone Astoria senilai Rp1.100.000, berapa harga 1 unit kendaraan tempur dan 2 unit drone?", isComplex: false, isTrueFalse: false, o: ["A. Rp700.000", "B. Rp650.000", "C. Rp800.000", "D. Rp750.000", "E. Rp600.000"], correctRaw: "A. Rp700.000", f: "SPLDV Metode Eliminasi", d: "Kendaraan = 300rb, Drone = 200rb. 1(300)+2(200) = 700rb.", level: 2 },
+                    { t: "8 panglima perang (termasuk Sairo dan Hans) duduk melingkar di meja dewan. Jika Sairo dan Hans wajib duduk berdampingan, berapa banyak susunan posisi duduk mereka?", isComplex: false, isTrueFalse: false, o: ["A. 5.040", "B. 1.440", "C. 720", "D. 2.880", "E. 360"], correctRaw: "B. 1.440", f: "Permutasi siklis: (n-1)! × k!", d: "(7-1)! × 2! = 720 × 2 = 1.440.", level: 3 },
+                    { t: "Peluang portal dimensi faksi Azzux gagal berfungsi adalah 0,04 dan faksi Shion 0,05. Berapa peluang paling sedikit satu portal BERFUNGSI normal?", isComplex: false, isTrueFalse: false, o: ["A. 0,998", "B. 0,002", "C. 0,950", "D. 0,912", "E. 0,980"], correctRaw: "A. 0,998", f: "1 - P(kedua portal gagal)", d: "1 - (0,04 × 0,05) = 0,998.", level: 2 },
+                    { t: "Peti harta karun Astoria berbentuk kubus dengan rusuk 10 cm. Berapakah panjang diagonal ruang HB pada peti tersebut?", isComplex: false, isTrueFalse: false, o: ["A. 10√2 cm", "B. 10√3 cm", "C. 5√3 cm", "D. 20 cm", "E. 10√6 cm"], correctRaw: "B. 10√3 cm", f: "Diagonal ruang kubus d = r√3", d: "HB = 10√3 cm.", level: 1 },
+                    { t: "Fungsi transformasi energi f(x) = (4x + 20) / 3 yang diatur oleh Kael memiliki fungsi invers f^(-1)(x) senilai...", isComplex: false, isTrueFalse: false, o: ["A. (3x - 20) / 4", "B. (4x - 20) / 3", "C. (3x + 20) / 4", "D. (20x - 3) / 4", "E. (3x - 4) / 20"], correctRaw: "A. (3x - 20) / 4", f: "y = (4x+20)/3 → 4x = 3y-20", d: "f^(-1)(x) = (3x-20)/4.", level: 1 },
+                    { t: "Tim ekspedisi khusus dibentuk dari 5 ahli teknis (termasuk Kael & Hans) dan 3 ahli strategi (termasuk Astoria). Tim beranggotakan 4 orang wajib memuat minimal 2 ahli teknis. Berapa variasi pembentukan tim?", isComplex: false, isTrueFalse: false, o: ["A. 65", "B. 70", "C. 55", "D. 60", "E. 45"], correctRaw: "A. 65", f: "Kombinasi C(n,k)", d: "C(5,2)C(3,2) + C(5,3)C(3,1) + C(5,4)C(3,0) = 30 + 30 + 5 = 65 cara.", level: 3 },
+                    { t: "Sistem diskon f(x) = 0,9x dan potongan harga g(x) = x - 20.000 diterapkan pada perangkat Lux' Hela. Jika harga akhir tercatat Rp160.000, berapakah harga awal x perangkat tersebut?", isComplex: false, isTrueFalse: false, o: ["A. Rp200.000", "B. Rp180.000", "C. Rp220.000", "D. Rp190.000", "E. Rp210.000"], correctRaw: "A. Rp200.000", f: "Komposisi fungsi g(f(x)) = 160.000", d: "(160rb + 20rb) / 0.9 = 200.000.", level: 2 },
+                    { t: "Interval kelas distribusi log artefak Shion tercatat 11-15. Berapakah nilai titik tengah (xi) kelas tersebut?", isComplex: false, isTrueFalse: false, o: ["A. 13", "B. 12,5", "C. 13,5", "D. 14", "E. 11,5"], correctRaw: "A. 13", f: "xi = (Batas Bawah + Batas Atas) / 2", d: "(11 + 15) / 2 = 13.", level: 1 },
+                    { t: "Alokasi sumber daya markas Azzux: 1 ruang kendali membutuhkan 3 unit daya mesin dan 1 unit daya komunikasi. Kapasitas total maksimum adalah 30 unit. Model matematika linear yang tepat adalah...", isComplex: false, isTrueFalse: false, o: ["A. 3x + y ≤ 30", "B. x + 3y ≤ 30", "C. 3x + y ≥ 30", "D. 3x + 3y ≤ 30", "E. x + y ≤ 30"], correctRaw: "A. 3x + y ≤ 30", f: "Model pertidaksamaan linear dua variabel.", d: "3x + y ≤ 30.", level: 1 },
+                    { t: "Kubah pelindung markas Sairo berbentuk setengah bola dengan diameter 28 m. Jika biaya pelapisan per meter persegi adalah Rp100.000, berapakah total biaya yang diperlukan Sairo?", isComplex: false, isTrueFalse: false, o: ["A. Rp123.200.000", "B. Rp246.400.000", "C. Rp61.600.000", "D. Rp184.800.000", "E. Rp150.000.000"], correctRaw: "A. Rp123.200.000", f: "Luas Permukaan Setengah Bola L = 2πr²", d: "L = 2 × (22/7) × 14² = 1.232 m². Biaya = 1.232 × 100.000 = Rp123.200.000.", level: 2 },
+                    { t: "Peluang keberhasilan invasi faksi Hans tercatat P(A) = 0,35. Berapakah peluang komplemen kegagalan invasi tersebut P(A^c)?", isComplex: false, isTrueFalse: false, o: ["A. 0,65", "B. 0,35", "C. 0,55", "D. 0,75", "E. 1,00"], correctRaw: "A. 0,65", f: "P(A^c) = 1 - P(A)", d: "1 - 0.35 = 0.65.", level: 1 },
+                    { t: "Matriks pertahanan A di markas Kael bernilai [[2, 3], [1, 4]]. Berapakah nilai determinan dari matriks pertahanan A tersebut?", isComplex: false, isTrueFalse: false, o: ["A. 5", "B. 7", "C. 8", "D. 10", "E. 11"], correctRaw: "A. 5", f: "det(A) = ad - bc", d: "(2×4) - (3×1) = 8 - 3 = 5.", level: 1 },
+                    { t: "Deret geometri aliran energi tak hingga milik Astoria memiliki suku awal a = 12 dan rasio r = 1/3. Berapakah jumlah total deret S_inf tersebut?", isComplex: false, isTrueFalse: false, o: ["A. 18", "B. 16", "C. 24", "D. 36", "E. 15"], correctRaw: "A. 18", f: "S_inf = a / (1 - r)", d: "12 / (1 - 1/3) = 12 / (2/3) = 18.", level: 2 },
+                    { t: "Garis lintasan teleportasi yang dilalui Lux' Hela melewati titik (2, 3) dengan gradien kemiringan m = 4. Persamaan garis lintasan tersebut adalah...", isComplex: false, isTrueFalse: false, o: ["A. y = 4x - 5", "B. y = 4x + 5", "C. y = 2x - 3", "D. y = 4x - 11", "E. y = 3x + 2"], correctRaw: "A. y = 4x - 5", f: "y - y1 = m(x - x1)", d: "y - 3 = 4(x - 2) ⇒ y = 4x - 5.", level: 1 },
+                    { t: "Fungsi percepatan roket Shion dirumuskan sebagai f(x) = 3x² - 5x + 8. Turunan pertama percepatan f'(x) adalah...", isComplex: false, isTrueFalse: false, o: ["A. 6x - 5", "B. 3x - 5", "C. 6x + 8", "D. 6x² - 5", "E. 5x - 3"], correctRaw: "A. 6x - 5", f: "f'(x) = n·a·x^(n-1)", d: "Turunan f'(x) = 6x - 5.", level: 2 },
+                    { t: "Integral tak tentu untuk akumulasi energi Azzux ∫ (6x + 4) dx menghasilkan...", isComplex: false, isTrueFalse: false, o: ["A. 3x² + 4x + C", "B. 6x² + 4x + C", "C. 3x² + C", "D. 6x² + C", "E. 2x² + 4x + C"], correctRaw: "A. 3x² + 4x + C", f: "∫ ax^n dx = (a/(n+1)) x^(n+1) + C", d: "(6/2)x² + 4x + C = 3x² + 4x + C.", level: 2 }
                 ];
                 return { id: i + 1, ...list[i] };
             }),
@@ -569,134 +571,71 @@
                 ];
                 
                 const item = passages[i % passages.length];
-                const isComp = (i % 2 === 0);
+                const typeSelector = i % 3; // 0: PG Tunggal, 1: PG Kompleks, 2: Benar/Salah
 
-                if (item.topic === "Infrastruktur Serat Optik") {
-                    if (isComp) {
-                        return {
-                            id: i + 1,
-                            isComplex: true,
-                            passage: item.p,
-                            t: "Berdasarkan wacana serat optik di atas, manakah pernyataan-pernyataan yang SESUAI? (Pilih semua yang benar)",
-                            o: [
-                                "A. Pembangunan jaringan serat optik bertujuan mengatasi kesenjangan akses informasi digital.",
-                                "B. Proyek serat optik menghadapi tantangan geografis pegunungan terjal dan cuaca buruk.",
-                                "C. Proyek serat optik diproyeksikan selesai tepat waktu demi pemerataan teknologi.",
-                                "D. Serat optik telah melumpuhkan seluruh akses komunikasi di wilayah perkotaan.",
-                                "E. Pemerintah menolak bantuan faksi swasta dalam proyek infrastruktur serat optik ini."
-                            ],
-                            correctRaws: [
-                                "A. Pembangunan jaringan serat optik bertujuan mengatasi kesenjangan akses informasi digital.",
-                                "B. Proyek serat optik menghadapi tantangan geografis pegunungan terjal dan cuaca buruk.",
-                                "C. Proyek serat optik diproyeksikan selesai tepat waktu demi pemerataan teknologi."
-                            ],
-                            f: "Analisis fakta tersurat wacana serat optik.",
-                            d: "Pernyataan A, B, dan C secara langsung didukung teks wacana infrastruktur serat optik.",
-                            level: 2
-                        };
-                    } else {
-                        return {
-                            id: i + 1,
-                            isComplex: false,
-                            passage: item.p,
-                            t: "Apakah gagasan utama (ide pokok) yang paling tepat untuk wacana tentang serat optik di atas?",
-                            o: [
-                                "A. Tantangan cuaca buruk dan pegunungan terjal di wilayah terpencil.",
-                                "B. Pembangunan infrastruktur jaringan serat optik untuk mengatasi kesenjangan akses digital.",
-                                "C. Pembatalan kerja sama proyek antara pemerintah dengan teknisi swasta.",
-                                "D. Kegagalan teknologi serat optik dalam menjangkau masyarakat pelosok.",
-                                "E. Prosedur pemotongan kabel serat optik di area perkotaan."
-                            ],
-                            correctRaw: "B. Pembangunan infrastruktur jaringan serat optik untuk mengatasi kesenjangan akses digital.",
-                            f: "Gagasan utama wacana infrastruktur serat optik.",
-                            d: "Inti wacana secara utuh membahas percepatan serat optik demi pemerataan informasi digital.",
-                            level: 1
-                        };
-                    }
-                } else if (item.topic === "Keamanan Siber & AI") {
-                    if (isComp) {
-                        return {
-                            id: i + 1,
-                            isComplex: true,
-                            passage: item.p,
-                            t: "Berdasarkan wacana keamanan siber di atas, manakah fakta yang SESUAI? (Pilih semua yang benar)",
-                            o: [
-                                "A. Kecerdasan buatan menjadi benteng utama perlindungan data vital pemerintahan.",
-                                "B. Sistem AI mampu mendeteksi anomali secara mandiri dalam hitungan milidetik.",
-                                "C. Sistem mampu mengisolasi jaringan terinfeksi tanpa mengganggu operasional utama.",
-                                "D. Peretasan global telah menghancurkan seluruh data vital pemerintah tanpa sisa.",
-                                "E. Sistem keamanan siber mewajibkan matinya operasional utama saat terjadi infeksi."
-                            ],
-                            correctRaws: [
-                                "A. Kecerdasan buatan menjadi benteng utama perlindungan data vital pemerintahan.",
-                                "B. Sistem AI mampu mendeteksi anomali secara mandiri dalam hitungan milidetik.",
-                                "C. Sistem mampu mengisolasi jaringan terinfeksi tanpa mengganggu operasional utama."
-                            ],
-                            f: "Analisis fakta siber AI.",
-                            d: "A, B, dan C sesuai dengan informasi yang ada pada wacana keamanan siber.",
-                            level: 2
-                        };
-                    } else {
-                        return {
-                            id: i + 1,
-                            isComplex: false,
-                            passage: item.p,
-                            t: "Gagasan utama wacana keamanan siber di atas adalah...",
-                            o: [
-                                "A. Dampak buruk peretasan terhadap sistem operasional pemerintahan.",
-                                "B. Penerapan sistem keamanan siber berbasis AI untuk melindungi data vital pemerintah.",
-                                "C. Penghentian seluruh aktivitas jaringan utama demi pencegahan infeksi.",
-                                "D. Kerusakan infrastruktur fisik akibat serangan peretasan global.",
-                                "E. Prosedur manual dalam mengisolasi berkas instansi pemerintahan."
-                            ],
-                            correctRaw: "B. Penerapan sistem keamanan siber berbasis AI untuk melindungi data vital pemerintah.",
-                            f: "Gagasan utama wacana siber.",
-                            d: "Teks menitikberatkan peran AI sebagai benteng keamanan siber pemerintah.",
-                            level: 1
-                        };
-                    }
+                if (typeSelector === 2) {
+                    // Soal Benar / Salah berdasarkan wacana
+                    const tfQuestions = [
+                        { q: "Berdasarkan teks, proyek serat optik dikerjakan tanpa bantuan pihak swasta.", ans: "Salah" },
+                        { q: "Sistem keamanan siber berbasis AI dapat mengisolasi jaringan terinfeksi tanpa mengganggu sistem utama.", ans: "Benar" },
+                        { q: "Pemanfaatan energi surya terbarukan terbukti meningkatkan emisi karbon di kawasan industri.", ans: "Salah" }
+                    ];
+                    let chosenTF = tfQuestions[i % tfQuestions.length];
+
+                    return {
+                        id: i + 1,
+                        isComplex: false,
+                        isTrueFalse: true,
+                        passage: item.p,
+                        t: `Pernyataan: "${chosenTF.q}"`,
+                        o: ["Benar", "Salah"],
+                        correctRaw: chosenTF.ans,
+                        f: "Evaluasi kebenaran pernyataan berdasarkan isi teks bacaan wacana.",
+                        d: `Pernyataan tersebut dinilai ${chosenTF.ans} sesuai dengan rincian fakta di dalam wacana.`,
+                        level: 1
+                    };
+                } else if (typeSelector === 1) {
+                    return {
+                        id: i + 1,
+                        isComplex: true,
+                        isTrueFalse: false,
+                        passage: item.p,
+                        t: "Berdasarkan wacana di atas, manakah pernyataan-pernyataan yang SESUAI? (Pilih semua yang benar)",
+                        o: [
+                            "A. Teks membahas upaya optimalisasi kemajuan teknologi atau sistem di bidang terkait.",
+                            "B. Permasalahan utama dalam teks diselesaikan dengan langkah strategis yang terukur.",
+                            "C. Dampak positif dari inovasi tersebut dirasakan langsung secara luas.",
+                            "D. Seluruh kegiatan operasional dihentikan total selamanya tanpa pemulihan.",
+                            "E. Inovasi teknologi yang dibahas terbukti gagal memberikan solusi."
+                        ],
+                        correctRaws: [
+                            "A. Teks membahas upaya optimalisasi kemajuan teknologi atau sistem di bidang terkait.",
+                            "B. Permasalahan utama dalam teks diselesaikan dengan langkah strategis yang terukur.",
+                            "C. Dampak positif dari inovasi tersebut dirasakan langsung secara luas."
+                        ],
+                        f: "Analisis informasi tersurat dan kesesuaian pernyataan wacana.",
+                        d: "Pernyataan A, B, dan C didukung penuh oleh konteks isi wacana.",
+                        level: 2
+                    };
                 } else {
-                    if (isComp) {
-                        return {
-                            id: i + 1,
-                            isComplex: true,
-                            passage: item.p,
-                            t: "Berdasarkan teks energi surya industri di atas, manakah pernyataan yang BENAR? (Pilih semua yang benar)",
-                            o: [
-                                "A. Pemanfaatan energi surya menekan biaya operasional industri hingga 40 persen.",
-                                "B. Transisi energi hijau mengurangi emisi karbon secara signifikan.",
-                                "C. Energi surya meningkatkan citra positif perusahaan di mata publik global.",
-                                "D. Energi surya menyebabkan pembengkakan emisi karbon pada kawasan industri.",
-                                "E. Perusahaan modern menolak penggunaan transisi energi hijau."
-                            ],
-                            correctRaws: [
-                                "A. Pemanfaatan energi surya menekan biaya operasional industri hingga 40 persen.",
-                                "B. Transisi energi hijau mengurangi emisi karbon secara signifikan.",
-                                "C. Energi surya meningkatkan citra positif perusahaan di mata publik global."
-                            ],
-                            f: "Analisis teks energi surya.",
-                            d: "A, B, dan C didukung penuh oleh teks wacana energi surya terbarukan.",
-                            level: 2
-                        };
-                    } else {
-                        return {
-                            id: i + 1,
-                            isComplex: false,
-                            passage: item.p,
-                            t: "Ide pokok dari paragraf energi surya industri tersebut adalah...",
-                            o: [
-                                "A. Kerugian finansial industri akibat peralihan ke energi hijau terbarukan.",
-                                "B. Manfaat pemanfaatan energi surya dalam efisiensi biaya dan kelestarian lingkungan industri.",
-                                "C. Peningkatan emisi karbon pada sektor manufaktur modern.",
-                                "D. Penurunan citra perusahaan global yang menggunakan energi surya.",
-                                "E. Kegagalan teknologi panel surya di kawasan industri."
-                            ],
-                            correctRaw: "B. Manfaat pemanfaatan energi surya dalam efisiensi biaya dan kelestarian lingkungan industri.",
-                            f: "Ide pokok wacana energi industri.",
-                            d: "Teks secara menyeluruh menjelaskan efisiensi biaya dan manfaat lingkungan dari energi surya.",
-                            level: 1
-                        };
-                    }
+                    return {
+                        id: i + 1,
+                        isComplex: false,
+                        isTrueFalse: false,
+                        passage: item.p,
+                        t: "Apakah gagasan utama (ide pokok) yang paling tepat untuk wacana di atas?",
+                        o: [
+                            "A. Hambatan fatal yang menghentikan seluruh kemajuan teknologi modern.",
+                            "B. Optimalisasi dan pemanfaatan sistem strategis untuk kemajuan serta efisiensi bidang terkait.",
+                            "C. Pembubaran seluruh instansi atau faksi yang terlibat dalam proyek.",
+                            "D. Kegagalan total dalam mengatasi kendala geografis maupun operasional.",
+                            "E. Pengabaian standar keamanan dan efisiensi lingkungan global."
+                        ],
+                        correctRaw: "B. Optimalisasi dan pemanfaatan sistem strategis untuk kemajuan serta efisiensi bidang terkait.",
+                        f: "Menentukan gagasan pokok / ide utama paragraf teks wacana.",
+                        d: "Gagasan utama mencakup keseluruhan inti pembahasan teks secara komprehensif.",
+                        level: 1
+                    };
                 }
             }),
 
@@ -717,134 +656,70 @@
                 ];
 
                 const itemEN = passagesEN[i % passagesEN.length];
-                const isCompEN = (i % 2 === 0);
+                const typeSelectorEN = i % 3;
 
-                if (itemEN.topic === "Cloud Computing") {
-                    if (isCompEN) {
-                        return {
-                            id: i + 1,
-                            isComplex: true,
-                            passage: itemEN.p,
-                            t: "Based on the Cloud Computing passage, which statements are TRUE? (Choose all correct answers)",
-                            o: [
-                                "A. Cloud computing allows enterprises to scale digital resources dynamically.",
-                                "B. Cloud computing drastically reduces physical hardware maintenance costs.",
-                                "C. System uptime and data security standards are maximized by cloud infrastructure.",
-                                "D. Cloud computing forces all companies to buy more physical local servers.",
-                                "E. Remote network security is completely destroyed by cloud implementation."
-                            ],
-                            correctRaws: [
-                                "A. Cloud computing allows enterprises to scale digital resources dynamically.",
-                                "B. Cloud computing drastically reduces physical hardware maintenance costs.",
-                                "C. System uptime and data security standards are maximized by cloud infrastructure."
-                            ],
-                            f: "Factual evaluation of Cloud Computing reading passage.",
-                            d: "Statements A, B, and C directly match the facts provided in the Cloud text.",
-                            level: 2
-                        };
-                    } else {
-                        return {
-                            id: i + 1,
-                            isComplex: false,
-                            passage: itemEN.p,
-                            t: "What is the primary main idea of the Cloud Computing passage?",
-                            o: [
-                                "A. The high cost and failure rate of physical server maintenance.",
-                                "B. The revolutionary impact of cloud computing on enterprise data management and scalability.",
-                                "C. The total breakdown of remote networks in global companies.",
-                                "D. Procedures for shutting down cloud server networks manually.",
-                                "E. The history of physical hard drive manufacturing."
-                            ],
-                            correctRaw: "B. The revolutionary impact of cloud computing on enterprise data management and scalability.",
-                            f: "Main idea identification for Cloud text.",
-                            d: "The entire passage describes how Cloud computing transforms enterprise data operations.",
-                            level: 1
-                        };
-                    }
-                } else if (itemEN.topic === "AI Cybersecurity") {
-                    if (isCompEN) {
-                        return {
-                            id: i + 1,
-                            isComplex: true,
-                            passage: itemEN.p,
-                            t: "Based on the AI Cybersecurity passage, which statements are TRUE? (Choose all correct answers)",
-                            o: [
-                                "A. AI systems autonomously monitor network traffic patterns for potential breaches.",
-                                "B. Malicious intrusions can be identified instantly before human operators notice.",
-                                "C. Digital assets gain exceptional protection against sophisticated cyberattacks.",
-                                "D. Machine learning algorithms require manual human authorization for every check.",
-                                "E. Network traffic monitoring is rendered useless by modern AI frameworks."
-                            ],
-                            correctRaws: [
-                                "A. AI systems autonomously monitor network traffic patterns for potential breaches.",
-                                "B. Malicious intrusions can be identified instantly before human operators notice.",
-                                "C. Digital assets gain exceptional protection against sophisticated cyberattacks."
-                            ],
-                            f: "AI Cybersecurity text evaluation.",
-                            d: "Options A, B, and C strictly conform to the details given in the AI Cybersecurity text.",
-                            level: 2
-                        };
-                    } else {
-                        return {
-                            id: i + 1,
-                            isComplex: false,
-                            passage: itemEN.p,
-                            t: "What is the primary purpose of the AI Cybersecurity passage?",
-                            o: [
-                                "A. To highlight the vulnerability of human operators during cyber intrusion.",
-                                "B. To explain how AI algorithms transform and strengthen modern cybersecurity frameworks.",
-                                "C. To advocate for the complete removal of digital security barriers.",
-                                "D. To describe how cyberattacks are manually coded by intruders.",
-                                "E. To compare old hardware firewalls with legacy routers."
-                            ],
-                            correctRaw: "B. To explain how AI algorithms transform and strengthen modern cybersecurity frameworks.",
-                            f: "Passage purpose identification.",
-                            d: "The text focuses on AI's proactive role in protecting network infrastructures.",
-                            level: 1
-                        };
-                    }
+                if (typeSelectorEN === 2) {
+                    const tfQuestionsEN = [
+                        { q: "Cloud computing eliminates the heavy reliance on physical on-premise servers.", ans: "Benar" },
+                        { q: "AI cybersecurity systems require human operators to manually spot every single network breach first.", ans: "Salah" },
+                        { q: "Renewable energy sources increase global carbon footprints across industrial sectors.", ans: "Salah" }
+                    ];
+                    let chosenTFEN = tfQuestionsEN[i % tfQuestionsEN.length];
+
+                    return {
+                        id: i + 1,
+                        isComplex: false,
+                        isTrueFalse: true,
+                        passage: itemEN.p,
+                        t: `Statement: "${chosenTFEN.q}"`,
+                        o: ["Benar", "Salah"],
+                        correctRaw: chosenTFEN.ans,
+                        f: "Reading comprehension True/False evaluation.",
+                        d: `The statement is evaluated as ${chosenTFEN.ans} based on the English passage context.`,
+                        level: 1
+                    };
+                } else if (typeSelectorEN === 1) {
+                    return {
+                        id: i + 1,
+                        isComplex: true,
+                        isTrueFalse: false,
+                        passage: itemEN.p,
+                        t: "Based on the passage above, which statements are TRUE? (Choose all correct answers)",
+                        o: [
+                            "A. The passage highlights a major positive technological shift or optimization.",
+                            "B. Modern tools and systems described bring efficiency and high security.",
+                            "C. Enterprises or industries benefit greatly from adopting these innovations.",
+                            "D. The technologies described lead to complete operational collapse.",
+                            "E. Companies strictly avoid modern digital frameworks in favor of obsolete tools."
+                        ],
+                        correctRaws: [
+                            "A. The passage highlights a major positive technological shift or optimization.",
+                            "B. Modern tools and systems described bring efficiency and high security.",
+                            "C. Enterprises or industries benefit greatly from adopting these innovations."
+                        ],
+                        f: "English complex reading evaluation.",
+                        d: "Statements A, B, and C accurately reflect the core message of the English passage.",
+                        level: 2
+                    };
                 } else {
-                    if (isCompEN) {
-                        return {
-                            id: i + 1,
-                            isComplex: true,
-                            passage: itemEN.p,
-                            t: "Based on the Renewable Energy passage, which statements are TRUE? (Choose all correct answers)",
-                            o: [
-                                "A. Solar panels, wind turbines, and microgrids are actively replacing fossil fuels.",
-                                "B. Renewable energy integration lowers carbon footprints worldwide.",
-                                "C. Renewable energy paves the way toward a sustainable ecological future.",
-                                "D. Forward-thinking industries are increasing their reliance on fossil fuels.",
-                                "E. Solar microgrids have been banned across industrial sectors."
-                            ],
-                            correctRaws: [
-                                "A. Solar panels, wind turbines, and microgrids are actively replacing fossil fuels.",
-                                "B. Renewable energy integration lowers carbon footprints worldwide.",
-                                "C. Renewable energy paves the way toward a sustainable ecological future."
-                            ],
-                            f: "Renewable Energy passage fact check.",
-                            d: "Options A, B, and C are explicitly supported by the green energy reading passage.",
-                            level: 2
-                        };
-                    } else {
-                        return {
-                            id: i + 1,
-                            isComplex: false,
-                            passage: itemEN.p,
-                            t: "What is the main topic of the Renewable Energy passage?",
-                            o: [
-                                "A. The inevitable expansion of fossil fuel power plants in industry.",
-                                "B. The crucial role of renewable energy integration in reducing industrial carbon footprints.",
-                                "C. The high financial costs of installing wind turbines in cities.",
-                                "D. The complete shutdown of smart microgrid development.",
-                                "E. A comparison between oil drilling and coal mining techniques."
-                            ],
-                            correctRaw: "B. The crucial role of renewable energy integration in reducing industrial carbon footprints.",
-                            f: "Main topic identification.",
-                            d: "The text explains how renewable energy technologies replace fossil fuels for ecological sustainability.",
-                            level: 1
-                        };
-                    }
+                    return {
+                        id: i + 1,
+                        isComplex: false,
+                        isTrueFalse: false,
+                        passage: itemEN.p,
+                        t: "What is the primary main idea or purpose of the passage?",
+                        o: [
+                            "A. To detail the failure and shutdown of enterprise digital systems.",
+                            "B. To explain how advanced technological integrations improve operational efficiency and security.",
+                            "C. To discourage industries from modernizing their infrastructures.",
+                            "D. To promote manual data storage methods over automated networks.",
+                            "E. To describe historical errors in hardware production."
+                        ],
+                        correctRaw: "B. To explain how advanced technological integrations improve operational efficiency and security.",
+                        f: "Identifying the main idea of an English informational text.",
+                        d: "The text emphasizes the advantages and transformative nature of modern technological solutions.",
+                        level: 1
+                    };
                 }
             })
         };
@@ -870,7 +745,7 @@
                 let limit = (currentUser.mode === 'latihan') ? 5 : 25;
                 let selectedSoal = shuffledSoal.slice(0, limit).map((q, idx) => {
                     let cleanOptions = q.o.map(opt => opt.replace(/^[A-E]\.\s*/, ''));
-                    let shuffledTexts = [...cleanOptions].sort(() => 0.5 - Math.random());
+                    let shuffledTexts = q.isTrueFalse ? cleanOptions : [...cleanOptions].sort(() => 0.5 - Math.random());
                     
                     let mappedRaws = q.correctRaw ? q.correctRaw.replace(/^[A-E]\.\s*/, '') : null;
                     let mappedRawsComplex = q.isComplex ? q.correctRaws.map(r => r.replace(/^[A-E]\.\s*/, '')) : [];
@@ -1134,10 +1009,17 @@
             document.getElementById('questionTitle').innerHTML = q.t;
 
             const typeBadge = document.getElementById('typeBadge');
+            const typeTFBadge = document.getElementById('typeTFBadge');
+            
             if (q.isComplex) {
                 typeBadge.style.display = 'inline-block';
+                typeTFBadge.style.display = 'none';
+            } else if (q.isTrueFalse) {
+                typeBadge.style.display = 'none';
+                typeTFBadge.style.display = 'inline-block';
             } else {
                 typeBadge.style.display = 'none';
+                typeTFBadge.style.display = 'none';
             }
 
             const badge = document.getElementById('difficultyBadge');
@@ -1190,8 +1072,16 @@
                 }
 
                 btn.className = btnClass;
-                let marker = q.isComplex ? ( (userAnswers[currentIdx] || []).includes(optIdx) ? '☑ ' : '☐ ' ) : '';
-                btn.innerHTML = marker + prefixLabels[optIdx] + textItem;
+                let marker = "";
+                if (q.isComplex) {
+                    marker = (userAnswers[currentIdx] || []).includes(optIdx) ? '☑ ' : '☐ ';
+                } else if (!q.isTrueFalse) {
+                    marker = prefixLabels[optIdx];
+                } else {
+                    marker = (userAnswers[currentIdx] === optIdx) ? '🔘 ' : '⚪ ';
+                }
+
+                btn.innerHTML = marker + textItem;
                 
                 if (!isSubmitted) {
                     btn.onclick = function() {
@@ -1373,7 +1263,7 @@
                 let correctDesc = q.isComplex ? q.cleanCorrects.join(", ") : q.cleanCorrect;
 
                 reviewHTML += `<div style="background: rgba(15, 23, 42, 0.85); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                    <div style="font-weight: bold; color: #f8fafc; margin-bottom: 8px; font-size: 0.95rem;">Soal ${idx + 1} ${q.isComplex ? '(Kompleks)' : ''}: ${q.t}</div>
+                    <div style="font-weight: bold; color: #f8fafc; margin-bottom: 8px; font-size: 0.95rem;">Soal ${idx + 1} ${q.isComplex ? '(Kompleks)' : (q.isTrueFalse ? '(Benar/Salah)' : '')}: ${q.t}</div>
                     ${q.passage ? `<div style="font-size: 0.85rem; color: #94a3b8; font-style: italic; margin-bottom: 6px;">Wacana: "${q.passage}"</div>` : ''}
                     <div style="font-size: 0.9rem; margin-bottom: 4px; color: ${isCorrect ? '#34d399' : '#fca5a5'};">Jawaban Anda: <b>${userDesc}</b> ${isCorrect ? '✅ (Benar)' : '❌ (Salah)'}</div>
                     <div style="font-size: 0.9rem; margin-bottom: 8px; color: #34d399;">Kunci Jawaban: <b>${correctDesc}</b></div>
