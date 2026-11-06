@@ -222,6 +222,37 @@
             color: #f8fafc;
         }
 
+        .tf-matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .tf-matrix-table th, .tf-matrix-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tf-matrix-table th {
+            background: rgba(15, 23, 42, 0.9);
+            color: #38bdf8;
+            font-size: 0.95rem;
+        }
+
+        .tf-matrix-table td.center, .tf-matrix-table th.center {
+            text-align: center;
+            width: 90px;
+        }
+
+        .tf-matrix-table tr:hover {
+            background: rgba(51, 65, 85, 0.4);
+        }
+
         .options-group {
             display: flex;
             flex-direction: column;
@@ -424,7 +455,7 @@
                         <div>
                             <span id="questionNumberTitle" style="font-weight: bold; color: #38bdf8;">Soal 1 dari 25</span>
                             <span id="typeBadge" class="difficulty-badge type-complex" style="display:none;">Pilihan Ganda Kompleks</span>
-                            <span id="typeTFBadge" class="difficulty-badge type-truefalse" style="display:none;">Benar / Salah</span>
+                            <span id="typeTFBadge" class="difficulty-badge type-truefalse" style="display:none;">Benar / Salah (Matriks Tabel)</span>
                         </div>
                         <div id="difficultyBadge" class="difficulty-badge diff-1">Level 1 (Mudah)</div>
                     </div>
@@ -526,10 +557,32 @@
             matematika: Array.from({length: 25}, (_, i) => {
                 const list = [
                     { t: "Sairo mendeteksi titik koordinat anomali waktu P(4, 6). Dilatasi dengan k = 3 pusat A(2, 1), dilanjutkan manipulasi distorsi 90° berlawanan arah jarum jam pusat (0,0). Posisi akhir temporal P'' adalah...", isComplex: false, isTrueFalse: false, o: ["A. (16, -8)", "B. (-16, 8)", "C. (8, 16)", "D. (-8, 16)", "E. (-16, -8)"], correctRaw: "B. (-16, 8)", f: "x' = a + k(x-a), y' = b + k(y-b). Rotasi 90° CCW: (-y, x)", d: "Dilatasi: (8, 16). Rotasi distorsi 90°: (-16, 8).", level: 3 },
-                    { t: "Pernyataan Matematika: Hasil refleksi titik A(3, 4) terhadap garis y = x adalah (4, 3).", isComplex: false, isTrueFalse: true, o: ["Benar", "Salah"], correctRaw: "Benar", f: "Sifat dasar refleksi koordinat terhadap garis y = x.", d: "Titik (x, y) dicerminkan terhadap y = x akan menghasilkan koordinat (y, x).", level: 1 },
+                    { 
+                        t: "Tentukan kebenaran dari pernyataan-pernyataan transformasi geometri berikut:", 
+                        isComplex: false, 
+                        isTrueFalse: true, 
+                        tfRows: [
+                            { stmt: "Hasil refleksi titik A(3, 4) terhadap garis y = x adalah (4, 3).", correct: "Benar" },
+                            { stmt: "Translasi titik B(2, 5) dengan vektor T(-1, 3) menghasilkan koordinat (2, 8).", correct: "Salah" }
+                        ],
+                        f: "Evaluasi matriks pernyataan sifat transformasi geometri.", 
+                        d: "Refleksi y=x menukar koordinat (4,3). Translasi B(2-1, 5+3) = (1,8), bukan (2,8).", 
+                        level: 2 
+                    },
                     { t: "Populasi energi klon kluster Lux' Hela bermula dari 500 unit. Setiap 15 menit mengalami duplikasi ganda 2 kali lipat. Berapa jumlah energi Lux' Hela pada menit ke-90?", isComplex: false, isTrueFalse: false, o: ["A. 16.000 unit", "B. 32.000 unit", "C. 64.000 unit", "D. 128.000 unit", "E. 256.000 unit"], correctRaw: "B. 32.000 unit", f: "N(t) = N0 · 2^(t/Td)", d: "n = 90/15 = 6. N = 500 × 64 = 32.000 unit energi.", level: 2 },
                     { t: "Arus esensi magis Astoria M(t) = 240 · 2^(-t/3). Sisa esensi Astoria setelah 12 jam peluruhan adalah...", isComplex: false, isTrueFalse: false, o: ["A. 30 unit", "B. 15 unit", "C. 60 unit", "D. 7,5 unit", "E. 120 unit"], correctRaw: "B. 15 unit", f: "Peluruhan eksponensial esensi.", d: "M(12) = 240 × 2^(-4) = 240 / 16 = 15 unit.", level: 2 },
-                    { t: "Pernyataan Logika: Nilai diskriminan dari fungsi kuadrat f(x) = x² - 4x + 4 adalah bernilai negatif.", isComplex: false, isTrueFalse: true, o: ["Benar", "Salah"], correctRaw: "Salah", f: "Rumus diskriminan D = b² - 4ac", d: "D = (-4)² - 4(1)(4) = 16 - 16 = 0 (bernilai nol, bukan negatif).", level: 2 },
+                    { 
+                        t: "Analisis sifat fungsi kuadrat f(x) = x² - 4x + 4 di bawah ini:", 
+                        isComplex: false, 
+                        isTrueFalse: true, 
+                        tfRows: [
+                            { stmt: "Nilai diskriminan dari fungsi tersebut bernilai negatif.", correct: "Salah" },
+                            { stmt: "Grafik fungsi kuadrat tersebut menyinggung sumbu X di satu titik.", correct: "Benar" }
+                        ],
+                        f: "Analisis diskriminan D = b² - 4ac pada fungsi kuadrat.", 
+                        d: "D = 0, artinya grafik menyinggung sumbu X di satu titik dan tidak bernilai negatif.", 
+                        level: 2 
+                    },
                     { t: "Menara pengintai Shion berbentuk gabungan tabung dan kerucut. Jari-jari r = 6 m, tinggi tabung 10 m, tinggi kerucut 8 m. Berapakah panjang garis pelukis kerucut menara Shion?", isComplex: false, isTrueFalse: false, o: ["A. 10 m", "B. 12 m", "C. 14 m", "D. 15 m", "E. 16 m"], correctRaw: "A. 10 m", f: "s = √(r² + t²)", d: "s = √(6² + 8²) = 10 m.", level: 1 },
                     { t: "Hans berdiri 15 m dari dinding benteng, mengamati puncak menara dengan sudut elevasi 45°. Jika tinggi Hans 1,6 m, berapakah tinggi total benteng yang diamati Hans?", isComplex: false, isTrueFalse: false, o: ["A. 15 m", "B. 16,6 m", "C. 13,4 m", "D. 18,6 m", "E. 20 m"], correctRaw: "B. 16,6 m", f: "tan 45° = h / 15 + tinggi pengamat", d: "h = 15 + 1.6 = 16.6 m.", level: 2 },
                     { t: "Rata-rata kekuatan 20 prajurit pengawal Sairo adalah 80. Saat 2 prajurit elit tambahan bergabung, rata-rata naik jadi 81. Selisih kekuatan kedua prajurit baru adalah 4. Berapa kekuatan prajurit baru yang terendah?", isComplex: false, isTrueFalse: false, o: ["A. 89", "B. 91", "C. 87", "D. 93", "E. 85"], correctRaw: "A. 89", f: "Analisis selisih total nilai kelompok.", d: "(22×81) - (20×80) = 182. Kekuatan: 89 dan 93.", level: 3 },
@@ -571,28 +624,23 @@
                 ];
                 
                 const item = passages[i % passages.length];
-                const typeSelector = i % 3; // 0: PG Tunggal, 1: PG Kompleks, 2: Benar/Salah
+                const typeSelector = i % 3;
 
                 if (typeSelector === 2) {
-                    // Soal Benar / Salah berdasarkan wacana
-                    const tfQuestions = [
-                        { q: "Berdasarkan teks, proyek serat optik dikerjakan tanpa bantuan pihak swasta.", ans: "Salah" },
-                        { q: "Sistem keamanan siber berbasis AI dapat mengisolasi jaringan terinfeksi tanpa mengganggu sistem utama.", ans: "Benar" },
-                        { q: "Pemanfaatan energi surya terbarukan terbukti meningkatkan emisi karbon di kawasan industri.", ans: "Salah" }
-                    ];
-                    let chosenTF = tfQuestions[i % tfQuestions.length];
-
                     return {
                         id: i + 1,
                         isComplex: false,
                         isTrueFalse: true,
                         passage: item.p,
-                        t: `Pernyataan: "${chosenTF.q}"`,
-                        o: ["Benar", "Salah"],
-                        correctRaw: chosenTF.ans,
-                        f: "Evaluasi kebenaran pernyataan berdasarkan isi teks bacaan wacana.",
-                        d: `Pernyataan tersebut dinilai ${chosenTF.ans} sesuai dengan rincian fakta di dalam wacana.`,
-                        level: 1
+                        t: "Tentukan kebenaran dari pernyataan-pernyataan berikut berdasarkan wacana di atas:",
+                        tfRows: [
+                            { stmt: "Proyek infrastruktur dikerjakan untuk mengatasi kesenjangan akses informasi digital.", correct: "Benar" },
+                            { stmt: "Proyek tidak menghadapi kendala geografis sama sekali di lapangan.", correct: "Salah" },
+                            { stmt: "Sistem teknologi yang diterapkan dirancang untuk mendukung efisiensi dan pemerataan.", correct: "Benar" }
+                        ],
+                        f: "Evaluasi matriks pernyataan benar-salah berdasarkan wacana.",
+                        d: "Pernyataan pertama dan ketiga terbukti benar sesuai teks, sedangkan pernyataan kedua salah karena teks menyebutkan adanya tantangan geografis ekstrim.",
+                        level: 2
                     };
                 } else if (typeSelector === 1) {
                     return {
@@ -659,24 +707,20 @@
                 const typeSelectorEN = i % 3;
 
                 if (typeSelectorEN === 2) {
-                    const tfQuestionsEN = [
-                        { q: "Cloud computing eliminates the heavy reliance on physical on-premise servers.", ans: "Benar" },
-                        { q: "AI cybersecurity systems require human operators to manually spot every single network breach first.", ans: "Salah" },
-                        { q: "Renewable energy sources increase global carbon footprints across industrial sectors.", ans: "Salah" }
-                    ];
-                    let chosenTFEN = tfQuestionsEN[i % tfQuestionsEN.length];
-
                     return {
                         id: i + 1,
                         isComplex: false,
                         isTrueFalse: true,
                         passage: itemEN.p,
-                        t: `Statement: "${chosenTFEN.q}"`,
-                        o: ["Benar", "Salah"],
-                        correctRaw: chosenTFEN.ans,
-                        f: "Reading comprehension True/False evaluation.",
-                        d: `The statement is evaluated as ${chosenTFEN.ans} based on the English passage context.`,
-                        level: 1
+                        t: "Determine whether the following statements are True or False based on the passage:",
+                        tfRows: [
+                            { stmt: "The technology helps reduce maintenance costs and improves overall system security.", correct: "Benar" },
+                            { stmt: "Companies continue to rely exclusively on outdated physical local servers without remote networks.", correct: "Salah" },
+                            { stmt: "Advanced systems optimize digital resource management and operational performance.", correct: "Benar" }
+                        ],
+                        f: "Reading comprehension True/False matrix evaluation in English.",
+                        d: "Statements 1 and 3 are correct based on the text, while statement 2 contradicts the shift to cloud/remote networks.",
+                        level: 2
                     };
                 } else if (typeSelectorEN === 1) {
                     return {
@@ -744,8 +788,8 @@
                 let shuffledSoal = [...masterSoal[sub]].sort(() => 0.5 - Math.random());
                 let limit = (currentUser.mode === 'latihan') ? 5 : 25;
                 let selectedSoal = shuffledSoal.slice(0, limit).map((q, idx) => {
-                    let cleanOptions = q.o.map(opt => opt.replace(/^[A-E]\.\s*/, ''));
-                    let shuffledTexts = q.isTrueFalse ? cleanOptions : [...cleanOptions].sort(() => 0.5 - Math.random());
+                    let cleanOptions = q.o ? q.o.map(opt => opt.replace(/^[A-E]\.\s*/, '')) : [];
+                    let shuffledTexts = q.isTrueFalse ? [] : [...cleanOptions].sort(() => 0.5 - Math.random());
                     
                     let mappedRaws = q.correctRaw ? q.correctRaw.replace(/^[A-E]\.\s*/, '') : null;
                     let mappedRawsComplex = q.isComplex ? q.correctRaws.map(r => r.replace(/^[A-E]\.\s*/, '')) : [];
@@ -966,6 +1010,8 @@
                 let isAnswered = false;
                 if (q.isComplex) {
                     isAnswered = userAnswers[index] && userAnswers[index].length > 0;
+                } else if (q.isTrueFalse) {
+                    isAnswered = userAnswers[index] && Object.keys(userAnswers[index]).length === q.tfRows.length;
                 } else {
                     isAnswered = userAnswers[index] !== undefined;
                 }
@@ -1038,61 +1084,82 @@
             const optionsContainer = document.getElementById('optionsContainer');
             optionsContainer.innerHTML = '';
 
-            q.shuffledTexts.forEach((textItem, optIdx) => {
-                const btn = document.createElement('button');
-                let btnClass = 'option-btn';
+            if (q.isTrueFalse) {
+                // Render Tipe Benar-Salah bentuk Matriks Tabel
+                let tableHTML = `<table class="tf-matrix-table">
+                    <thead>
+                        <tr>
+                            <th>Pernyataan</th>
+                            <th class="center">Benar</th>
+                            <th class="center">Salah</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                
+                q.tfRows.forEach((row, rIdx) => {
+                    let userRowAns = (userAnswers[currentIdx] || {})[rIdx];
+                    tableHTML += `<tr>
+                        <td>${row.stmt}</td>
+                        <td class="center">
+                            <input type="radio" name="tf_row_${rIdx}" value="Benar" ${userRowAns === 'Benar' ? 'checked' : ''} ${isSubmitted ? 'disabled' : ''} onclick="selectTF(${rIdx}, 'Benar')">
+                        </td>
+                        <td class="center">
+                            <input type="radio" name="tf_row_${rIdx}" value="Salah" ${userRowAns === 'Salah' ? 'checked' : ''} ${isSubmitted ? 'disabled' : ''} onclick="selectTF(${rIdx}, 'Salah')">
+                        </td>
+                    </tr>`;
+                });
+                tableHTML += `</tbody></table>`;
+                optionsContainer.innerHTML = tableHTML;
+            } else {
+                // Render Pilihan Ganda Biasa atau Kompleks
+                q.shuffledTexts.forEach((textItem, optIdx) => {
+                    const btn = document.createElement('button');
+                    let btnClass = 'option-btn';
 
-                if (q.isComplex) {
-                    let selectedArr = userAnswers[currentIdx] || [];
-                    if (selectedArr.includes(optIdx)) {
-                        btnClass += ' selected';
-                    }
-                } else {
-                    if (userAnswers[currentIdx] === optIdx) {
-                        btnClass += ' selected';
-                    }
-                }
-
-                if (isSubmitted) {
                     if (q.isComplex) {
-                        let isThisCorrect = q.cleanCorrects.includes(textItem);
-                        let isSelected = (userAnswers[currentIdx] || []).includes(optIdx);
-                        if (isThisCorrect) {
-                            btnClass += ' correct-ans';
-                        } else if (isSelected && !isThisCorrect) {
-                            btnClass += ' wrong-ans';
+                        let selectedArr = userAnswers[currentIdx] || [];
+                        if (selectedArr.includes(optIdx)) {
+                            btnClass += ' selected';
                         }
                     } else {
-                        if (textItem === q.cleanCorrect) {
-                            btnClass += ' correct-ans';
-                        } else if (userAnswers[currentIdx] === optIdx && textItem !== q.cleanCorrect) {
-                            btnClass += ' wrong-ans';
+                        if (userAnswers[currentIdx] === optIdx) {
+                            btnClass += ' selected';
                         }
                     }
-                }
 
-                btn.className = btnClass;
-                let marker = "";
-                if (q.isComplex) {
-                    marker = (userAnswers[currentIdx] || []).includes(optIdx) ? '☑ ' : '☐ ';
-                } else if (!q.isTrueFalse) {
-                    marker = prefixLabels[optIdx];
-                } else {
-                    marker = (userAnswers[currentIdx] === optIdx) ? '🔘 ' : '⚪ ';
-                }
+                    if (isSubmitted) {
+                        if (q.isComplex) {
+                            let isThisCorrect = q.cleanCorrects.includes(textItem);
+                            let isSelected = (userAnswers[currentIdx] || []).includes(optIdx);
+                            if (isThisCorrect) {
+                                btnClass += ' correct-ans';
+                            } else if (isSelected && !isThisCorrect) {
+                                btnClass += ' wrong-ans';
+                            }
+                        } else {
+                            if (textItem === q.cleanCorrect) {
+                                btnClass += ' correct-ans';
+                            } else if (userAnswers[currentIdx] === optIdx && textItem !== q.cleanCorrect) {
+                                btnClass += ' wrong-ans';
+                            }
+                        }
+                    }
 
-                btn.innerHTML = marker + textItem;
-                
-                if (!isSubmitted) {
-                    btn.onclick = function() {
-                        selectOption(optIdx, q.isComplex);
-                    };
-                } else {
-                    btn.disabled = true;
-                }
+                    btn.className = btnClass;
+                    let marker = q.isComplex ? ((userAnswers[currentIdx] || []).includes(optIdx) ? '☑ ' : '☐ ') : prefixLabels[optIdx];
+                    btn.innerHTML = marker + textItem;
+                    
+                    if (!isSubmitted) {
+                        btn.onclick = function() {
+                            selectOption(optIdx, q.isComplex);
+                        };
+                    } else {
+                        btn.disabled = true;
+                    }
 
-                optionsContainer.appendChild(btn);
-            });
+                    optionsContainer.appendChild(btn);
+                });
+            }
 
             document.getElementById('formulaContent').innerHTML = q.f;
             document.getElementById('discussionContent').innerHTML = q.d;
@@ -1140,6 +1207,16 @@
             loadQuestion();
         }
 
+        function selectTF(rowIdx, val) {
+            if (isSubmitted) return;
+            if (!userAnswers[currentIdx]) {
+                userAnswers[currentIdx] = {};
+            }
+            userAnswers[currentIdx][rowIdx] = val;
+            saveToStorage();
+            initNav();
+        }
+
         function checkIsCorrect(q, userAnswer) {
             if (q.isComplex) {
                 if (!userAnswer || !Array.isArray(userAnswer) || userAnswer.length === 0) return false;
@@ -1147,6 +1224,15 @@
                 let correctTexts = [...q.cleanCorrects].sort();
                 if (userSelectedTexts.length !== correctTexts.length) return false;
                 return userSelectedTexts.every((val, index) => val === correctTexts[index]);
+            } else if (q.isTrueFalse) {
+                if (!userAnswer || typeof userAnswer !== 'object') return false;
+                let allCorrect = true;
+                q.tfRows.forEach((row, rIdx) => {
+                    if (userAnswer[rIdx] !== row.correct) {
+                        allCorrect = false;
+                    }
+                });
+                return allCorrect;
             } else {
                 if (userAnswer === undefined) return false;
                 let chosenText = q.shuffledTexts[userAnswer];
@@ -1256,17 +1342,39 @@
                     } else {
                         userDesc = userAnswer.map(i => q.shuffledTexts[i]).join(", ");
                     }
+                } else if (q.isTrueFalse) {
+                    if (!userAnswer || Object.keys(userAnswer).length === 0) {
+                        userDesc = "Belum lengkap dijawab";
+                    } else {
+                        userDesc = "<ul>";
+                        q.tfRows.forEach((row, rIdx) => {
+                            let ans = userAnswer[rIdx] || "Kosong";
+                            userDesc += `<li>${row.stmt} -> <b>${ans}</b></li>`;
+                        });
+                        userDesc += "</ul>";
+                    }
                 } else {
                     userDesc = userAnswer !== undefined ? q.shuffledTexts[userAnswer] : "Tidak dijawab";
                 }
 
-                let correctDesc = q.isComplex ? q.cleanCorrects.join(", ") : q.cleanCorrect;
+                let correctDesc = "";
+                if (q.isTrueFalse) {
+                    correctDesc = "<ul>";
+                    q.tfRows.forEach((row) => {
+                        correctDesc += `<li>${row.stmt} -> <b>${row.correct}</b></li>`;
+                    });
+                    correctDesc += "</ul>";
+                } else if (q.isComplex) {
+                    correctDesc = q.cleanCorrects.join(", ");
+                } else {
+                    correctDesc = q.cleanCorrect;
+                }
 
                 reviewHTML += `<div style="background: rgba(15, 23, 42, 0.85); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                    <div style="font-weight: bold; color: #f8fafc; margin-bottom: 8px; font-size: 0.95rem;">Soal ${idx + 1} ${q.isComplex ? '(Kompleks)' : (q.isTrueFalse ? '(Benar/Salah)' : '')}: ${q.t}</div>
+                    <div style="font-weight: bold; color: #f8fafc; margin-bottom: 8px; font-size: 0.95rem;">Soal ${idx + 1} ${q.isComplex ? '(Kompleks)' : (q.isTrueFalse ? '(Benar/Salah Matriks)' : '')}: ${q.t}</div>
                     ${q.passage ? `<div style="font-size: 0.85rem; color: #94a3b8; font-style: italic; margin-bottom: 6px;">Wacana: "${q.passage}"</div>` : ''}
-                    <div style="font-size: 0.9rem; margin-bottom: 4px; color: ${isCorrect ? '#34d399' : '#fca5a5'};">Jawaban Anda: <b>${userDesc}</b> ${isCorrect ? '✅ (Benar)' : '❌ (Salah)'}</div>
-                    <div style="font-size: 0.9rem; margin-bottom: 8px; color: #34d399;">Kunci Jawaban: <b>${correctDesc}</b></div>
+                    <div style="font-size: 0.9rem; margin-bottom: 4px; color: ${isCorrect ? '#34d399' : '#fca5a5'};">Jawaban Anda: ${q.isTrueFalse ? userDesc : `<b>${userDesc}</b>`} ${isCorrect ? '✅ (Benar)' : '❌ (Salah)'}</div>
+                    <div style="font-size: 0.9rem; margin-bottom: 8px; color: #34d399;">Kunci Jawaban: ${q.isTrueFalse ? correctDesc : `<b>${correctDesc}</b>`}</div>
                     <div style="font-size: 0.85rem; background: rgba(16, 185, 129, 0.1); padding: 10px; border-left: 3px solid #10b981; border-radius: 4px; color: #e2e8f0; margin-top: 6px; line-height: 1.5;">
                         <b>Konsep / Analisis:</b> ${q.f}<br><b>Pembahasan:</b> ${q.d}
                     </div>
