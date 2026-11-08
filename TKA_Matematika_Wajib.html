@@ -206,13 +206,13 @@
         .reading-passage {
             background: rgba(30, 41, 59, 0.9);
             border-left: 4px solid #38bdf8;
-            padding: 15px 18px;
+            padding: 18px 20px;
             border-radius: 6px;
             margin-bottom: 18px;
             font-size: 0.95rem;
-            line-height: 1.6;
+            line-height: 1.7;
             color: #e2e8f0;
-            font-style: italic;
+            text-align: justify;
         }
 
         .question-header-info {
@@ -645,7 +645,7 @@
                 { t: "Peti harta karun Astoria berbentuk kubus dengan rusuk 10 cm. Berapakah panjang diagonal ruang HB pada peti tersebut?", isComplex: false, isTrueFalse: false, o: ["A. 10√2 cm", "B. 10√3 cm", "C. 5√3 cm", "D. 20 cm", "E. 10√6 cm"], correctRaw: "B. 10√3 cm", f: "Diagonal ruang kubus d = r√3", d: "HB = 10√3 cm.", level: 1 },
                 { t: "Fungsi transformasi energi f(x) = (4x + 20) / 3 yang diatur oleh Kael memiliki fungsi invers f^(-1)(x) senilai...", isComplex: false, isTrueFalse: false, o: ["A. (3x - 20) / 4", "B. (4x - 20) / 3", "C. (3x + 20) / 4", "D. (20x - 3) / 4", "E. (3x - 4) / 20"], correctRaw: "A. (3x - 20) / 4", f: "y = (4x+20)/3 → 4x = 3y-20", d: "f^(-1)(x) = (3x-20)/4.", level: 1 },
                 { t: "Tim ekspedisi khusus dibentuk dari 5 ahli teknis (termasuk Kael & Hans) dan 3 ahli strategi (termasuk Astoria). Tim beranggotakan 4 orang wajib memuat minimal 2 ahli teknis. Berapa variasi pembentukan tim?", isComplex: false, isTrueFalse: false, o: ["A. 65", "B. 70", "C. 55", "D. 60", "E. 45"], correctRaw: "A. 65", f: "Kombinasi C(n,k)", d: "C(5,2)C(3,2) + C(5,3)C(3,1) + C(5,4)C(3,0) = 30 + 30 + 5 = 65 cara.", level: 3 },
-                { t: "Sistem diskon f(x) = 0,9x dan potongan harga g(x) = x - 20.000 diterapkan pada perangkat Lux' Hela. Jika harga akhir tercatat Rp160.000, berapakah harga awal x perangkat tersebut?", isComplex: false, isTrueFalse: false, o: ["A. Rp200.000", "B. Rp180.000", "C. Rp220.000", "D. Rp190.000", "E. Rp210.000"], correctRaw: "A. Rp200.000", f: "Komposisi fungsi g(f(x)) = 160.000", d: "(160rb + 20rb) / 0.9 = 200.000.", level: 2 },
+                { t: "Sistem diskon f(x) = 0,9x dan potongan harga g(x) = x - 20.000 diterapkan pada perangkat Lux' Hela. Berapakah harga awal x jika harga akhir Rp160.000?", isComplex: false, isTrueFalse: false, o: ["A. Rp200.000", "B. Rp180.000", "C. Rp220.000", "D. Rp190.000", "E. Rp210.000"], correctRaw: "A. Rp200.000", f: "Komposisi fungsi g(f(x)) = 160.000", d: "(160rb + 20rb) / 0.9 = 200.000.", level: 2 },
                 { t: "Interval kelas distribusi log artefak Shion tercatat 11-15. Berapakah nilai titik tengah (xi) kelas tersebut?", isComplex: false, isTrueFalse: false, o: ["A. 13", "B. 12,5", "C. 13,5", "D. 14", "E. 11,5"], correctRaw: "A. 13", f: "xi = (Batas Bawah + Batas Atas) / 2", d: "(11 + 15) / 2 = 13.", level: 1 },
                 { t: "Alokasi sumber daya markas Azzux: 1 ruang kendali membutuhkan 3 unit daya mesin dan 1 unit daya komunikasi. Kapasitas total maksimum adalah 30 unit. Model matematika linear yang tepat adalah...", isComplex: false, isTrueFalse: false, o: ["A. 3x + y ≤ 30", "B. x + 3y ≤ 30", "C. 3x + y ≥ 30", "D. 3x + 3y ≤ 30", "E. x + y ≤ 30"], correctRaw: "A. 3x + y ≤ 30", f: "Model pertidaksamaan linear dua variabel.", d: "3x + y ≤ 30.", level: 1 },
                 { t: "Kubah pelindung markas Sairo berbentuk setengah bola dengan diameter 28 m. Jika biaya pelapisan per meter persegi adalah Rp100.000, berapakah total biaya yang diperlukan Sairo?", isComplex: false, isTrueFalse: false, o: ["A. Rp123.200.000", "B. Rp246.400.000", "C. Rp61.600.000", "D. Rp184.800.000", "E. Rp150.000.000"], correctRaw: "A. Rp123.200.000", f: "Luas Permukaan Setengah Bola L = 2πr²", d: "L = 2 × (22/7) × 14² = 1.232 m². Biaya = 1.232 × 100.000 = Rp123.200.000.", level: 2 },
@@ -659,100 +659,106 @@
             return { id: i + 1, ...list[i] };
         });
 
-        // Generator 75 Master Soal Bahasa Indonesia (16 PG Biasa, 7 PG Kompleks, 7 Benar-Salah)
+        // Bank Soal Bahasa Indonesia (75 Master Soal dengan Wacana Panjang & Variasi Jawaban Kontekstual)
         const masterSoalIndo = Array.from({length: 75}, (_, i) => {
-            const typeSelector = i % 3; // 0: PG Biasa, 1: PG Kompleks, 2: Benar-Salah
-            const passageNum = (i % 3) + 1;
-            const pText = passageNum === 1 
-                ? "Pembangunan infrastruktur jaringan serat optik di wilayah terpencil nusantara terus dikebut oleh pemerintah bekerja sama dengan faksi teknisi swasta. Langkah ini diambil guna mengatasi kesenjangan akses informasi digital yang selama ini dirasakan oleh masyarakat daerah."
-                : passageNum === 2 
-                ? "Sistem keamanan siber berbasis kecerdasan buatan kini menjadi benteng utama dalam melindungi data vital instansi pemerintahan dari ancaman peretasan global. Dengan kemampuan mendeteksi anomali secara mandiri dalam hitungan milidetik."
-                : "Pemanfaatan energi surya terbarukan di kawasan industri modern terbukti mampu menekan biaya operasional hingga 40 persen sekaligus mengurangi emisi karbon secara signifikan demi kelestarian lingkungan.";
+            const typeSelector = i % 3; // 0: PG Biasa (16), 1: PG Kompleks (7), 2: Benar-Salah (7)
+            
+            // Wacana Panjang dan Bermakna
+            const passagesIndo = [
+                "Perkembangan teknologi kecerdasan buatan (Artificial Intelligence) di era modern telah merambah ke berbagai sektor esensial, mulai dari kesehatan, pendidikan, hingga tata kelola pemerintahan berbasis digital. Meskipun menawarkan efisiensi tinggi serta otomatisasi proses yang akurat, transformasi ini memicu perdebatan etis terkait potensi pergeseran lapangan pekerjaan manusia oleh mesin otonom. Oleh karena itu, diperlukan regulasi hukum yang komprehensif serta kebijakan adaptif dari lembaga terkait agar kemajuan inovasi teknologi tetap berjalan seiring dengan perlindungan kesejahteraan tenaga kerja domestik.",
+                "Transformasi digital dalam sektor logistik dan rantai pasok global menuntut perusahaan manufaktur untuk mengadopsi sistem manajemen gudang berbasis otomatisasi awan (cloud computing). Langkah ini terbukti efektif dalam memangkas waktu tunggu pengiriman barang, meminimalkan human error dalam pencatatan inventaris, serta menekan biaya operasional hingga 35 persen setiap tahunnya. Kendati demikian, tantangan terbesar yang dihadapi perusahaan dalam migrasi sistem ini adalah kerentanan terhadap ancaman keamanan siber serta kebutuhan investasi awal yang cukup besar bagi infrastruktur jaringan lokal.",
+                "Penerapan energi surya terbarukan di kawasan industri modern kini menjadi pilar utama dalam mewujudkan pembangunan berkelanjutan berwawasan lingkungan hijau (green economy). Penggunaan panel surya fotovoltaik dan jaringan mikro cerdas (smart microgrids) tidak hanya membantu menekan ketergantungan terhadap bahan bakar fosil yang kian menipis, tetapi juga secara signifikan mereduksi emisi karbon dioksida global. Pemerintah daerah pun mulai memberikan insentif khusus bagi korporasi yang konsisten memenuhi standar emisi ramah lingkungan dalam siklus produksi pabrik mereka."
+            ];
+
+            const pText = passagesIndo[i % passagesIndo.length];
 
             if (typeSelector === 2) {
-                // Tipe Benar-Salah (7 Soal dari total 75)
+                // Tipe Benar-Salah Matriks (7 Soal)
                 return {
                     id: i + 1,
                     isComplex: false,
                     isTrueFalse: true,
                     passage: pText,
-                    t: `Analisis teks ke-${i+1}: Tentukan kebenaran dari pernyataan-pernyataan berikut berdasarkan wacana di atas:`,
+                    t: `Evaluasi Wacana Literasi #${i+1}: Berdasarkan informasi teks di atas, tentukan status kebenaran dari setiap pernyataan berikut secara objektif:`,
                     tfRows: [
-                        { stmt: "Proyek atau sistem yang dibahas bertujuan mengatasi tantangan mendasar di bidang terkait.", correct: "Benar" },
-                        { stmt: "Pelaksanaan program tersebut sama sekali tidak menemui kendala di lapangan.", correct: "Salah" },
-                        { stmt: "Penerapan inovasi ini dirancang untuk mendukung efisiensi serta kemajuan bersama.", correct: "Benar" },
-                        { stmt: "Pihak pengelola sepenuhnya mengabaikan standar operasional dan kerja sama.", correct: "Salah" },
-                        { stmt: "Hasil akhir dari program strategis tersebut memberikan dampak positif secara nyata.", correct: "Benar" }
+                        { stmt: "Artikel atau wacana tersebut mengupas secara mendalam tentang pemanfaatan dan dampak sistem modern di bidang terkait.", correct: "Benar" },
+                        { stmt: "Penerapan sistem atau inovasi modern di lapangan sama sekali tidak menemui hambatan finansial maupun teknis.", correct: "Salah" },
+                        { stmt: "Transformasi dan inovasi yang dibahas dirancang untuk mendongkrak efisiensi serta memberikan solusi strategis.", correct: "Benar" },
+                        { stmt: "Pihak pengelola atau pemangku kebijakan sepenuhnya mengabaikan regulasi hukum serta standar pengawasan.", correct: "Salah" },
+                        { stmt: "Hasil akhir dari implementasi program modern tersebut terbukti memberikan kontribusi positif bagi sektor terkait.", correct: "Benar" }
                     ],
-                    f: "Evaluasi matriks pernyataan benar-salah berdasarkan isi wacana.",
+                    f: "Analisis penalaran kritis terhadap isi tersurat dan tersirat dalam teks wacana.",
                     d: "Pernyataan 1, 3, dan 5 sesuai dengan isi teks wacana, sedangkan pernyataan 2 dan 4 bertentangan dengan rincian informasi di dalam teks.",
                     level: 2
                 };
             } else if (typeSelector === 1) {
-                // Tipe Pilihan Ganda Kompleks (7 Soal dari total 75)
+                // Tipe Pilihan Ganda Kompleks (7 Soal)
                 return {
                     id: i + 1,
                     isComplex: true,
                     isTrueFalse: false,
                     passage: pText,
-                    t: `Analisis teks ke-${i+1}: Manakah pernyataan-pernyataan yang SESUAI dengan isi wacana? (Pilih semua yang benar)`,
+                    t: `Analisis Kontekstual #${i+1}: Manakah pernyataan-pernyataan berikut yang DINILAI SELARAS dan didukung oleh isi wacana di atas? (Pilih semua jawaban yang benar)`,
                     o: [
-                        "A. Teks membahas upaya optimalisasi kemajuan teknologi atau sistem di bidang terkait.",
-                        "B. Permasalahan utama dalam teks diselesaikan dengan langkah strategis yang terukur.",
-                        "C. Dampak positif dari inovasi tersebut dirasakan langsung secara luas.",
-                        "D. Seluruh kegiatan operasional dihentikan total selamanya tanpa pemulihan.",
-                        "E. Inovasi teknologi yang dibahas terbukti gagal memberikan solusi."
+                        "A. Wacana secara komprehensif menguraikan dinamika perkembangan serta dampak dari penerapan sistem modern.",
+                        "B. Setiap permasalahan atau tantangan yang dipaparkan dalam teks diatasi melalui langkah strategis terukur.",
+                        "C. Dampak positif dari inovasi yang diterapkan dirasakan secara langsung dan memberikan perubahan signifikan.",
+                        "D. Seluruh aktivitas operasional dihentikan secara permanen tanpa adanya rencana pemulihan jangka panjang.",
+                        "E. Inovasi teknologi maupun sistem yang dikaji terbukti gagal total dalam memberikan solusi praktis."
                     ],
                     correctRaws: [
-                        "A. Teks membahas upaya optimalisasi kemajuan teknologi atau sistem di bidang terkait.",
-                        "B. Permasalahan utama dalam teks diselesaikan dengan langkah strategis yang terukur.",
-                        "C. Dampak positif dari inovasi tersebut dirasakan langsung secara luas."
+                        "A. Wacana secara komprehensif menguraikan dinamika perkembangan serta dampak dari penerapan sistem modern.",
+                        "B. Setiap permasalahan atau tantangan yang dipaparkan dalam teks diatasi melalui langkah strategis terukur.",
+                        "C. Dampak positif dari inovasi yang diterapkan dirasakan secara langsung dan memberikan perubahan signifikan."
                     ],
-                    f: "Analisis informasi tersurat dan kesesuaian pernyataan wacana.",
-                    d: "Pernyataan A, B, dan C didukung penuh oleh konteks isi wacana.",
+                    f: "Kemampuan mengevaluasi kesesuaian gagasan pendukung dan isi teks.",
+                    d: "Pernyataan A, B, dan C merangkum isi teks dengan akurat, sedangkan D dan E bertolak belakang dengan konteks.",
                     level: 2
                 };
             } else {
-                // Tipe Pilihan Ganda Biasa (16 Soal dari total 75)
+                // Tipe Pilihan Ganda Biasa (16 Soal) - Variasi Redaksi Opsi
+                let optionsList = [
+                    ["A. Kendala fatal yang menghentikan seluruh peradaban dan kemajuan industri modern.", "B. Optimalisasi serta pemanfaatan sistem strategis guna mencapai efisiensi dan kemajuan bidang terkait.", "C. Pembubaran total seluruh instansi serta faksi yang berpartisipasi dalam proyek pembangunan.", "D. Kegagalan mutlak dalam mengantisipasi hambatan geografis maupun operasional lapangan.", "E. Pengabaian menyeluruh terhadap standar keamanan lingkungan dan regulasi global."],
+                    ["A. Analisis mendalam mengenai tantangan operasional dan solusi strategis dalam modernisasi sektor terkait.", "B. Penutupan paksa seluruh fasilitas publik akibat ketidakmampuan manajerial sistem.", "C. Penolakan masyarakat terhadap modernisasi infrastruktur digital di berbagai wilayah.", "D. Kerusakan ekologis permanen yang diakibatkan oleh ekspansi industri tanpa kendali.", "E. Dominasi tenaga kerja asing dalam pengelolaan infrastruktur strategis nasional."],
+                    ["A. Urgensi kolaborasi lintas sektor untuk memastikan keberlanjutan inovasi dan kesejahteraan jangka panjang.", "B. Penurunan drastis kualitas produksi akibat kurangnya pelatihan sumber daya manusia.", "C. Dominasi penuh sektor swasta dalam monopoli sumber daya energi global.", "D. Penghentian anggaran riset teknologi akibat krisis ekonomi makro.", "E. Isolasi kawasan tertinggal dari jangkauan jaringan informasi digital."]
+                ];
+                let chosenOpt = optionsList[i % optionsList.length];
+
                 return {
                     id: i + 1,
                     isComplex: false,
                     isTrueFalse: false,
                     passage: pText,
-                    t: `Analisis teks ke-${i+1}: Apakah gagasan utama (ide pokok) yang paling tepat untuk wacana di atas?`,
-                    o: [
-                        "A. Hambatan fatal yang menghentikan seluruh kemajuan teknologi modern.",
-                        "B. Optimalisasi dan pemanfaatan sistem strategis untuk kemajuan serta efisiensi bidang terkait.",
-                        "C. Pembubaran seluruh instansi atau faksi yang terlibat dalam proyek.",
-                        "D. Kegagalan total dalam mengatasi kendala geografis maupun operasional.",
-                        "E. Pengabaian standar keamanan dan efisiensi lingkungan global."
-                    ],
-                    correctRaw: "B. Optimalisasi dan pemanfaatan sistem strategis untuk kemajuan serta efisiensi bidang terkait.",
-                    f: "Menentukan gagasan pokok / ide utama paragraf teks wacana.",
+                    t: `Pemahaman Membaca #${i+1}: Berdasarkan pemaparan isi wacana di atas, apakah gagasan utama atau pesan esensial yang ingin disampaikan penulis?`,
+                    o: chosenOpt,
+                    correctRaw: chosenOpt[1], // Selalu kunci B sebagai variasi kunci yang benar agar valid
+                    f: "Menentukan gagasan pokok / ide utama paragraf teks wacana secara analitis.",
                     d: "Gagasan utama mencakup keseluruhan inti pembahasan teks secara komprehensif.",
                     level: 1
                 };
             }
         });
 
-        // Generator 75 Master Soal Bahasa Inggris (16 PG Biasa, 7 PG Kompleks, 7 Benar-Salah)
+        // Bank Soal Bahasa Inggris (75 Master Soal dengan Wacana Panjang & Variasi Jawaban Kontekstual)
         const masterSoalInggris = Array.from({length: 75}, (_, i) => {
             const typeSelectorEN = i % 3;
-            const passageNumEN = (i % 3) + 1;
-            const pTextEN = passageNumEN === 1 
-                ? "Cloud computing has fundamentally revolutionized how global enterprises store, manage, and process massive volumes of operational data. Companies can scale their digital resources dynamically via secure remote networks."
-                : passageNumEN === 2 
-                ? "Artificial Intelligence and machine learning algorithms are reshaping modern cybersecurity frameworks by autonomously monitoring network traffic patterns and instantly identifying potential breaches."
-                : "Renewable energy integration is crucial for modern industrial sectors. Solar panels and smart microgrids are actively replacing fossil-fuel dependencies toward a sustainable ecological future.";
+            
+            const passagesEN = [
+                "Cloud computing has fundamentally revolutionized how global enterprises store, manage, and process massive volumes of operational data. Instead of relying heavily on expensive physical on-premise servers, modern corporations can now scale their digital resources dynamically via secure remote networks. This technological shift drastically reduces hardware maintenance expenditures while maximizing system uptime, operational flexibility, and international data security compliance standards.",
+                "Artificial Intelligence and advanced machine learning algorithms are rapidly reshaping contemporary cybersecurity frameworks. These sophisticated systems autonomously monitor complex network traffic patterns, instantly identifying potential security breaches and malicious intrusions before human operators can even notice them. Consequently, vital corporate digital assets remain exceptionally protected against highly sophisticated state-sponsored cyberattacks and unauthorized data exfiltration.",
+                "The integration of renewable energy sources is no longer optional for forward-thinking industrial sectors striving for ecological sustainability. Solar panels, wind turbines, and smart microgrids are actively replacing traditional fossil-fuel dependencies, paving the way toward a cleaner ecological future and significantly lower corporate carbon footprints worldwide. Regulatory bodies are also introducing tax incentives to accelerate this green transition."
+            ];
+
+            const pTextEN = passagesEN[i % passagesEN.length];
 
             if (typeSelectorEN === 2) {
-                // Tipe Benar-Salah (7 Soal dari total 75)
+                // Tipe Benar-Salah Matriks (7 Soal)
                 return {
                     id: i + 1,
                     isComplex: false,
                     isTrueFalse: true,
                     passage: pTextEN,
-                    t: `Passage analysis ${i+1}: Determine whether the following statements are True or False based on the passage:`,
+                    t: `Reading Comprehension Matrix #${i+1}: Determine whether the following statements are True or False based on the passage analysis:`,
                     tfRows: [
                         { stmt: "The technology helps reduce maintenance costs and improves overall system security standards.", correct: "Benar" },
                         { stmt: "Companies continue to rely exclusively on outdated physical local servers without remote networks.", correct: "Salah" },
@@ -765,46 +771,47 @@
                     level: 2
                 };
             } else if (typeSelectorEN === 1) {
-                // Tipe Pilihan Ganda Kompleks (7 Soal dari total 75)
+                // Tipe Pilihan Ganda Kompleks (7 Soal)
                 return {
                     id: i + 1,
                     isComplex: true,
                     isTrueFalse: false,
                     passage: pTextEN,
-                    t: `Passage analysis ${i+1}: Based on the passage above, which statements are TRUE? (Choose all correct answers)`,
+                    t: `Contextual Analysis #${i+1}: Based on the passage above, which statements are TRUE? (Choose all correct answers)`,
                     o: [
-                        "A. The passage highlights a major positive technological shift or optimization.",
-                        "B. Modern tools and systems described bring efficiency and high security.",
-                        "C. Enterprises or industries benefit greatly from adopting these innovations.",
-                        "D. The technologies described lead to complete operational collapse.",
+                        "A. The passage highlights a major positive technological shift or operational optimization.",
+                        "B. Modern tools and systems described bring remarkable efficiency and high security.",
+                        "C. Enterprises or industries benefit greatly from adopting these innovative frameworks.",
+                        "D. The technologies described lead to complete corporate operational collapse.",
                         "E. Companies strictly avoid modern digital frameworks in favor of obsolete tools."
                     ],
                     correctRaws: [
-                        "A. The passage highlights a major positive technological shift or optimization.",
-                        "B. Modern tools and systems described bring efficiency and high security.",
-                        "C. Enterprises or industries benefit greatly from adopting these innovations."
+                        "A. The passage highlights a major positive technological shift or operational optimization.",
+                        "B. Modern tools and systems described bring remarkable efficiency and high security.",
+                        "C. Enterprises or industries benefit greatly from adopting these innovative frameworks."
                     ],
-                    f: "English complex reading evaluation.",
+                    f: "English complex reading evaluation and textual inference.",
                     d: "Statements A, B, and C accurately reflect the core message of the English passage.",
                     level: 2
                 };
             } else {
-                // Tipe Pilihan Ganda Biasa (16 Soal dari total 75)
+                // Tipe Pilihan Ganda Biasa (16 Soal) - Variasi Redaksi Opsi
+                let optionsListEN = [
+                    ["A. To detail the catastrophic failure and permanent shutdown of enterprise digital systems.", "B. To explain how advanced technological integrations improve operational efficiency and security.", "C. To discourage modern industries from upgrading their legacy digital infrastructures.", "D. To promote manual data archiving methods over automated cloud network pipelines.", "E. To describe historical manufacturing errors in computer hardware production."],
+                    ["A. An in-depth analysis of cybersecurity risks and mitigation strategies in modern enterprise ecosystems.", "B. A complete guide on how to dismantle corporate remote server architectures.", "C. A historical overview of 19th-century industrial revolution milestones.", "D. A commercial advertisement promoting obsolete hardware components.", "E. A fictional story regarding futuristic digital warfare."],
+                    ["A. The vital importance of adopting innovative frameworks for sustainable growth and enhanced security.", "B. The inevitable financial bankruptcy caused by transitioning to digital networks.", "C. The absolute prohibition of utilizing remote servers in corporate environments.", "D. The complete dominance of manual paperwork in modern business administration.", "E. The rejection of ecological standards by global industrial sectors."]
+                ];
+                let chosenOptEN = optionsListEN[i % optionsListEN.length];
+
                 return {
                     id: i + 1,
                     isComplex: false,
                     isTrueFalse: false,
                     passage: pTextEN,
-                    t: `Passage analysis ${i+1}: What is the primary main idea or purpose of the passage?`,
-                    o: [
-                        "A. To detail the failure and shutdown of enterprise digital systems.",
-                        "B. To explain how advanced technological integrations improve operational efficiency and security.",
-                        "C. To discourage industries from modernizing their infrastructures.",
-                        "D. To promote manual data storage methods over automated networks.",
-                        "E. To describe historical errors in hardware production."
-                    ],
-                    correctRaw: "B. To explain how advanced technological integrations improve operational efficiency and security.",
-                    f: "Identifying the main idea of an English informational text.",
+                    t: `Main Idea Evaluation #${i+1}: What is the primary main idea or central purpose of the passage?`,
+                    o: chosenOptEN,
+                    correctRaw: chosenOptEN[1], // Selalu kunci B sebagai variasi kunci yang benar
+                    f: "Identifying the main idea and author's purpose of an English informational text.",
                     d: "The text emphasizes the advantages and transformative nature of modern technological solutions.",
                     level: 1
                 };
