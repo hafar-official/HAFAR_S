@@ -19,6 +19,29 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: #f8fafc;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Watermark Dinamis di Background Soal */
+        .exam-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.025);
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+            user-select: none;
+            letter-spacing: 5px;
+        }
+
+        .quiz-content-wrapper {
+            position: relative;
+            z-index: 1;
         }
 
         .tka-header-bar {
@@ -404,127 +427,151 @@
     <div class="tka-wrapper">
         <div class="tka-card-container">
             
-            <div class="tka-header-bar">
-                <div>
-                    <h2 style="color: #38bdf8; margin: 0; font-size: 1.4rem;">Latihan Soal TKA SMK 2026</h2>
-                    <p style="color: #94a3b8; font-size: 0.85rem; margin: 5px 0 0 0;" id="modeHeaderInfo">Mode Simulasi Terpadu HAFAR'S</p>
-                </div>
-                <div class="timer-badge">
-                    <span>⏱️</span>
-                    <span id="timerDisplay">75:00</span>
-                </div>
-            </div>
+            <div id="examWatermark" class="exam-watermark">HAFAR'S EXAM SYSTEM</div>
 
-            <div class="subject-tabs">
-                <button id="tabMatematika" class="tab-btn active-tab" onclick="changeSubject('matematika', this)">📐 Matematika Wajib</button>
-                <button id="tabIndo" class="tab-btn" onclick="changeSubject('indo', this)">📖 Bahasa Indonesia</button>
-                <button id="tabInggris" class="tab-btn" onclick="changeSubject('inggris', this)">🌐 Bahasa Inggris</button>
-            </div>
-
-            <div id="startOverlay" class="start-overlay">
-                <h3 style="color: #ffffff; margin-bottom: 8px; font-size: 1.3rem;">Masukkan Identitas Anda</h3>
-                <p style="color: #94a3b8; font-size: 0.85rem; max-width: 500px; margin: 0 auto 20px auto; line-height: 1.5;">
-                    Dengan memasukkan identitasmu, namamu akan tertampil di leaderboard.
-                </p>
-                
-                <div class="form-group">
-                    <label>Nama Karakter / Nama Anda:</label>
-                    <input type="text" id="inputNama" class="form-input" placeholder="Contoh: Sairo / Kael" required>
-                </div>
-                <div class="form-group">
-                    <label>Asal:</label>
-                    <input type="text" id="inputKelas" class="form-input" placeholder="Contoh: Dimensi Akhir / Malang" required>
-                </div>
-                <div class="form-group">
-                    <label>Pilih Mode Pengerjaan:</label>
-                    <select id="inputMode" class="form-select">
-                        <option value="latihan">Mode Latihan (5 Soal - Tidak Masuk Leaderboard)</option>
-                        <option value="ujian">Mode Ujian Resmi (25 Soal - Masuk Leaderboard + Anti-Cheat)</option>
-                    </select>
-                </div>
-
-                <button class="btn-start" onclick="startQuiz()">▶️ Mulai Mengerjakan</button>
-            </div>
-
-            <div id="quizArea" style="display: none;">
-                
-                <div class="nav-questions" id="navQuestions"></div>
-
-                <div class="question-card">
-                    <div class="question-header-info">
-                        <div>
-                            <span id="questionNumberTitle" style="font-weight: bold; color: #38bdf8;">Soal 1 dari 25</span>
-                            <span id="typeBadge" class="difficulty-badge type-complex" style="display:none;">Pilihan Ganda Kompleks</span>
-                            <span id="typeTFBadge" class="difficulty-badge type-truefalse" style="display:none;">Benar / Salah (Matriks Tabel)</span>
-                        </div>
-                        <div id="difficultyBadge" class="difficulty-badge diff-1">Level 1 (Mudah)</div>
-                    </div>
-                    <div id="readingPassageBox" class="reading-passage" style="display: none;"></div>
-                    <div class="question-title" id="questionTitle">Loading...</div>
-                </div>
-
-                <div class="options-group" id="optionsContainer"></div>
-
-                <div class="formula-box" id="formulaBox" style="margin-top: 20px;">
-                    <h4 style="margin: 0 0 6px 0; color: #fbbf24; font-size: 0.95rem;">📌 Konsep & Analisis:</h4>
-                    <div id="formulaContent" style="font-size: 0.9rem;"></div>
-                </div>
-
-                <div class="action-bar">
+            <div class="quiz-content-wrapper">
+                <div class="tka-header-bar">
                     <div>
-                        <button class="btn-action" onclick="prevQuestion()">⬅️ Sebelumnya</button>
-                        <button id="btnNext" class="btn-action" onclick="nextQuestion()">Berikutnya ➡️</button>
+                        <h2 style="color: #38bdf8; margin: 0; font-size: 1.4rem;">Latihan Soal TKA SMK 2026</h2>
+                        <p style="color: #94a3b8; font-size: 0.85rem; margin: 5px 0 0 0;" id="modeHeaderInfo">Mode Simulasi Terpadu HAFAR'S</p>
                     </div>
-                    <div>
-                        <button id="btnDiscussion" class="btn-action" style="background-color: #0ea5e9; display: none;" onclick="toggleDiscussion()">💡 Analisis Lore</button>
-                        <button id="btnSubmit" class="btn-action" style="background-color: #10b981; display: none;" onclick="submitQuiz()">🏆 Selesai Simulasi</button>
+                    <div class="timer-badge">
+                        <span>⏱️</span>
+                        <span id="timerDisplay">75:00</span>
                     </div>
                 </div>
 
-                <div class="discussion-box" id="discussionBox">
-                    <h4 style="margin: 0 0 8px 0; color: #34d399;">📝 Catatan Peristiwa:</h4>
-                    <div id="discussionContent" style="font-size: 0.9rem;"></div>
+                <div class="subject-tabs">
+                    <button id="tabMatematika" class="tab-btn active-tab" onclick="changeSubject('matematika', this)">📐 Matematika Wajib</button>
+                    <button id="tabIndo" class="tab-btn" onclick="changeSubject('indo', this)">📖 Bahasa Indonesia</button>
+                    <button id="tabInggris" class="tab-btn" onclick="changeSubject('inggris', this)">🌐 Bahasa Inggris</button>
                 </div>
 
-                <div class="result-box" id="resultBox">
-                    <h2 style="color: #34d399; margin: 0 0 10px 0;">Pengerjaan Selesai!</h2>
-                    <p id="scoreText" style="font-size: 1.2rem; margin: 15px 0; font-weight: bold; color: #ffffff;"></p>
-                    <p id="leaderboardStatusText" style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;"></p>
+                <div id="startOverlay" class="start-overlay">
+                    <h3 style="color: #ffffff; margin-bottom: 8px; font-size: 1.3rem;">Masukkan Identitas Anda</h3>
+                    <p style="color: #94a3b8; font-size: 0.85rem; max-width: 500px; margin: 0 auto 20px auto; line-height: 1.5;">
+                        Dengan memasukkan identitasmu, namamu akan tertampil di leaderboard.
+                    </p>
                     
-                    <div id="reviewContainer"></div>
+                    <div class="form-group">
+                        <label>Nama Karakter / Nama Anda:</label>
+                        <input type="text" id="inputNama" class="form-input" placeholder="Contoh: Sairo / Kael" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Asal:</label>
+                        <input type="text" id="inputKelas" class="form-input" placeholder="Contoh: Dimensi Akhir / Malang" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Pilih Mode Pengerjaan:</label>
+                        <select id="inputMode" class="form-select">
+                            <option value="latihan">Mode Latihan (5 Soal - Tidak Masuk Leaderboard)</option>
+                            <option value="ujian">Mode Ujian Resmi (25 Soal - Masuk Leaderboard + Anti-Cheat)</option>
+                        </select>
+                    </div>
 
-                    <button class="btn-action" style="margin-top: 25px;" onclick="resetQuiz()">🔄 Ulangi / Ganti Mode</button>
+                    <button class="btn-start" onclick="startQuiz()">▶️ Mulai Mengerjakan</button>
+                </div>
+
+                <div id="quizArea" style="display: none;">
+                    
+                    <div class="nav-questions" id="navQuestions"></div>
+
+                    <div class="question-card">
+                        <div class="question-header-info">
+                            <div>
+                                <span id="questionNumberTitle" style="font-weight: bold; color: #38bdf8;">Soal 1 dari 25</span>
+                                <span id="typeBadge" class="difficulty-badge type-complex" style="display:none;">Pilihan Ganda Kompleks</span>
+                                <span id="typeTFBadge" class="difficulty-badge type-truefalse" style="display:none;">Benar / Salah (Matriks Tabel)</span>
+                            </div>
+                            <div id="difficultyBadge" class="difficulty-badge diff-1">Level 1 (Mudah)</div>
+                        </div>
+                        <div id="readingPassageBox" class="reading-passage" style="display: none;"></div>
+                        <div class="question-title" id="questionTitle">Loading...</div>
+                    </div>
+
+                    <div class="options-group" id="optionsContainer"></div>
+
+                    <div class="formula-box" id="formulaBox" style="margin-top: 20px;">
+                        <h4 style="margin: 0 0 6px 0; color: #fbbf24; font-size: 0.95rem;">📌 Konsep & Analisis:</h4>
+                        <div id="formulaContent" style="font-size: 0.9rem;"></div>
+                    </div>
+
+                    <div class="action-bar">
+                        <div>
+                            <button class="btn-action" onclick="prevQuestion()">⬅️ Sebelumnya</button>
+                            <button id="btnNext" class="btn-action" onclick="nextQuestion()">Berikutnya ➡️</button>
+                        </div>
+                        <div>
+                            <button id="btnDiscussion" class="btn-action" style="background-color: #0ea5e9; display: none;" onclick="toggleDiscussion()">💡 Analisis Lore</button>
+                            <button id="btnSubmit" class="btn-action" style="background-color: #10b981; display: none;" onclick="submitQuiz()">🏆 Selesai Simulasi</button>
+                        </div>
+                    </div>
+
+                    <div class="discussion-box" id="discussionBox">
+                        <h4 style="margin: 0 0 8px 0; color: #34d399;">📝 Catatan Peristiwa:</h4>
+                        <div id="discussionContent" style="font-size: 0.9rem;"></div>
+                    </div>
+
+                    <div class="result-box" id="resultBox">
+                        <h2 style="color: #34d399; margin: 0 0 10px 0;">Pengerjaan Selesai!</h2>
+                        <p id="scoreText" style="font-size: 1.2rem; margin: 15px 0; font-weight: bold; color: #ffffff;"></p>
+                        <p id="leaderboardStatusText" style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;"></p>
+                        
+                        <div id="reviewContainer"></div>
+
+                        <button class="btn-action" style="margin-top: 25px;" onclick="resetQuiz()">🔄 Ulangi / Ganti Mode</button>
+                    </div>
+
+                </div>
+
+                <!-- Leaderboard Sections (Pemisahan Clean Board & Penalty Board) -->
+                <div class="leaderboard-section">
+                    <h3 id="leaderboardTitle" style="color: #38bdf8; margin-top: 0; font-size: 1.1rem;">🏆 Leaderboard Utama (Jujur & Terverifikasi): Matematika Wajib</h3>
+                    <div style="overflow-x: auto; margin-bottom: 30px;">
+                        <table class="leaderboard-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">Rank</th>
+                                    <th>Nama</th>
+                                    <th>Asal</th>
+                                    <th style="text-align: center;">Waktu Sisa</th>
+                                    <th style="text-align: right;">Skor</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboardBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; color: #94a3b8;">Memuat data peringkat utama...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 style="color: #fca5a5; margin-top: 10px; font-size: 1.1rem;">⚠️ Penalty Board (Terdeteksi Pelanggaran / Anti-Cheat):</h3>
+                    <div style="overflow-x: auto;">
+                        <table class="leaderboard-table" style="border: 1px solid rgba(239, 68, 68, 0.3);">
+                            <thead>
+                                <tr style="background: rgba(239, 68, 68, 0.1);">
+                                    <th style="width: 50px; color: #fca5a5;">Rank</th>
+                                    <th style="color: #fca5a5;">Nama</th>
+                                    <th style="color: #fca5a5;">Asal</th>
+                                    <th style="text-align: center; color: #fca5a5;">Total Pelanggaran</th>
+                                    <th style="text-align: right; color: #fca5a5;">Skor Akhir</th>
+                                </tr>
+                            </thead>
+                            <tbody id="penaltyLeaderboardBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; color: #94a3b8;">Tidak ada catatan pelanggaran.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 25px;">
+                        <button onclick="clearLocalCache()" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: bold; transition: all 0.2s;">🗑️ Bersihkan Cache Peringkat Lokal</button>
+                    </div>
                 </div>
 
             </div>
-
-            <!-- Leaderboard Section -->
-            <div class="leaderboard-section">
-                <h3 id="leaderboardTitle" style="color: #38bdf8; margin-top: 0; font-size: 1.1rem;">🏆 Leaderboard: Matematika Wajib</h3>
-                <div style="overflow-x: auto;">
-                    <table class="leaderboard-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 50px;">Rank</th>
-                                <th>Nama</th>
-                                <th>Asal</th>
-                                <th style="text-align: center;">Waktu Sisa</th>
-                                <th style="text-align: right;">Skor</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboardBody">
-                            <tr>
-                                <td colspan="5" style="text-align: center; color: #94a3b8;">Memuat data peringkat...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div style="text-align: center; margin-top: 20px;">
-                    <button onclick="clearLocalCache()" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: bold; transition: all 0.2s;">🗑️ Bersihkan Cache Peringkat Lokal</button>
-                </div>
-            </div>
-
         </div>
     </div>
 
@@ -831,12 +878,15 @@
                         isStarted = data.isStarted || false;
                         isSubmitted = data.isSubmitted || false;
                         currentUser = data.currentUser || { name: "", kelas: "", mode: "ujian" };
+                        cheatCount = data.cheatCount || 0;
                         activeTotalQuestions = dbSoal[currentSubject] ? dbSoal[currentSubject].length : 25;
 
                         if (isStarted) {
                             document.getElementById('startOverlay').style.display = 'none';
                             document.getElementById('quizArea').style.display = 'block';
                             
+                            updateWatermark();
+
                             if (!isSubmitted) {
                                 lockOtherTabs(currentSubject);
                                 initTimer();
@@ -870,9 +920,19 @@
                 timeLeft,
                 isStarted,
                 isSubmitted,
-                currentUser
+                currentUser,
+                cheatCount
             };
             localStorage.setItem('hafar_tka_state', JSON.stringify(state));
+        }
+
+        function updateWatermark() {
+            const wm = document.getElementById('examWatermark');
+            if (currentUser.name && currentUser.kelas) {
+                wm.innerText = `${currentUser.name} - ${currentUser.kelas} | HAFAR'S EXAM`;
+            } else {
+                wm.innerText = `HAFAR'S EXAM SYSTEM`;
+            }
         }
 
         function startQuiz() {
@@ -886,6 +946,7 @@
             }
 
             currentUser = { name: nameInput, kelas: kelasInput, mode: modeInput };
+            cheatCount = 0;
             activeTotalQuestions = (modeInput === 'latihan') ? 5 : 25;
 
             initRandomizedQuestions();
@@ -895,6 +956,7 @@
             isStarted = true;
             isSubmitted = false;
 
+            updateWatermark();
             lockOtherTabs(currentSubject);
             initTimer();
             if (currentUser.mode === 'ujian') {
@@ -931,7 +993,7 @@
             timeLeft -= 1200;
             if (timeLeft < 0) timeLeft = 0;
             
-            alert(`⚠️ PERINGATAN KECURANGAN KE-${cheatCount}!\nAlasan: ${reason}\nSanksi: Waktu ujian Anda dikurangi 20 menit!`);
+            alert(`⚠️ PERINGATAN KECURANGAN KE-${cheatCount}!\nAlasan: ${reason}\nSanksi: Waktu ujian Anda dikurangi 20 menit dan tercatat di Penalty Board!`);
             
             if (timeLeft <= 0) {
                 alert("Waktu Anda habis akibat akumulasi sanksi kecurangan!");
@@ -1307,7 +1369,7 @@
             const remainingTimeSeconds = timeLeft;
 
             if (currentUser.mode === 'ujian') {
-                sendScoreToFirebase(currentSubject, currentUser.name, currentUser.kelas, Math.round(totalScore), remainingTimeSeconds);
+                sendScoreToFirebase(currentSubject, currentUser.name, currentUser.kelas, Math.round(totalScore), remainingTimeSeconds, cheatCount);
             }
 
             showResultView(score, activeData.length);
@@ -1334,11 +1396,16 @@
             const reviewContainer = document.getElementById('reviewContainer');
             const totalScore = (score / total) * 100;
 
-            scoreText.innerText = `Nama: ${currentUser.name} (${currentUser.kelas}) — Skor: ${Math.round(totalScore)} / 100 (${score} Benar dari ${total}) | Sisa Waktu: ${formatTimeRemaining(timeLeft)}`;
+            scoreText.innerText = `Nama: ${currentUser.name} (${currentUser.kelas}) — Skor: ${Math.round(totalScore)} / 100 (${score} Benar dari ${total}) | Sisa Waktu: ${formatTimeRemaining(timeLeft)} | Pelanggaran: ${cheatCount}`;
             
             if (currentUser.mode === 'ujian') {
-                lbStatusText.innerText = "Skor dan waktu penyelesaian Anda telah berhasil dikirim ke Leaderboard.";
-                lbStatusText.style.color = "#34d399";
+                if (cheatCount > 0) {
+                    lbStatusText.innerText = "Ujian selesai. Karena terdeteksi pelanggaran, skor Anda dicatat ke Penalty Board.";
+                    lbStatusText.style.color = "#fca5a5";
+                } else {
+                    lbStatusText.innerText = "Skor bersih Anda berhasil dikirim ke Leaderboard Utama (Clean Board).";
+                    lbStatusText.style.color = "#34d399";
+                }
             } else {
                 lbStatusText.innerText = "Mode Latihan (Uji Coba 5 Soal): Skor tidak dicatat ke Leaderboard.";
                 lbStatusText.style.color = "#fbbf24";
@@ -1407,8 +1474,8 @@
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
-        function sendScoreToFirebase(mapel, nama, kelas, skor, waktuSisa) {
-            saveToLocalLeaderboard(mapel, nama, kelas, skor, waktuSisa);
+        function sendScoreToFirebase(mapel, nama, kelas, skor, waktuSisa, cheats) {
+            saveToLocalLeaderboard(mapel, nama, kelas, skor, waktuSisa, cheats);
 
             if (!db) return;
 
@@ -1425,6 +1492,7 @@
                               db.collection("leaderboard").doc(doc.id).update({
                                   skor: skor,
                                   waktuSisa: waktuSisa,
+                                  cheatCount: cheats,
                                   timestamp: firebase.firestore.FieldValue.serverTimestamp()
                               });
                           }
@@ -1436,6 +1504,7 @@
                           kelas: kelas,
                           skor: skor,
                           waktuSisa: waktuSisa,
+                          cheatCount: cheats,
                           timestamp: firebase.firestore.FieldValue.serverTimestamp()
                       });
                   }
@@ -1448,13 +1517,14 @@
         function fetchLeaderboard(mapel) {
             const titleElem = document.getElementById('leaderboardTitle');
             const mapelNames = { matematika: 'Matematika Wajib', indo: 'Bahasa Indonesia', inggris: 'Bahasa Inggris' };
-            titleElem.innerText = `🏆 Leaderboard: ${mapelNames[mapel]}`;
+            titleElem.innerText = `🏆 Leaderboard Utama (Jujur & Terverifikasi): ${mapelNames[mapel]}`;
 
-            const tbody = document.getElementById('leaderboardBody');
+            const tbodyClean = document.getElementById('leaderboardBody');
+            const tbodyPenalty = document.getElementById('penaltyLeaderboardBody');
             
             let localData = JSON.parse(localStorage.getItem('hafar_local_lb') || '{}');
             let localList = localData[mapel] || [];
-            renderTableData(localList, tbody);
+            renderDualLeaderboardTables(localList, tbodyClean, tbodyPenalty);
 
             if (!db) return;
 
@@ -1480,53 +1550,70 @@
                   });
 
                   let combinedList = Array.from(mergedMap.values());
-                  combinedList.sort((a, b) => {
-                      if (b.skor !== a.skor) {
-                          return b.skor - a.skor;
-                      }
-                      return (b.waktuSisa || 0) - (a.waktuSisa || 0);
-                  });
-
                   if (combinedList.length > 0) {
-                      renderTableData(combinedList, tbody);
+                      renderDualLeaderboardTables(combinedList, tbodyClean, tbodyPenalty);
                   }
               }, (error) => {
                   console.warn("Gagal mengambil data real-time:", error);
               });
         }
 
-        function renderTableData(list, tbody) {
-            tbody.innerHTML = '';
-            
-            list.sort((a, b) => {
-                if (b.skor !== a.skor) {
-                    return b.skor - a.skor;
-                }
+        function renderDualLeaderboardTables(list, tbodyClean, tbodyPenalty) {
+            tbodyClean.innerHTML = '';
+            tbodyPenalty.innerHTML = '';
+
+            let cleanList = list.filter(item => (item.cheatCount || 0) === 0);
+            let penaltyList = list.filter(item => (item.cheatCount || 0) > 0);
+
+            cleanList.sort((a, b) => {
+                if (b.skor !== a.skor) return b.skor - a.skor;
                 return (b.waktuSisa || 0) - (a.waktuSisa || 0);
             });
 
-            let top10 = list.slice(0, 10);
+            penaltyList.sort((a, b) => {
+                if ((a.cheatCount || 0) !== (b.cheatCount || 0)) {
+                    return (a.cheatCount || 0) - (b.cheatCount || 0);
+                }
+                return b.skor - a.skor;
+            });
 
-            if (top10.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #94a3b8;">Belum ada data peringkat. Jadilah yang pertama di Mode Ujian!</td></tr>`;
-                return;
+            let top10Clean = cleanList.slice(0, 10);
+            let top10Penalty = penaltyList.slice(0, 10);
+
+            if (top10Clean.length === 0) {
+                tbodyClean.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #94a3b8;">Belum ada data di Leaderboard Utama. Jadilah yang pertama mengerjakan dengan jujur!</td></tr>`;
+            } else {
+                top10Clean.forEach((item, index) => {
+                    let rankClass = index === 0 ? 'rank-1' : (index === 1 ? 'rank-2' : (index === 2 ? 'rank-3' : ''));
+                    let timeStr = item.waktuSisa !== undefined ? formatTimeRemaining(item.waktuSisa) : "-";
+                    let row = `<tr>
+                        <td class="${rankClass}">#${index + 1}</td>
+                        <td style="font-weight: 500; color: #fff;">${item.nama}</td>
+                        <td>${item.kelas}</td>
+                        <td style="text-align: center; font-family: monospace; color: #94a3b8;">${timeStr}</td>
+                        <td style="text-align: right; font-weight: bold; color: #38bdf8;">${item.skor}</td>
+                    </tr>`;
+                    tbodyClean.innerHTML += row;
+                });
             }
 
-            top10.forEach((item, index) => {
-                let rankClass = index === 0 ? 'rank-1' : (index === 1 ? 'rank-2' : (index === 2 ? 'rank-3' : ''));
-                let timeStr = item.waktuSisa !== undefined ? formatTimeRemaining(item.waktuSisa) : "-";
-                let row = `<tr>
-                    <td class="${rankClass}">#${index + 1}</td>
-                    <td style="font-weight: 500; color: #fff;">${item.nama}</td>
-                    <td>${item.kelas}</td>
-                    <td style="text-align: center; font-family: monospace; color: #94a3b8;">${timeStr}</td>
-                    <td style="text-align: right; font-weight: bold; color: #38bdf8;">${item.skor}</td>
-                </tr>`;
-                tbody.innerHTML += row;
-            });
+            if (top10Penalty.length === 0) {
+                tbodyPenalty.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #94a3b8;">Tidak ada catatan pelanggaran. Bagus sekali!</td></tr>`;
+            } else {
+                top10Penalty.forEach((item, index) => {
+                    let row = `<tr>
+                        <td style="color: #fca5a5; font-weight: bold;">#${index + 1}</td>
+                        <td style="color: #cbd5e1; font-weight: 500;">${item.nama}</td>
+                        <td style="color: #cbd5e1;">${item.kelas}</td>
+                        <td style="text-align: center; font-weight: bold; color: #ef4444;">${item.cheatCount || 1}x Pelanggaran</td>
+                        <td style="text-align: right; font-weight: bold; color: #fca5a5;">${item.skor}</td>
+                    </tr>`;
+                    tbodyPenalty.innerHTML += row;
+                });
+            }
         }
 
-        function saveToLocalLeaderboard(mapel, nama, kelas, skor, waktuSisa) {
+        function saveToLocalLeaderboard(mapel, nama, kelas, skor, waktuSisa, cheats) {
             let localData = JSON.parse(localStorage.getItem('hafar_local_lb') || '{}');
             if (!localData[mapel]) localData[mapel] = [];
             
@@ -1535,16 +1622,11 @@
                 if (skor > existing.skor || (skor === existing.skor && waktuSisa > (existing.waktuSisa || 0))) {
                     existing.skor = skor;
                     existing.waktuSisa = waktuSisa;
+                    existing.cheatCount = cheats;
                 }
             } else {
-                localData[mapel].push({ nama, kelas, skor, waktuSisa });
+                localData[mapel].push({ nama, kelas, skor, waktuSisa, cheatCount: cheats });
             }
-
-            localData[mapel].sort((a, b) => {
-                if (b.skor !== a.skor) return b.skor - a.skor;
-                return (b.waktuSisa || 0) - (a.waktuSisa || 0);
-            });
-            localData[mapel] = localData[mapel].slice(0, 10);
 
             localStorage.setItem('hafar_local_lb', JSON.stringify(localData));
         }
@@ -1579,6 +1661,7 @@
             document.getElementById('inputNama').value = currentUser.name || '';
             document.getElementById('inputKelas').value = currentUser.kelas || '';
 
+            updateWatermark();
             unlockAllTabs();
             fetchLeaderboard(currentSubject);
         }
