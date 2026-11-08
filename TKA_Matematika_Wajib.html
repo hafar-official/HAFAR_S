@@ -23,7 +23,6 @@
             overflow: hidden;
         }
 
-        /* Watermark Dinamis di Background Soal */
         .exam-watermark {
             position: absolute;
             top: 50%;
@@ -465,7 +464,7 @@
                         <label>Pilih Mode Pengerjaan:</label>
                         <select id="inputMode" class="form-select">
                             <option value="latihan">Mode Latihan (5 Soal - Tidak Masuk Leaderboard)</option>
-                            <option value="ujian">Mode Ujian Resmi (25 Soal - Masuk Leaderboard + Anti-Cheat)</option>
+                            <option value="ujian">Mode Ujian Resmi (Matematika: 25 Soal | Bindo/Inggris: 30 Soal + Anti-Cheat)</option>
                         </select>
                     </div>
 
@@ -479,7 +478,7 @@
                     <div class="question-card">
                         <div class="question-header-info">
                             <div>
-                                <span id="questionNumberTitle" style="font-weight: bold; color: #38bdf8;">Soal 1 dari 25</span>
+                                <span id="questionNumberTitle" style="font-weight: bold; color: #38bdf8;">Soal 1 dari 30</span>
                                 <span id="typeBadge" class="difficulty-badge type-complex" style="display:none;">Pilihan Ganda Kompleks</span>
                                 <span id="typeTFBadge" class="difficulty-badge type-truefalse" style="display:none;">Benar / Salah (Matriks Tabel)</span>
                             </div>
@@ -524,7 +523,6 @@
 
                 </div>
 
-                <!-- Leaderboard Sections (Pemisahan Clean Board & Penalty Board) -->
                 <div class="leaderboard-section">
                     <h3 id="leaderboardTitle" style="color: #38bdf8; margin-top: 0; font-size: 1.1rem;">🏆 Leaderboard Utama (Jujur & Terverifikasi): Matematika Wajib</h3>
                     <div style="overflow-x: auto; margin-bottom: 30px;">
@@ -601,230 +599,217 @@
             console.warn("Gagal menginisialisasi Firestore:", e);
         }
 
-        const masterSoal = {
-            matematika: Array.from({length: 25}, (_, i) => {
-                const list = [
-                    { t: "Sairo mendeteksi titik koordinat anomali waktu P(4, 6). Dilatasi dengan k = 3 pusat A(2, 1), dilanjutkan manipulasi distorsi 90° berlawanan arah jarum jam pusat (0,0). Posisi akhir temporal P'' adalah...", isComplex: false, isTrueFalse: false, o: ["A. (16, -8)", "B. (-16, 8)", "C. (8, 16)", "D. (-8, 16)", "E. (-16, -8)"], correctRaw: "B. (-16, 8)", f: "x' = a + k(x-a), y' = b + k(y-b). Rotasi 90° CCW: (-y, x)", d: "Dilatasi: (8, 16). Rotasi distorsi 90°: (-16, 8).", level: 3 },
-                    { 
-                        t: "Tentukan kebenaran dari pernyataan-pernyataan sifat transformasi geometri berikut:", 
-                        isComplex: false, 
-                        isTrueFalse: true, 
-                        tfRows: [
-                            { stmt: "Hasil refleksi titik A(3, 4) terhadap garis y = x adalah koordinat (4, 3).", correct: "Benar" },
-                            { stmt: "Translasi titik B(2, 5) dengan vektor pergeseran T(-1, 3) menghasilkan koordinat (2, 8).", correct: "Salah" },
-                            { stmt: "Rotasi sejauh 180° terhadap titik pusat (0,0) mengubah titik (x, y) menjadi (-x, -y).", correct: "Benar" },
-                            { stmt: "Dilatasi dengan faktor skala k=-2 pada titik (1, -1) menghasilkan koordinat pusat ( -2, 2 ).", correct: "Benar" },
-                            { stmt: "Pencerminan terhadap sumbu X mentransformasikan ordinat y menjadi positif tetap (y).", correct: "Salah" }
-                        ],
-                        f: "Evaluasi matriks pernyataan sifat transformasi geometri (Refleksi, Translasi, Rotasi, dan Dilatasi).", 
-                        d: "Refleksi y=x menukar posisi (4,3). Translasi B(2-1, 5+3) = (1,8) bukan (2,8). Rotasi 180° menghasilkan (-x,-y). Dilatasi k=-2 pada (1,-1) memberikan (-2,2). Pencerminan sumbu X mengubah y menjadi -y.", 
-                        level: 2 
-                    },
-                    { t: "Populasi energi klon kluster Lux' Hela bermula dari 500 unit. Setiap 15 menit mengalami duplikasi ganda 2 kali lipat. Berapa jumlah energi Lux' Hela pada menit ke-90?", isComplex: false, isTrueFalse: false, o: ["A. 16.000 unit", "B. 32.000 unit", "C. 64.000 unit", "D. 128.000 unit", "E. 256.000 unit"], correctRaw: "B. 32.000 unit", f: "N(t) = N0 · 2^(t/Td)", d: "n = 90/15 = 6. N = 500 × 64 = 32.000 unit energi.", level: 2 },
-                    { t: "Arus esensi magis Astoria M(t) = 240 · 2^(-t/3). Sisa esensi Astoria setelah 12 jam peluruhan adalah...", isComplex: false, isTrueFalse: false, o: ["A. 30 unit", "B. 15 unit", "C. 60 unit", "D. 7,5 unit", "E. 120 unit"], correctRaw: "B. 15 unit", f: "Peluruhan eksponensial esensi.", d: "M(12) = 240 × 2^(-4) = 240 / 16 = 15 unit.", level: 2 },
-                    { 
-                        t: "Analisis sifat fungsi kuadrat f(x) = x² - 4x + 4 secara komprehensif:", 
-                        isComplex: false, 
-                        isTrueFalse: true, 
-                        tfRows: [
-                            { stmt: "Nilai diskriminan dari fungsi kuadrat tersebut bernilai negatif.", correct: "Salah" },
-                            { stmt: "Grafik fungsi kuadrat tersebut menyinggung sumbu X persis di satu titik.", correct: "Benar" },
-                            { stmt: "Titik puncak (balik) dari fungsi kuadrat tersebut berada pada koordinat (2, 0).", correct: "Benar" },
-                            { stmt: "Nilai minimum fungsi kuadrat tersebut adalah 4.", correct: "Salah" },
-                            { stmt: "Kurva parabola terbuka ke arah bawah karena koefisien x² bernilai negatif.", correct: "Salah" }
-                        ],
-                        f: "Analisis diskriminan D = b² - 4ac, titik puncak, dan sifat kurva parabola.", 
-                        d: "D = 0 (menyinggung 1 titik di sumbu X). Puncak (-b/2a, f(-b/2a)) = (2,0). Nilai minimumnya adalah 0, bukan 4. Kurva terbuka ke atas karena koefisien a = 1 positif.", 
-                        level: 2 
-                    },
-                    { t: "Menara pengintai Shion berbentuk gabungan tabung dan kerucut. Jari-jari r = 6 m, tinggi tabung 10 m, tinggi kerucut 8 m. Berapakah panjang garis pelukis kerucut menara Shion?", isComplex: false, isTrueFalse: false, o: ["A. 10 m", "B. 12 m", "C. 14 m", "D. 15 m", "E. 16 m"], correctRaw: "A. 10 m", f: "s = √(r² + t²)", d: "s = √(6² + 8²) = 10 m.", level: 1 },
-                    { t: "Hans berdiri 15 m dari dinding benteng, mengamati puncak menara dengan sudut elevasi 45°. Jika tinggi Hans 1,6 m, berapakah tinggi total benteng yang diamati Hans?", isComplex: false, isTrueFalse: false, o: ["A. 15 m", "B. 16,6 m", "C. 13,4 m", "D. 18,6 m", "E. 20 m"], correctRaw: "B. 16,6 m", f: "tan 45° = h / 15 + tinggi pengamat", d: "h = 15 + 1.6 = 16.6 m.", level: 2 },
-                    { t: "Rata-rata kekuatan 20 prajurit pengawal Sairo adalah 80. Saat 2 prajurit elit tambahan bergabung, rata-rata naik jadi 81. Selisih kekuatan kedua prajurit baru adalah 4. Berapa kekuatan prajurit baru yang terendah?", isComplex: false, isTrueFalse: false, o: ["A. 89", "B. 91", "C. 87", "D. 93", "E. 85"], correctRaw: "A. 89", f: "Analisis selisih total nilai kelompok.", d: "(22×81) - (20×80) = 182. Kekuatan: 89 dan 93.", level: 3 },
-                    { t: "Produksi artefak faksi Kael pada bulan ke-3 adalah 100 buah, dan bulan ke-6 mencapai 190 buah. Total artefak yang dihasilkan dalam 12 bulan pertama adalah...", isComplex: false, isTrueFalse: false, o: ["A. 2.460 buah", "B. 2.520 buah", "C. 2.300 buah", "D. 2.400 buah", "E. 2.600 buah"], correctRaw: "A. 2.460 buah", f: "Deret Aritmetika S_n = n/2 (2a + (n-1)b)", d: "b = 30, a = 40. S12 = 6 × (80 + 330) = 2.460.", level: 3 },
-                    { t: "Harga 2 unit kendaraan tempur Lux' Hela + 3 unit drone Astoria senilai Rp1.200.000. Jika 3 unit kendaraan tempur Lux' Hela + 1 unit drone Astoria senilai Rp1.100.000, berapa harga 1 unit kendaraan tempur dan 2 unit drone?", isComplex: false, isTrueFalse: false, o: ["A. Rp700.000", "B. Rp650.000", "C. Rp800.000", "D. Rp750.000", "E. Rp600.000"], correctRaw: "A. Rp700.000", f: "SPLDV Metode Eliminasi", d: "Kendaraan = 300rb, Drone = 200rb. 1(300)+2(200) = 700rb.", level: 2 },
-                    { t: "8 panglima perang (termasuk Sairo dan Hans) duduk melingkar di meja dewan. Jika Sairo dan Hans wajib duduk berdampingan, berapa banyak susunan posisi duduk mereka?", isComplex: false, isTrueFalse: false, o: ["A. 5.040", "B. 1.440", "C. 720", "D. 2.880", "E. 360"], correctRaw: "B. 1.440", f: "Permutasi siklis: (n-1)! × k!", d: "(7-1)! × 2! = 720 × 2 = 1.440.", level: 3 },
-                    { t: "Peluang portal dimensi faksi Azzux gagal berfungsi adalah 0,04 dan faksi Shion 0,05. Berapa peluang paling sedikit satu portal BERFUNGSI normal?", isComplex: false, isTrueFalse: false, o: ["A. 0,998", "B. 0,002", "C. 0,950", "D. 0,912", "E. 0,980"], correctRaw: "A. 0,998", f: "1 - P(kedua portal gagal)", d: "1 - (0,04 × 0,05) = 0,998.", level: 2 },
-                    { t: "Peti harta karun Astoria berbentuk kubus dengan rusuk 10 cm. Berapakah panjang diagonal ruang HB pada peti tersebut?", isComplex: false, isTrueFalse: false, o: ["A. 10√2 cm", "B. 10√3 cm", "C. 5√3 cm", "D. 20 cm", "E. 10√6 cm"], correctRaw: "B. 10√3 cm", f: "Diagonal ruang kubus d = r√3", d: "HB = 10√3 cm.", level: 1 },
-                    { t: "Fungsi transformasi energi f(x) = (4x + 20) / 3 yang diatur oleh Kael memiliki fungsi invers f^(-1)(x) senilai...", isComplex: false, isTrueFalse: false, o: ["A. (3x - 20) / 4", "B. (4x - 20) / 3", "C. (3x + 20) / 4", "D. (20x - 3) / 4", "E. (3x - 4) / 20"], correctRaw: "A. (3x - 20) / 4", f: "y = (4x+20)/3 → 4x = 3y-20", d: "f^(-1)(x) = (3x-20)/4.", level: 1 },
-                    { t: "Tim ekspedisi khusus dibentuk dari 5 ahli teknis (termasuk Kael & Hans) dan 3 ahli strategi (termasuk Astoria). Tim beranggotakan 4 orang wajib memuat minimal 2 ahli teknis. Berapa variasi pembentukan tim?", isComplex: false, isTrueFalse: false, o: ["A. 65", "B. 70", "C. 55", "D. 60", "E. 45"], correctRaw: "A. 65", f: "Kombinasi C(n,k)", d: "C(5,2)C(3,2) + C(5,3)C(3,1) + C(5,4)C(3,0) = 30 + 30 + 5 = 65 cara.", level: 3 },
-                    { t: "Sistem diskon f(x) = 0,9x dan potongan harga g(x) = x - 20.000 diterapkan pada perangkat Lux' Hela. Jika harga akhir tercatat Rp160.000, berapakah harga awal x perangkat tersebut?", isComplex: false, isTrueFalse: false, o: ["A. Rp200.000", "B. Rp180.000", "C. Rp220.000", "D. Rp190.000", "E. Rp210.000"], correctRaw: "A. Rp200.000", f: "Komposisi fungsi g(f(x)) = 160.000", d: "(160rb + 20rb) / 0.9 = 200.000.", level: 2 },
-                    { t: "Interval kelas distribusi log artefak Shion tercatat 11-15. Berapakah nilai titik tengah (xi) kelas tersebut?", isComplex: false, isTrueFalse: false, o: ["A. 13", "B. 12,5", "C. 13,5", "D. 14", "E. 11,5"], correctRaw: "A. 13", f: "xi = (Batas Bawah + Batas Atas) / 2", d: "(11 + 15) / 2 = 13.", level: 1 },
-                    { t: "Alokasi sumber daya markas Azzux: 1 ruang kendali membutuhkan 3 unit daya mesin dan 1 unit daya komunikasi. Kapasitas total maksimum adalah 30 unit. Model matematika linear yang tepat adalah...", isComplex: false, isTrueFalse: false, o: ["A. 3x + y ≤ 30", "B. x + 3y ≤ 30", "C. 3x + y ≥ 30", "D. 3x + 3y ≤ 30", "E. x + y ≤ 30"], correctRaw: "A. 3x + y ≤ 30", f: "Model pertidaksamaan linear dua variabel.", d: "3x + y ≤ 30.", level: 1 },
-                    { t: "Kubah pelindung markas Sairo berbentuk setengah bola dengan diameter 28 m. Jika biaya pelapisan per meter persegi adalah Rp100.000, berapakah total biaya yang diperlukan Sairo?", isComplex: false, isTrueFalse: false, o: ["A. Rp123.200.000", "B. Rp246.400.000", "C. Rp61.600.000", "D. Rp184.800.000", "E. Rp150.000.000"], correctRaw: "A. Rp123.200.000", f: "Luas Permukaan Setengah Bola L = 2πr²", d: "L = 2 × (22/7) × 14² = 1.232 m². Biaya = 1.232 × 100.000 = Rp123.200.000.", level: 2 },
-                    { t: "Peluang keberhasilan invasi faksi Hans tercatat P(A) = 0,35. Berapakah peluang komplemen kegagalan invasi tersebut P(A^c)?", isComplex: false, isTrueFalse: false, o: ["A. 0,65", "B. 0,35", "C. 0,55", "D. 0,75", "E. 1,00"], correctRaw: "A. 0,65", f: "P(A^c) = 1 - P(A)", d: "1 - 0.35 = 0.65.", level: 1 },
-                    { t: "Matriks pertahanan A di markas Kael bernilai [[2, 3], [1, 4]]. Berapakah nilai determinan dari matriks pertahanan A tersebut?", isComplex: false, isTrueFalse: false, o: ["A. 5", "B. 7", "C. 8", "D. 10", "E. 11"], correctRaw: "A. 5", f: "det(A) = ad - bc", d: "(2×4) - (3×1) = 8 - 3 = 5.", level: 1 },
-                    { t: "Deret geometri aliran energi tak hingga milik Astoria memiliki suku awal a = 12 dan rasio r = 1/3. Berapakah jumlah total deret S_inf tersebut?", isComplex: false, isTrueFalse: false, o: ["A. 18", "B. 16", "C. 24", "D. 36", "E. 15"], correctRaw: "A. 18", f: "S_inf = a / (1 - r)", d: "12 / (1 - 1/3) = 12 / (2/3) = 18.", level: 2 },
-                    { t: "Garis lintasan teleportasi yang dilalui Lux' Hela melewati titik (2, 3) dengan gradien kemiringan m = 4. Persamaan garis lintasan tersebut adalah...", isComplex: false, isTrueFalse: false, o: ["A. y = 4x - 5", "B. y = 4x + 5", "C. y = 2x - 3", "D. y = 4x - 11", "E. y = 3x + 2"], correctRaw: "A. y = 4x - 5", f: "y - y1 = m(x - x1)", d: "y - 3 = 4(x - 2) ⇒ y = 4x - 5.", level: 1 },
-                    { t: "Fungsi percepatan roket Shion dirumuskan sebagai f(x) = 3x² - 5x + 8. Turunan pertama percepatan f'(x) adalah...", isComplex: false, isTrueFalse: false, o: ["A. 6x - 5", "B. 3x - 5", "C. 6x + 8", "D. 6x² - 5", "E. 5x - 3"], correctRaw: "A. 6x - 5", f: "f'(x) = n·a·x^(n-1)", d: "Turunan f'(x) = 6x - 5.", level: 2 },
-                    { t: "Integral tak tentu untuk akumulasi energi Azzux ∫ (6x + 4) dx menghasilkan...", isComplex: false, isTrueFalse: false, o: ["A. 3x² + 4x + C", "B. 6x² + 4x + C", "C. 3x² + C", "D. 6x² + C", "E. 2x² + 4x + C"], correctRaw: "A. 3x² + 4x + C", f: "∫ ax^n dx = (a/(n+1)) x^(n+1) + C", d: "(6/2)x² + 4x + C = 3x² + 4x + C.", level: 2 }
-                ];
-                return { id: i + 1, ...list[i] };
-            }),
+        // Master Soal Matematika Wajib (25 Soal)
+        const masterSoalMatematika = Array.from({length: 25}, (_, i) => {
+            const list = [
+                { t: "Sairo mendeteksi titik koordinat anomali waktu P(4, 6). Dilatasi dengan k = 3 pusat A(2, 1), dilanjutkan manipulasi distorsi 90° berlawanan arah jarum jam pusat (0,0). Posisi akhir temporal P'' adalah...", isComplex: false, isTrueFalse: false, o: ["A. (16, -8)", "B. (-16, 8)", "C. (8, 16)", "D. (-8, 16)", "E. (-16, -8)"], correctRaw: "B. (-16, 8)", f: "x' = a + k(x-a), y' = b + k(y-b). Rotasi 90° CCW: (-y, x)", d: "Dilatasi: (8, 16). Rotasi distorsi 90°: (-16, 8).", level: 3 },
+                { 
+                    t: "Tentukan kebenaran dari pernyataan-pernyataan sifat transformasi geometri berikut:", 
+                    isComplex: false, 
+                    isTrueFalse: true, 
+                    tfRows: [
+                        { stmt: "Hasil refleksi titik A(3, 4) terhadap garis y = x adalah koordinat (4, 3).", correct: "Benar" },
+                        { stmt: "Translasi titik B(2, 5) dengan vektor pergeseran T(-1, 3) menghasilkan koordinat (2, 8).", correct: "Salah" },
+                        { stmt: "Rotasi sejauh 180° terhadap titik pusat (0,0) mengubah titik (x, y) menjadi (-x, -y).", correct: "Benar" },
+                        { stmt: "Dilatasi dengan faktor skala k=-2 pada titik (1, -1) menghasilkan koordinat pusat ( -2, 2 ).", correct: "Benar" },
+                        { stmt: "Pencerminan terhadap sumbu X mentransformasikan ordinat y menjadi positif tetap (y).", correct: "Salah" }
+                    ],
+                    f: "Evaluasi matriks pernyataan sifat transformasi geometri (Refleksi, Translasi, Rotasi, dan Dilatasi).", 
+                    d: "Refleksi y=x menukar posisi (4,3). Translasi B(2-1, 5+3) = (1,8) bukan (2,8). Rotasi 180° menghasilkan (-x,-y). Dilatasi k=-2 pada (1,-1) memberikan (-2,2). Pencerminan sumbu X mengubah y menjadi -y.", 
+                    level: 2 
+                },
+                { t: "Populasi energi klon kluster Lux' Hela bermula dari 500 unit. Setiap 15 menit mengalami duplikasi ganda 2 kali lipat. Berapa jumlah energi Lux' Hela pada menit ke-90?", isComplex: false, isTrueFalse: false, o: ["A. 16.000 unit", "B. 32.000 unit", "C. 64.000 unit", "D. 128.000 unit", "E. 256.000 unit"], correctRaw: "B. 32.000 unit", f: "N(t) = N0 · 2^(t/Td)", d: "n = 90/15 = 6. N = 500 × 64 = 32.000 unit energi.", level: 2 },
+                { t: "Arus esensi magis Astoria M(t) = 240 · 2^(-t/3). Sisa esensi Astoria setelah 12 jam peluruhan adalah...", isComplex: false, isTrueFalse: false, o: ["A. 30 unit", "B. 15 unit", "C. 60 unit", "D. 7,5 unit", "E. 120 unit"], correctRaw: "B. 15 unit", f: "Peluruhan eksponensial esensi.", d: "M(12) = 240 × 2^(-4) = 240 / 16 = 15 unit.", level: 2 },
+                { 
+                    t: "Analisis sifat fungsi kuadrat f(x) = x² - 4x + 4 secara komprehensif:", 
+                    isComplex: false, 
+                    isTrueFalse: true, 
+                    tfRows: [
+                        { stmt: "Nilai diskriminan dari fungsi kuadrat tersebut bernilai negatif.", correct: "Salah" },
+                        { stmt: "Grafik fungsi kuadrat tersebut menyinggung sumbu X persis di satu titik.", correct: "Benar" },
+                        { stmt: "Titik puncak (balik) dari fungsi kuadrat tersebut berada pada koordinat (2, 0).", correct: "Benar" },
+                        { stmt: "Nilai minimum fungsi kuadrat tersebut adalah 4.", correct: "Salah" },
+                        { stmt: "Kurva parabola terbuka ke arah bawah karena koefisien x² bernilai negatif.", correct: "Salah" }
+                    ],
+                    f: "Analisis diskriminan D = b² - 4ac, titik puncak, dan sifat kurva parabola.", 
+                    d: "D = 0 (menyinggung 1 titik di sumbu X). Puncak (-b/2a, f(-b/2a)) = (2,0). Nilai minimumnya adalah 0, bukan 4. Kurva terbuka ke atas karena koefisien a = 1 positif.", 
+                    level: 2 
+                },
+                { t: "Menara pengintai Shion berbentuk gabungan tabung dan kerucut. Jari-jari r = 6 m, tinggi tabung 10 m, tinggi kerucut 8 m. Berapakah panjang garis pelukis kerucut menara Shion?", isComplex: false, isTrueFalse: false, o: ["A. 10 m", "B. 12 m", "C. 14 m", "D. 15 m", "E. 16 m"], correctRaw: "A. 10 m", f: "s = √(r² + t²)", d: "s = √(6² + 8²) = 10 m.", level: 1 },
+                { t: "Hans berdiri 15 m dari dinding benteng, mengamati puncak menara dengan sudut elevasi 45°. Jika tinggi Hans 1,6 m, berapakah tinggi total benteng yang diamati Hans?", isComplex: false, isTrueFalse: false, o: ["A. 15 m", "B. 16,6 m", "C. 13,4 m", "D. 18,6 m", "E. 20 m"], correctRaw: "B. 16,6 m", f: "tan 45° = h / 15 + tinggi pengamat", d: "h = 15 + 1.6 = 16.6 m.", level: 2 },
+                { t: "Rata-rata kekuatan 20 prajurit pengawal Sairo adalah 80. Saat 2 prajurit elit tambahan bergabung, rata-rata naik jadi 81. Selisih kekuatan kedua prajurit baru adalah 4. Berapa kekuatan prajurit baru yang terendah?", isComplex: false, isTrueFalse: false, o: ["A. 89", "B. 91", "C. 87", "D. 93", "E. 85"], correctRaw: "A. 89", f: "Analisis selisih total nilai kelompok.", d: "(22×81) - (20×80) = 182. Kekuatan: 89 dan 93.", level: 3 },
+                { t: "Produksi artefak faksi Kael pada bulan ke-3 adalah 100 buah, dan bulan ke-6 mencapai 190 buah. Total artefak yang dihasilkan dalam 12 bulan pertama adalah...", isComplex: false, isTrueFalse: false, o: ["A. 2.460 buah", "B. 2.520 buah", "C. 2.300 buah", "D. 2.400 buah", "E. 2.600 buah"], correctRaw: "A. 2.460 buah", f: "Deret Aritmetika S_n = n/2 (2a + (n-1)b)", d: "b = 30, a = 40. S12 = 6 × (80 + 330) = 2.460.", level: 3 },
+                { t: "Harga 2 unit kendaraan tempur Lux' Hela + 3 unit drone Astoria senilai Rp1.200.000. Jika 3 unit kendaraan tempur Lux' Hela + 1 unit drone Astoria senilai Rp1.100.000, berapa harga 1 unit kendaraan tempur dan 2 unit drone?", isComplex: false, isTrueFalse: false, o: ["A. Rp700.000", "B. Rp650.000", "C. Rp800.000", "D. Rp750.000", "E. Rp600.000"], correctRaw: "A. Rp700.000", f: "SPLDV Metode Eliminasi", d: "Kendaraan = 300rb, Drone = 200rb. 1(300)+2(200) = 700rb.", level: 2 },
+                { t: "8 panglima perang (termasuk Sairo dan Hans) duduk melingkar di meja dewan. Jika Sairo dan Hans wajib duduk berdampingan, berapa banyak susunan posisi duduk mereka?", isComplex: false, isTrueFalse: false, o: ["A. 5.040", "B. 1.440", "C. 720", "D. 2.880", "E. 360"], correctRaw: "B. 1.440", f: "Permutasi siklis: (n-1)! × k!", d: "(7-1)! × 2! = 720 × 2 = 1.440.", level: 3 },
+                { t: "Peluang portal dimensi faksi Azzux gagal berfungsi adalah 0,04 dan faksi Shion 0,05. Berapa peluang paling sedikit satu portal BERFUNGSI normal?", isComplex: false, isTrueFalse: false, o: ["A. 0,998", "B. 0,002", "C. 0,950", "D. 0,912", "E. 0,980"], correctRaw: "A. 0,998", f: "1 - P(kedua portal gagal)", d: "1 - (0,04 × 0,05) = 0,998.", level: 2 },
+                { t: "Peti harta karun Astoria berbentuk kubus dengan rusuk 10 cm. Berapakah panjang diagonal ruang HB pada peti tersebut?", isComplex: false, isTrueFalse: false, o: ["A. 10√2 cm", "B. 10√3 cm", "C. 5√3 cm", "D. 20 cm", "E. 10√6 cm"], correctRaw: "B. 10√3 cm", f: "Diagonal ruang kubus d = r√3", d: "HB = 10√3 cm.", level: 1 },
+                { t: "Fungsi transformasi energi f(x) = (4x + 20) / 3 yang diatur oleh Kael memiliki fungsi invers f^(-1)(x) senilai...", isComplex: false, isTrueFalse: false, o: ["A. (3x - 20) / 4", "B. (4x - 20) / 3", "C. (3x + 20) / 4", "D. (20x - 3) / 4", "E. (3x - 4) / 20"], correctRaw: "A. (3x - 20) / 4", f: "y = (4x+20)/3 → 4x = 3y-20", d: "f^(-1)(x) = (3x-20)/4.", level: 1 },
+                { t: "Tim ekspedisi khusus dibentuk dari 5 ahli teknis (termasuk Kael & Hans) dan 3 ahli strategi (termasuk Astoria). Tim beranggotakan 4 orang wajib memuat minimal 2 ahli teknis. Berapa variasi pembentukan tim?", isComplex: false, isTrueFalse: false, o: ["A. 65", "B. 70", "C. 55", "D. 60", "E. 45"], correctRaw: "A. 65", f: "Kombinasi C(n,k)", d: "C(5,2)C(3,2) + C(5,3)C(3,1) + C(5,4)C(3,0) = 30 + 30 + 5 = 65 cara.", level: 3 },
+                { t: "Sistem diskon f(x) = 0,9x dan potongan harga g(x) = x - 20.000 diterapkan pada perangkat Lux' Hela. Jika harga akhir tercatat Rp160.000, berapakah harga awal x perangkat tersebut?", isComplex: false, isTrueFalse: false, o: ["A. Rp200.000", "B. Rp180.000", "C. Rp220.000", "D. Rp190.000", "E. Rp210.000"], correctRaw: "A. Rp200.000", f: "Komposisi fungsi g(f(x)) = 160.000", d: "(160rb + 20rb) / 0.9 = 200.000.", level: 2 },
+                { t: "Interval kelas distribusi log artefak Shion tercatat 11-15. Berapakah nilai titik tengah (xi) kelas tersebut?", isComplex: false, isTrueFalse: false, o: ["A. 13", "B. 12,5", "C. 13,5", "D. 14", "E. 11,5"], correctRaw: "A. 13", f: "xi = (Batas Bawah + Batas Atas) / 2", d: "(11 + 15) / 2 = 13.", level: 1 },
+                { t: "Alokasi sumber daya markas Azzux: 1 ruang kendali membutuhkan 3 unit daya mesin dan 1 unit daya komunikasi. Kapasitas total maksimum adalah 30 unit. Model matematika linear yang tepat adalah...", isComplex: false, isTrueFalse: false, o: ["A. 3x + y ≤ 30", "B. x + 3y ≤ 30", "C. 3x + y ≥ 30", "D. 3x + 3y ≤ 30", "E. x + y ≤ 30"], correctRaw: "A. 3x + y ≤ 30", f: "Model pertidaksamaan linear dua variabel.", d: "3x + y ≤ 30.", level: 1 },
+                { t: "Kubah pelindung markas Sairo berbentuk setengah bola dengan diameter 28 m. Jika biaya pelapisan per meter persegi adalah Rp100.000, berapakah total biaya yang diperlukan Sairo?", isComplex: false, isTrueFalse: false, o: ["A. Rp123.200.000", "B. Rp246.400.000", "C. Rp61.600.000", "D. Rp184.800.000", "E. Rp150.000.000"], correctRaw: "A. Rp123.200.000", f: "Luas Permukaan Setengah Bola L = 2πr²", d: "L = 2 × (22/7) × 14² = 1.232 m². Biaya = 1.232 × 100.000 = Rp123.200.000.", level: 2 },
+                { t: "Peluang keberhasilan invasi faksi Hans tercatat P(A) = 0,35. Berapakah peluang komplemen kegagalan invasi tersebut P(A^c)?", isComplex: false, isTrueFalse: false, o: ["A. 0,65", "B. 0,35", "C. 0,55", "D. 0,75", "E. 1,00"], correctRaw: "A. 0,65", f: "P(A^c) = 1 - P(A)", d: "1 - 0.35 = 0.65.", level: 1 },
+                { t: "Matriks pertahanan A di markas Kael bernilai [[2, 3], [1, 4]]. Berapakah nilai determinan dari matriks pertahanan A tersebut?", isComplex: false, isTrueFalse: false, o: ["A. 5", "B. 7", "C. 8", "D. 10", "E. 11"], correctRaw: "A. 5", f: "det(A) = ad - bc", d: "(2×4) - (3×1) = 8 - 3 = 5.", level: 1 },
+                { t: "Deret geometri aliran energi tak hingga milik Astoria memiliki suku awal a = 12 dan rasio r = 1/3. Berapakah jumlah total deret S_inf tersebut?", isComplex: false, isTrueFalse: false, o: ["A. 18", "B. 16", "C. 24", "D. 36", "E. 15"], correctRaw: "A. 18", f: "S_inf = a / (1 - r)", d: "12 / (1 - 1/3) = 12 / (2/3) = 18.", level: 2 },
+                { t: "Garis lintasan teleportasi yang dilalui Lux' Hela melewati titik (2, 3) dengan gradien kemiringan m = 4. Persamaan garis lintasan tersebut adalah...", isComplex: false, isTrueFalse: false, o: ["A. y = 4x - 5", "B. y = 4x + 5", "C. y = 2x - 3", "D. y = 4x - 11", "E. y = 3x + 2"], correctRaw: "A. y = 4x - 5", f: "y - y1 = m(x - x1)", d: "y - 3 = 4(x - 2) ⇒ y = 4x - 5.", level: 1 },
+                { t: "Fungsi percepatan roket Shion dirumuskan sebagai f(x) = 3x² - 5x + 8. Turunan pertama percepatan f'(x) adalah...", isComplex: false, isTrueFalse: false, o: ["A. 6x - 5", "B. 3x - 5", "C. 6x + 8", "D. 6x² - 5", "E. 5x - 3"], correctRaw: "A. 6x - 5", f: "f'(x) = n·a·x^(n-1)", d: "Turunan f'(x) = 6x - 5.", level: 2 },
+                { t: "Integral tak tentu untuk akumulasi energi Azzux ∫ (6x + 4) dx menghasilkan...", isComplex: false, isTrueFalse: false, o: ["A. 3x² + 4x + C", "B. 6x² + 4x + C", "C. 3x² + C", "D. 6x² + C", "E. 2x² + 4x + C"], correctRaw: "A. 3x² + 4x + C", f: "∫ ax^n dx = (a/(n+1)) x^(n+1) + C", d: "(6/2)x² + 4x + C = 3x² + 4x + C.", level: 2 }
+            ];
+            return { id: i + 1, ...list[i] };
+        });
 
-            indo: Array.from({length: 25}, (_, i) => {
-                const passages = [
-                    {
-                        p: "Pembangunan infrastruktur jaringan serat optik di wilayah terpencil nusantara terus dikebut oleh pemerintah bekerja sama dengan faksi teknisi swasta. Langkah ini diambil guna mengatasi kesenjangan akses informasi digital yang selama ini dirasakan oleh masyarakat daerah. Kendati menghadapi tantangan geografis yang cukup ekstrim seperti pegunungan terjal dan cuaca buruk, proyek ini diproyeksikan selesai tepat waktu demi pemerataan teknologi.",
-                        topic: "Infrastruktur Serat Optik"
-                    },
-                    {
-                        p: "Sistem keamanan siber berbasis kecerdasan buatan kini menjadi benteng utama dalam melindungi data vital instansi pemerintahan dari ancaman peretasan global. Dengan kemampuan mendeteksi anomali secara mandiri dalam hitungan milidetik, sistem ini mampu mengisolasi jaringan yang terinfeksi tanpa mengganggu aktivitas operasional sistem utama.",
-                        topic: "Keamanan Siber & AI"
-                    },
-                    {
-                        p: "Pemanfaatan energi surya terbarukan di kawasan industri modern terbukti mampu menekan biaya operasional hingga 40 persen sekaligus mengurangi emisi karbon secara signifikan. Transisi energi hijau ini tidak hanya berdampak positif bagi kelestarian lingkungan ekologis, tetapi juga meningkatkan citra perusahaan di mata global.",
-                        topic: "Energi Surya Industri"
-                    }
-                ];
-                
-                const item = passages[i % passages.length];
-                const typeSelector = i % 3;
+        // Generator 75 Master Soal Bahasa Indonesia (16 PG Biasa, 7 PG Kompleks, 7 Benar-Salah)
+        const masterSoalIndo = Array.from({length: 75}, (_, i) => {
+            const typeSelector = i % 3; // 0: PG Biasa, 1: PG Kompleks, 2: Benar-Salah
+            const passageNum = (i % 3) + 1;
+            const pText = passageNum === 1 
+                ? "Pembangunan infrastruktur jaringan serat optik di wilayah terpencil nusantara terus dikebut oleh pemerintah bekerja sama dengan faksi teknisi swasta. Langkah ini diambil guna mengatasi kesenjangan akses informasi digital yang selama ini dirasakan oleh masyarakat daerah."
+                : passageNum === 2 
+                ? "Sistem keamanan siber berbasis kecerdasan buatan kini menjadi benteng utama dalam melindungi data vital instansi pemerintahan dari ancaman peretasan global. Dengan kemampuan mendeteksi anomali secara mandiri dalam hitungan milidetik."
+                : "Pemanfaatan energi surya terbarukan di kawasan industri modern terbukti mampu menekan biaya operasional hingga 40 persen sekaligus mengurangi emisi karbon secara signifikan demi kelestarian lingkungan.";
 
-                if (typeSelector === 2) {
-                    return {
-                        id: i + 1,
-                        isComplex: false,
-                        isTrueFalse: true,
-                        passage: item.p,
-                        t: "Tentukan kebenaran dari pernyataan-pernyataan berikut berdasarkan wacana di atas:",
-                        tfRows: [
-                            { stmt: "Proyek infrastruktur atau sistem yang dibahas dikerjakan untuk mengatasi kesenjangan atau tantangan mendasar.", correct: "Benar" },
-                            { stmt: "Pelaksanaan di lapangan sama sekali tidak menemui hambatan geografis maupun teknis.", correct: "Salah" },
-                            { stmt: "Penerapan teknologi atau inovasi tersebut dirancang untuk mendukung efisiensi serta pemerataan yang luas.", correct: "Benar" },
-                            { stmt: "Pihak pengelola mengabaikan standar operasional dan tidak melibatkan kerja sama eksternal.", correct: "Salah" },
-                            { stmt: "Hasil akhir dari program strategis tersebut membawa dampak positif bagi sektor terkait.", correct: "Benar" }
-                        ],
-                        f: "Evaluasi matriks pernyataan benar-salah berdasarkan isi wacana.",
-                        d: "Pernyataan 1, 3, dan 5 sesuai dengan isi teks wacana, sedangkan pernyataan 2 dan 4 bertentangan dengan rincian informasi di dalam teks.",
-                        level: 2
-                    };
-                } else if (typeSelector === 1) {
-                    return {
-                        id: i + 1,
-                        isComplex: true,
-                        isTrueFalse: false,
-                        passage: item.p,
-                        t: "Berdasarkan wacana di atas, manakah pernyataan-pernyataan yang SESUAI? (Pilih semua yang benar)",
-                        o: [
-                            "A. Teks membahas upaya optimalisasi kemajuan teknologi atau sistem di bidang terkait.",
-                            "B. Permasalahan utama dalam teks diselesaikan dengan langkah strategis yang terukur.",
-                            "C. Dampak positif dari inovasi tersebut dirasakan langsung secara luas.",
-                            "D. Seluruh kegiatan operasional dihentikan total selamanya tanpa pemulihan.",
-                            "E. Inovasi teknologi yang dibahas terbukti gagal memberikan solusi."
-                        ],
-                        correctRaws: [
-                            "A. Teks membahas upaya optimalisasi kemajuan teknologi atau sistem di bidang terkait.",
-                            "B. Permasalahan utama dalam teks diselesaikan dengan langkah strategis yang terukur.",
-                            "C. Dampak positif dari inovasi tersebut dirasakan langsung secara luas."
-                        ],
-                        f: "Analisis informasi tersurat dan kesesuaian pernyataan wacana.",
-                        d: "Pernyataan A, B, dan C didukung penuh oleh konteks isi wacana.",
-                        level: 2
-                    };
-                } else {
-                    return {
-                        id: i + 1,
-                        isComplex: false,
-                        isTrueFalse: false,
-                        passage: item.p,
-                        t: "Apakah gagasan utama (ide pokok) yang paling tepat untuk wacana di atas?",
-                        o: [
-                            "A. Hambatan fatal yang menghentikan seluruh kemajuan teknologi modern.",
-                            "B. Optimalisasi dan pemanfaatan sistem strategis untuk kemajuan serta efisiensi bidang terkait.",
-                            "C. Pembubaran seluruh instansi atau faksi yang terlibat dalam proyek.",
-                            "D. Kegagalan total dalam mengatasi kendala geografis maupun operasional.",
-                            "E. Pengabaian standar keamanan dan efisiensi lingkungan global."
-                        ],
-                        correctRaw: "B. Optimalisasi dan pemanfaatan sistem strategis untuk kemajuan serta efisiensi bidang terkait.",
-                        f: "Menentukan gagasan pokok / ide utama paragraf teks wacana.",
-                        d: "Gagasan utama mencakup keseluruhan inti pembahasan teks secara komprehensif.",
-                        level: 1
-                    };
-                }
-            }),
+            if (typeSelector === 2) {
+                // Tipe Benar-Salah (7 Soal dari total 75)
+                return {
+                    id: i + 1,
+                    isComplex: false,
+                    isTrueFalse: true,
+                    passage: pText,
+                    t: `Analisis teks ke-${i+1}: Tentukan kebenaran dari pernyataan-pernyataan berikut berdasarkan wacana di atas:`,
+                    tfRows: [
+                        { stmt: "Proyek atau sistem yang dibahas bertujuan mengatasi tantangan mendasar di bidang terkait.", correct: "Benar" },
+                        { stmt: "Pelaksanaan program tersebut sama sekali tidak menemui kendala di lapangan.", correct: "Salah" },
+                        { stmt: "Penerapan inovasi ini dirancang untuk mendukung efisiensi serta kemajuan bersama.", correct: "Benar" },
+                        { stmt: "Pihak pengelola sepenuhnya mengabaikan standar operasional dan kerja sama.", correct: "Salah" },
+                        { stmt: "Hasil akhir dari program strategis tersebut memberikan dampak positif secara nyata.", correct: "Benar" }
+                    ],
+                    f: "Evaluasi matriks pernyataan benar-salah berdasarkan isi wacana.",
+                    d: "Pernyataan 1, 3, dan 5 sesuai dengan isi teks wacana, sedangkan pernyataan 2 dan 4 bertentangan dengan rincian informasi di dalam teks.",
+                    level: 2
+                };
+            } else if (typeSelector === 1) {
+                // Tipe Pilihan Ganda Kompleks (7 Soal dari total 75)
+                return {
+                    id: i + 1,
+                    isComplex: true,
+                    isTrueFalse: false,
+                    passage: pText,
+                    t: `Analisis teks ke-${i+1}: Manakah pernyataan-pernyataan yang SESUAI dengan isi wacana? (Pilih semua yang benar)`,
+                    o: [
+                        "A. Teks membahas upaya optimalisasi kemajuan teknologi atau sistem di bidang terkait.",
+                        "B. Permasalahan utama dalam teks diselesaikan dengan langkah strategis yang terukur.",
+                        "C. Dampak positif dari inovasi tersebut dirasakan langsung secara luas.",
+                        "D. Seluruh kegiatan operasional dihentikan total selamanya tanpa pemulihan.",
+                        "E. Inovasi teknologi yang dibahas terbukti gagal memberikan solusi."
+                    ],
+                    correctRaws: [
+                        "A. Teks membahas upaya optimalisasi kemajuan teknologi atau sistem di bidang terkait.",
+                        "B. Permasalahan utama dalam teks diselesaikan dengan langkah strategis yang terukur.",
+                        "C. Dampak positif dari inovasi tersebut dirasakan langsung secara luas."
+                    ],
+                    f: "Analisis informasi tersurat dan kesesuaian pernyataan wacana.",
+                    d: "Pernyataan A, B, dan C didukung penuh oleh konteks isi wacana.",
+                    level: 2
+                };
+            } else {
+                // Tipe Pilihan Ganda Biasa (16 Soal dari total 75)
+                return {
+                    id: i + 1,
+                    isComplex: false,
+                    isTrueFalse: false,
+                    passage: pText,
+                    t: `Analisis teks ke-${i+1}: Apakah gagasan utama (ide pokok) yang paling tepat untuk wacana di atas?`,
+                    o: [
+                        "A. Hambatan fatal yang menghentikan seluruh kemajuan teknologi modern.",
+                        "B. Optimalisasi dan pemanfaatan sistem strategis untuk kemajuan serta efisiensi bidang terkait.",
+                        "C. Pembubaran seluruh instansi atau faksi yang terlibat dalam proyek.",
+                        "D. Kegagalan total dalam mengatasi kendala geografis maupun operasional.",
+                        "E. Pengabaian standar keamanan dan efisiensi lingkungan global."
+                    ],
+                    correctRaw: "B. Optimalisasi dan pemanfaatan sistem strategis untuk kemajuan serta efisiensi bidang terkait.",
+                    f: "Menentukan gagasan pokok / ide utama paragraf teks wacana.",
+                    d: "Gagasan utama mencakup keseluruhan inti pembahasan teks secara komprehensif.",
+                    level: 1
+                };
+            }
+        });
 
-            inggris: Array.from({length: 25}, (_, i) => {
-                const passagesEN = [
-                    {
-                        p: "Cloud computing has fundamentally revolutionized how global enterprises store, manage, and process massive volumes of operational data. Instead of relying heavily on physical on-premise servers, companies can now scale their digital resources dynamically via secure remote networks. This technological shift drastically reduces hardware maintenance costs while maximizing system uptime and data security standards.",
-                        topic: "Cloud Computing"
-                    },
-                    {
-                        p: "Artificial Intelligence and machine learning algorithms are reshaping modern cybersecurity frameworks. These advanced systems autonomously monitor network traffic patterns, instantly identifying potential breaches and malicious intrusions before human operators can even notice. Consequently, digital assets remain exceptionally protected against sophisticated cyberattacks.",
-                        topic: "AI Cybersecurity"
-                    },
-                    {
-                        p: "Renewable energy integration is no longer optional for forward-thinking industrial sectors. Solar panels, wind turbines, and smart microgrids are actively replacing fossil-fuel dependencies, paving the way toward a sustainable ecological future and drastically lower carbon footprints worldwide.",
-                        topic: "Renewable Industrial Energy"
-                    }
-                ];
+        // Generator 75 Master Soal Bahasa Inggris (16 PG Biasa, 7 PG Kompleks, 7 Benar-Salah)
+        const masterSoalInggris = Array.from({length: 75}, (_, i) => {
+            const typeSelectorEN = i % 3;
+            const passageNumEN = (i % 3) + 1;
+            const pTextEN = passageNumEN === 1 
+                ? "Cloud computing has fundamentally revolutionized how global enterprises store, manage, and process massive volumes of operational data. Companies can scale their digital resources dynamically via secure remote networks."
+                : passageNumEN === 2 
+                ? "Artificial Intelligence and machine learning algorithms are reshaping modern cybersecurity frameworks by autonomously monitoring network traffic patterns and instantly identifying potential breaches."
+                : "Renewable energy integration is crucial for modern industrial sectors. Solar panels and smart microgrids are actively replacing fossil-fuel dependencies toward a sustainable ecological future.";
 
-                const itemEN = passagesEN[i % passagesEN.length];
-                const typeSelectorEN = i % 3;
-
-                if (typeSelectorEN === 2) {
-                    return {
-                        id: i + 1,
-                        isComplex: false,
-                        isTrueFalse: true,
-                        passage: itemEN.p,
-                        t: "Determine whether the following statements are True or False based on the passage:",
-                        tfRows: [
-                            { stmt: "The technology helps reduce maintenance costs and improves overall system security standards.", correct: "Benar" },
-                            { stmt: "Companies continue to rely exclusively on outdated physical local servers without remote networks.", correct: "Salah" },
-                            { stmt: "Advanced systems optimize digital resource management and operational performance dynamically.", correct: "Benar" },
-                            { stmt: "The implementation causes complete system failures and increases operational vulnerabilities.", correct: "Salah" },
-                            { stmt: "Organizations adopt these modern frameworks to achieve greater efficiency and protection.", correct: "Benar" }
-                        ],
-                        f: "Reading comprehension True/False matrix evaluation in English.",
-                        d: "Statements 1, 3, and 5 are correct according to the text, while statements 2 and 4 directly contradict the passage.",
-                        level: 2
-                    };
-                } else if (typeSelectorEN === 1) {
-                    return {
-                        id: i + 1,
-                        isComplex: true,
-                        isTrueFalse: false,
-                        passage: itemEN.p,
-                        t: "Based on the passage above, which statements are TRUE? (Choose all correct answers)",
-                        o: [
-                            "A. The passage highlights a major positive technological shift or optimization.",
-                            "B. Modern tools and systems described bring efficiency and high security.",
-                            "C. Enterprises or industries benefit greatly from adopting these innovations.",
-                            "D. The technologies described lead to complete operational collapse.",
-                            "E. Companies strictly avoid modern digital frameworks in favor of obsolete tools."
-                        ],
-                        correctRaws: [
-                            "A. The passage highlights a major positive technological shift or optimization.",
-                            "B. Modern tools and systems described bring efficiency and high security.",
-                            "C. Enterprises or industries benefit greatly from adopting these innovations."
-                        ],
-                        f: "English complex reading evaluation.",
-                        d: "Statements A, B, and C accurately reflect the core message of the English passage.",
-                        level: 2
-                    };
-                } else {
-                    return {
-                        id: i + 1,
-                        isComplex: false,
-                        isTrueFalse: false,
-                        passage: itemEN.p,
-                        t: "What is the primary main idea or purpose of the passage?",
-                        o: [
-                            "A. To detail the failure and shutdown of enterprise digital systems.",
-                            "B. To explain how advanced technological integrations improve operational efficiency and security.",
-                            "C. To discourage industries from modernizing their infrastructures.",
-                            "D. To promote manual data storage methods over automated networks.",
-                            "E. To describe historical errors in hardware production."
-                        ],
-                        correctRaw: "B. To explain how advanced technological integrations improve operational efficiency and security.",
-                        f: "Identifying the main idea of an English informational text.",
-                        d: "The text emphasizes the advantages and transformative nature of modern technological solutions.",
-                        level: 1
-                    };
-                }
-            })
-        };
+            if (typeSelectorEN === 2) {
+                // Tipe Benar-Salah (7 Soal dari total 75)
+                return {
+                    id: i + 1,
+                    isComplex: false,
+                    isTrueFalse: true,
+                    passage: pTextEN,
+                    t: `Passage analysis ${i+1}: Determine whether the following statements are True or False based on the passage:`,
+                    tfRows: [
+                        { stmt: "The technology helps reduce maintenance costs and improves overall system security standards.", correct: "Benar" },
+                        { stmt: "Companies continue to rely exclusively on outdated physical local servers without remote networks.", correct: "Salah" },
+                        { stmt: "Advanced systems optimize digital resource management and operational performance dynamically.", correct: "Benar" },
+                        { stmt: "The implementation causes complete system failures and increases operational vulnerabilities.", correct: "Salah" },
+                        { stmt: "Organizations adopt these modern frameworks to achieve greater efficiency and protection.", correct: "Benar" }
+                    ],
+                    f: "Reading comprehension True/False matrix evaluation in English.",
+                    d: "Statements 1, 3, and 5 are correct according to the text, while statements 2 and 4 directly contradict the passage.",
+                    level: 2
+                };
+            } else if (typeSelectorEN === 1) {
+                // Tipe Pilihan Ganda Kompleks (7 Soal dari total 75)
+                return {
+                    id: i + 1,
+                    isComplex: true,
+                    isTrueFalse: false,
+                    passage: pTextEN,
+                    t: `Passage analysis ${i+1}: Based on the passage above, which statements are TRUE? (Choose all correct answers)`,
+                    o: [
+                        "A. The passage highlights a major positive technological shift or optimization.",
+                        "B. Modern tools and systems described bring efficiency and high security.",
+                        "C. Enterprises or industries benefit greatly from adopting these innovations.",
+                        "D. The technologies described lead to complete operational collapse.",
+                        "E. Companies strictly avoid modern digital frameworks in favor of obsolete tools."
+                    ],
+                    correctRaws: [
+                        "A. The passage highlights a major positive technological shift or optimization.",
+                        "B. Modern tools and systems described bring efficiency and high security.",
+                        "C. Enterprises or industries benefit greatly from adopting these innovations."
+                    ],
+                    f: "English complex reading evaluation.",
+                    d: "Statements A, B, and C accurately reflect the core message of the English passage.",
+                    level: 2
+                };
+            } else {
+                // Tipe Pilihan Ganda Biasa (16 Soal dari total 75)
+                return {
+                    id: i + 1,
+                    isComplex: false,
+                    isTrueFalse: false,
+                    passage: pTextEN,
+                    t: `Passage analysis ${i+1}: What is the primary main idea or purpose of the passage?`,
+                    o: [
+                        "A. To detail the failure and shutdown of enterprise digital systems.",
+                        "B. To explain how advanced technological integrations improve operational efficiency and security.",
+                        "C. To discourage industries from modernizing their infrastructures.",
+                        "D. To promote manual data storage methods over automated networks.",
+                        "E. To describe historical errors in hardware production."
+                    ],
+                    correctRaw: "B. To explain how advanced technological integrations improve operational efficiency and security.",
+                    f: "Identifying the main idea of an English informational text.",
+                    d: "The text emphasizes the advantages and transformative nature of modern technological solutions.",
+                    level: 1
+                };
+            }
+        });
 
         let currentSubject = 'matematika';
         let currentIdx = 0;
@@ -842,26 +827,45 @@
 
         function initRandomizedQuestions() {
             dbSoal = {};
-            for (let sub in masterSoal) {
-                let shuffledSoal = [...masterSoal[sub]].sort(() => 0.5 - Math.random());
-                let limit = (currentUser.mode === 'latihan') ? 5 : 25;
-                let selectedSoal = shuffledSoal.slice(0, limit).map((q, idx) => {
-                    let cleanOptions = q.o ? q.o.map(opt => opt.replace(/^[A-E]\.\s*/, '')) : [];
-                    let shuffledTexts = q.isTrueFalse ? [] : [...cleanOptions].sort(() => 0.5 - Math.random());
-                    
-                    let mappedRaws = q.correctRaw ? q.correctRaw.replace(/^[A-E]\.\s*/, '') : null;
-                    let mappedRawsComplex = q.isComplex ? q.correctRaws.map(r => r.replace(/^[A-E]\.\s*/, '')) : [];
 
-                    return {
-                        ...q,
-                        id: idx + 1,
-                        shuffledTexts: shuffledTexts,
-                        cleanCorrect: mappedRaws,
-                        cleanCorrects: mappedRawsComplex
-                    };
-                });
-                dbSoal[sub] = selectedSoal;
+            // 1. Matematika Wajib (Tetap 25 Soal)
+            let shuffledMath = [...masterSoalMatematika].sort(() => 0.5 - Math.random());
+            let mathLimit = (currentUser.mode === 'latihan') ? 5 : 25;
+            dbSoal.matematika = shuffledMath.slice(0, mathLimit).map((q, idx) => formatQuestion(q, idx + 1));
+
+            // 2. Bahasa Indonesia (Bindo): 16 PG, 7 PGK, 7 BS = 30 Soal
+            dbSoal.indo = generateBalancedSubtest(masterSoalIndo);
+
+            // 3. Bahasa Inggris (Inggris): 16 PG, 7 PGK, 7 BS = 30 Soal
+            dbSoal.inggris = generateBalancedSubtest(masterSoalInggris);
+        }
+
+        function generateBalancedSubtest(masterArr) {
+            if (currentUser.mode === 'latihan') {
+                return masterArr.slice(0, 5).map((q, idx) => formatQuestion(q, idx + 1));
             }
+
+            let pgList = masterArr.filter(q => !q.isComplex && !q.isTrueFalse).sort(() => 0.5 - Math.random()).slice(0, 16);
+            let pgkList = masterArr.filter(q => q.isComplex).sort(() => 0.5 - Math.random()).slice(0, 7);
+            let tfList = masterArr.filter(q => q.isTrueFalse).sort(() => 0.5 - Math.random()).slice(0, 7);
+
+            let combined = [...pgList, ...pgkList, ...tfList].sort(() => 0.5 - Math.random());
+            return combined.map((q, idx) => formatQuestion(q, idx + 1));
+        }
+
+        function formatQuestion(q, newId) {
+            let cleanOptions = q.o ? q.o.map(opt => opt.replace(/^[A-E]\.\s*/, '')) : [];
+            let shuffledTexts = q.isTrueFalse ? [] : [...cleanOptions].sort(() => 0.5 - Math.random());
+            let mappedRaws = q.correctRaw ? q.correctRaw.replace(/^[A-E]\.\s*/, '') : null;
+            let mappedRawsComplex = q.isComplex ? q.correctRaws.map(r => r.replace(/^[A-E]\.\s*/, '')) : [];
+
+            return {
+                ...q,
+                id: newId,
+                shuffledTexts: shuffledTexts,
+                cleanCorrect: mappedRaws,
+                cleanCorrects: mappedRawsComplex
+            };
         }
 
         function loadFromStorage() {
@@ -947,9 +951,9 @@
 
             currentUser = { name: nameInput, kelas: kelasInput, mode: modeInput };
             cheatCount = 0;
-            activeTotalQuestions = (modeInput === 'latihan') ? 5 : 25;
 
             initRandomizedQuestions();
+            activeTotalQuestions = dbSoal[currentSubject].length;
 
             document.getElementById('startOverlay').style.display = 'none';
             document.getElementById('quizArea').style.display = 'block';
@@ -1064,6 +1068,7 @@
             if (isStarted) {
                 if (!isSubmitted) lockOtherTabs(currentSubject);
                 initRandomizedQuestions();
+                activeTotalQuestions = dbSoal[currentSubject].length;
                 loadQuestion();
             }
             fetchLeaderboard(currentSubject);
