@@ -244,13 +244,11 @@
             const lightbox = document.getElementById('lightbox');
             const lightboxImg = document.getElementById('lightbox-img');
             
-            // Pindahkan elemen lightbox langsung ke paling bawah body agar lepas dari container bertransformasi
             document.body.appendChild(lightbox);
             
             lightboxImg.src = src;
             lightbox.classList.add('active');
             
-            // Atur posisi top sesuai dengan scroll perangkat saat ini jika position fixed terhambat
             lightbox.style.top = window.scrollY + 'px';
         }
 
@@ -387,7 +385,9 @@
         }
 
         function loadPhotos() {
-            db.collection('photos').orderBy('createdAt', 'desc').get().then(snapshot => {
+            // Mengurutkan foto berdasarkan eventDate (tanggal kegiatan) secara menurun ('desc' = terbaru ke terlama)
+            // Jika ingin dari tanggal terlama ke terbaru, ganti 'desc' menjadi 'asc'
+            db.collection('photos').orderBy('eventDate', 'desc').get().then(snapshot => {
                 const grid = document.getElementById('gallery-grid');
                 grid.innerHTML = '';
 
