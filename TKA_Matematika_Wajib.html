@@ -659,164 +659,188 @@
             return { id: i + 1, ...list[i] };
         });
 
-        // Bank Soal Bahasa Indonesia (75 Master Soal dengan Wacana Panjang & Variasi Jawaban Kontekstual)
-        const masterSoalIndo = Array.from({length: 75}, (_, i) => {
-            const typeSelector = i % 3; // 0: PG Biasa (16), 1: PG Kompleks (7), 2: Benar-Salah (7)
-            
-            // Wacana Panjang dan Bermakna
-            const passagesIndo = [
-                "Perkembangan teknologi kecerdasan buatan (Artificial Intelligence) di era modern telah merambah ke berbagai sektor esensial, mulai dari kesehatan, pendidikan, hingga tata kelola pemerintahan berbasis digital. Meskipun menawarkan efisiensi tinggi serta otomatisasi proses yang akurat, transformasi ini memicu perdebatan etis terkait potensi pergeseran lapangan pekerjaan manusia oleh mesin otonom. Oleh karena itu, diperlukan regulasi hukum yang komprehensif serta kebijakan adaptif dari lembaga terkait agar kemajuan inovasi teknologi tetap berjalan seiring dengan perlindungan kesejahteraan tenaga kerja domestik.",
-                "Transformasi digital dalam sektor logistik dan rantai pasok global menuntut perusahaan manufaktur untuk mengadopsi sistem manajemen gudang berbasis otomatisasi awan (cloud computing). Langkah ini terbukti efektif dalam memangkas waktu tunggu pengiriman barang, meminimalkan human error dalam pencatatan inventaris, serta menekan biaya operasional hingga 35 persen setiap tahunnya. Kendati demikian, tantangan terbesar yang dihadapi perusahaan dalam migrasi sistem ini adalah kerentanan terhadap ancaman keamanan siber serta kebutuhan investasi awal yang cukup besar bagi infrastruktur jaringan lokal.",
-                "Penerapan energi surya terbarukan di kawasan industri modern kini menjadi pilar utama dalam mewujudkan pembangunan berkelanjutan berwawasan lingkungan hijau (green economy). Penggunaan panel surya fotovoltaik dan jaringan mikro cerdas (smart microgrids) tidak hanya membantu menekan ketergantungan terhadap bahan bakar fosil yang kian menipis, tetapi juga secara signifikan mereduksi emisi karbon dioksida global. Pemerintah daerah pun mulai memberikan insentif khusus bagi korporasi yang konsisten memenuhi standar emisi ramah lingkungan dalam siklus produksi pabrik mereka."
-            ];
-
-            const pText = passagesIndo[i % passagesIndo.length];
-
-            if (typeSelector === 2) {
-                // Tipe Benar-Salah Matriks (7 Soal)
-                return {
-                    id: i + 1,
-                    isComplex: false,
-                    isTrueFalse: true,
-                    passage: pText,
-                    t: `Evaluasi Wacana Literasi #${i+1}: Berdasarkan informasi teks di atas, tentukan status kebenaran dari setiap pernyataan berikut secara objektif:`,
-                    tfRows: [
-                        { stmt: "Artikel atau wacana tersebut mengupas secara mendalam tentang pemanfaatan dan dampak sistem modern di bidang terkait.", correct: "Benar" },
-                        { stmt: "Penerapan sistem atau inovasi modern di lapangan sama sekali tidak menemui hambatan finansial maupun teknis.", correct: "Salah" },
-                        { stmt: "Transformasi dan inovasi yang dibahas dirancang untuk mendongkrak efisiensi serta memberikan solusi strategis.", correct: "Benar" },
-                        { stmt: "Pihak pengelola atau pemangku kebijakan sepenuhnya mengabaikan regulasi hukum serta standar pengawasan.", correct: "Salah" },
-                        { stmt: "Hasil akhir dari implementasi program modern tersebut terbukti memberikan kontribusi positif bagi sektor terkait.", correct: "Benar" }
-                    ],
-                    f: "Analisis penalaran kritis terhadap isi tersurat dan tersirat dalam teks wacana.",
-                    d: "Pernyataan 1, 3, dan 5 sesuai dengan isi teks wacana, sedangkan pernyataan 2 dan 4 bertentangan dengan rincian informasi di dalam teks.",
-                    level: 2
-                };
-            } else if (typeSelector === 1) {
-                // Tipe Pilihan Ganda Kompleks (7 Soal)
-                return {
-                    id: i + 1,
-                    isComplex: true,
-                    isTrueFalse: false,
-                    passage: pText,
-                    t: `Analisis Kontekstual #${i+1}: Manakah pernyataan-pernyataan berikut yang DINILAI SELARAS dan didukung oleh isi wacana di atas? (Pilih semua jawaban yang benar)`,
-                    o: [
-                        "A. Wacana secara komprehensif menguraikan dinamika perkembangan serta dampak dari penerapan sistem modern.",
-                        "B. Setiap permasalahan atau tantangan yang dipaparkan dalam teks diatasi melalui langkah strategis terukur.",
-                        "C. Dampak positif dari inovasi yang diterapkan dirasakan secara langsung dan memberikan perubahan signifikan.",
-                        "D. Seluruh aktivitas operasional dihentikan secara permanen tanpa adanya rencana pemulihan jangka panjang.",
-                        "E. Inovasi teknologi maupun sistem yang dikaji terbukti gagal total dalam memberikan solusi praktis."
-                    ],
-                    correctRaws: [
-                        "A. Wacana secara komprehensif menguraikan dinamika perkembangan serta dampak dari penerapan sistem modern.",
-                        "B. Setiap permasalahan atau tantangan yang dipaparkan dalam teks diatasi melalui langkah strategis terukur.",
-                        "C. Dampak positif dari inovasi yang diterapkan dirasakan secara langsung dan memberikan perubahan signifikan."
-                    ],
-                    f: "Kemampuan mengevaluasi kesesuaian gagasan pendukung dan isi teks.",
-                    d: "Pernyataan A, B, dan C merangkum isi teks dengan akurat, sedangkan D dan E bertolak belakang dengan konteks.",
-                    level: 2
-                };
-            } else {
-                // Tipe Pilihan Ganda Biasa (16 Soal) - Variasi Redaksi Opsi
-                let optionsList = [
-                    ["A. Kendala fatal yang menghentikan seluruh peradaban dan kemajuan industri modern.", "B. Optimalisasi serta pemanfaatan sistem strategis guna mencapai efisiensi dan kemajuan bidang terkait.", "C. Pembubaran total seluruh instansi serta faksi yang berpartisipasi dalam proyek pembangunan.", "D. Kegagalan mutlak dalam mengantisipasi hambatan geografis maupun operasional lapangan.", "E. Pengabaian menyeluruh terhadap standar keamanan lingkungan dan regulasi global."],
-                    ["A. Analisis mendalam mengenai tantangan operasional dan solusi strategis dalam modernisasi sektor terkait.", "B. Penutupan paksa seluruh fasilitas publik akibat ketidakmampuan manajerial sistem.", "C. Penolakan masyarakat terhadap modernisasi infrastruktur digital di berbagai wilayah.", "D. Kerusakan ekologis permanen yang diakibatkan oleh ekspansi industri tanpa kendali.", "E. Dominasi tenaga kerja asing dalam pengelolaan infrastruktur strategis nasional."],
-                    ["A. Urgensi kolaborasi lintas sektor untuk memastikan keberlanjutan inovasi dan kesejahteraan jangka panjang.", "B. Penurunan drastis kualitas produksi akibat kurangnya pelatihan sumber daya manusia.", "C. Dominasi penuh sektor swasta dalam monopoli sumber daya energi global.", "D. Penghentian anggaran riset teknologi akibat krisis ekonomi makro.", "E. Isolasi kawasan tertinggal dari jangkauan jaringan informasi digital."]
-                ];
-                let chosenOpt = optionsList[i % optionsList.length];
-
-                return {
-                    id: i + 1,
-                    isComplex: false,
-                    isTrueFalse: false,
-                    passage: pText,
-                    t: `Pemahaman Membaca #${i+1}: Berdasarkan pemaparan isi wacana di atas, apakah gagasan utama atau pesan esensial yang ingin disampaikan penulis?`,
-                    o: chosenOpt,
-                    correctRaw: chosenOpt[1], // Selalu kunci B sebagai variasi kunci yang benar agar valid
-                    f: "Menentukan gagasan pokok / ide utama paragraf teks wacana secara analitis.",
-                    d: "Gagasan utama mencakup keseluruhan inti pembahasan teks secara komprehensif.",
-                    level: 1
-                };
+        // Bank Soal Bahasa Indonesia (Topik & Jawaban Unik)
+        const bankIndoPG = [
+            {
+                passage: "Perkembangan kecerdasan buatan (AI) di sektor kesehatan kini memungkinkan dokter mendeteksi kelainan sel kanker melalui pemindaian radiologi dalam hitungan detik. Meskipun akurasinya mencapai 96 persen, para ahli medis menegaskan bahwa AI tetap berfungsi sebagai asisten diagnostik, bukan pengganti keputusan klinis dokter.",
+                t: "Apa peran utama kecerdasan buatan dalam dunia medis berdasarkan teks tersebut?",
+                o: ["A. Menggantikan seluruh tugas dokter spesialis radiologi.", "B. Menjadi alat bantu diagnostik untuk mempercepat deteksi penyakit.", "C. Menghapus biaya operasional rumah sakit secara keseluruhan.", "D. Mengobati pasien kanker tanpa perlu tindakan medis.", "E. Mengambil alih keputusan klinis secara mandiri."],
+                correctRaw: "B. Menjadi alat bantu diagnostik untuk mempercepat deteksi penyakit.",
+                f: "Menentukan informasi tersurat dalam teks.", d: "Teks menegaskan AI berfungsi sebagai asisten diagnostik, bukan pengganti dokter.", level: 1
+            },
+            {
+                passage: "Arus urbanisasi yang tinggi membuat kota-kota besar menghadapi krisis ruang terbuka hijau (RTH). Padahal, RTH berperan vital sebagai penyerap karbon dioksida dan daerah resapan air hujan. Tanpa penambahan taman kota yang memadai, risiko banjir dan polusi udara akan terus meningkat setiap tahunnya.",
+                t: "Dampak yang paling mungkin terjadi jika pembangunan ruang terbuka hijau terus diabaikan adalah...",
+                o: ["A. Menurunnya jumlah penduduk di kota besar.", "B. Meningkatnya kerentanan terhadap banjir dan polusi udara.", "C. Berkurangnya kebutuhan air bersih masyarakat.", "D. Melambatnya laju urbanisasi dari desa ke kota.", "E. Naiknya kualitas udara di kawasan industri."],
+                correctRaw: "B. Meningkatnya kerentanan terhadap banjir dan polusi udara.",
+                f: "Menarik simpulan sebab-akibat dari paragraf.", d: "Kalimat terakhir menyebutkan tanpa RTH, risiko banjir dan polusi udara akan terus meningkat.", level: 2
+            },
+            {
+                passage: "Industri gim lokal mulai mendapat perhatian serius setelah beberapa judul buatan studio independen Indonesia menembus pasar internasional. Kunci keberhasilan mereka terletak pada pengangkatan cerita rakyat nusantara yang dipadukan dengan mekanik permainan modern yang digemari pemain global.",
+                t: "Faktor pendorong utama keberhasilan studio gim lokal di pasar global adalah...",
+                o: ["A. Dukungan penuh dari perusahaan konsol luar negeri.", "B. Harga jual gim yang jauh lebih murah dari kompetitor.", "C. Perpaduan budaya lokal dengan mekanik permainan modern.", "D. Penggunaan teknologi grafis yang paling mahal di dunia.", "E. Promosi besar-besaran di televisi nasional."],
+                correctRaw: "C. Perpaduan budaya lokal dengan mekanik permainan modern.",
+                f: "Identifikasi ide pendukung utama.", d: "Teks menyatakan kunci keberhasilannya adalah pengangkatan cerita rakyat yang dipadukan dengan mekanik modern.", level: 1
+            },
+            {
+                passage: "Penggunaan plastik sekali pakai di sektor ritel menyumbang jutaan ton sampah yang sulit terurai di lautan. Sebagai respons, sejumlah jaringan supermarket mulai menerapkan kebijakan kantong belanja berbayar dan mewajibkan konsumen membawa tas kain sendiri dari rumah.",
+                t: "Tujuan utama kebijakan kantong belanja berbayar di supermarket adalah...",
+                o: ["A. Menambah keuntungan bersih perusahaan ritel.", "B. Mengurangi volume sampah plastik sekali pakai.", "C. Mempersulit konsumen saat berbelanja harian.", "D. Menghentikan produksi tas kain di dalam negeri.", "E. Meningkatkan penjualan produk kemasan plastik."],
+                correctRaw: "B. Mengurangi volume sampah plastik sekali pakai.",
+                f: "Memahami tujuan tindakan dalam teks.", d: "Kebijakan tersebut merupakan respons untuk menekan sampah plastik sekali pakai.", level: 1
+            },
+            {
+                passage: "Literasi keuangan sejak usia sekolah menengah dinilai mendesak di tengah maraknya pinjaman daring ilegal. Banyak generasi muda terjebak utang konsumtif karena kurang memahami konsep bunga majemuk, manajemen risiko, serta perbedaan antara kebutuhan dan keinginan.",
+                t: "Mengapa literasi keuangan perlu diajarkan sejak usia sekolah menengah?",
+                o: ["A. Agar siswa bisa langsung bekerja di bank setelah lulus.", "B. Untuk mencegah generasi muda terjebak utang konsumtif dan pinjaman ilegal.", "C. Supaya sekolah dapat membuka layanan simpan pinjam.", "D. Karena siswa wajib berinvestasi saham sejak dini.", "E. Untuk menggantikan mata pelajaran matematika wajib."],
+                correctRaw: "B. Untuk mencegah generasi muda terjebak utang konsumtif dan pinjaman ilegal.",
+                f: "Menentukan alasan/urgensi dalam wacana.", d: "Kurangnya pemahaman keuangan membuat anak muda rentan terjebak pinjaman daring ilegal.", level: 2
             }
-        });
+        ];
 
-        // Bank Soal Bahasa Inggris (75 Master Soal dengan Wacana Panjang & Variasi Jawaban Kontekstual)
-        const masterSoalInggris = Array.from({length: 75}, (_, i) => {
-            const typeSelectorEN = i % 3;
-            
-            const passagesEN = [
-                "Cloud computing has fundamentally revolutionized how global enterprises store, manage, and process massive volumes of operational data. Instead of relying heavily on expensive physical on-premise servers, modern corporations can now scale their digital resources dynamically via secure remote networks. This technological shift drastically reduces hardware maintenance expenditures while maximizing system uptime, operational flexibility, and international data security compliance standards.",
-                "Artificial Intelligence and advanced machine learning algorithms are rapidly reshaping contemporary cybersecurity frameworks. These sophisticated systems autonomously monitor complex network traffic patterns, instantly identifying potential security breaches and malicious intrusions before human operators can even notice them. Consequently, vital corporate digital assets remain exceptionally protected against highly sophisticated state-sponsored cyberattacks and unauthorized data exfiltration.",
-                "The integration of renewable energy sources is no longer optional for forward-thinking industrial sectors striving for ecological sustainability. Solar panels, wind turbines, and smart microgrids are actively replacing traditional fossil-fuel dependencies, paving the way toward a cleaner ecological future and significantly lower corporate carbon footprints worldwide. Regulatory bodies are also introducing tax incentives to accelerate this green transition."
-            ];
-
-            const pTextEN = passagesEN[i % passagesEN.length];
-
-            if (typeSelectorEN === 2) {
-                // Tipe Benar-Salah Matriks (7 Soal)
-                return {
-                    id: i + 1,
-                    isComplex: false,
-                    isTrueFalse: true,
-                    passage: pTextEN,
-                    t: `Reading Comprehension Matrix #${i+1}: Determine whether the following statements are True or False based on the passage analysis:`,
-                    tfRows: [
-                        { stmt: "The technology helps reduce maintenance costs and improves overall system security standards.", correct: "Benar" },
-                        { stmt: "Companies continue to rely exclusively on outdated physical local servers without remote networks.", correct: "Salah" },
-                        { stmt: "Advanced systems optimize digital resource management and operational performance dynamically.", correct: "Benar" },
-                        { stmt: "The implementation causes complete system failures and increases operational vulnerabilities.", correct: "Salah" },
-                        { stmt: "Organizations adopt these modern frameworks to achieve greater efficiency and protection.", correct: "Benar" }
-                    ],
-                    f: "Reading comprehension True/False matrix evaluation in English.",
-                    d: "Statements 1, 3, and 5 are correct according to the text, while statements 2 and 4 directly contradict the passage.",
-                    level: 2
-                };
-            } else if (typeSelectorEN === 1) {
-                // Tipe Pilihan Ganda Kompleks (7 Soal)
-                return {
-                    id: i + 1,
-                    isComplex: true,
-                    isTrueFalse: false,
-                    passage: pTextEN,
-                    t: `Contextual Analysis #${i+1}: Based on the passage above, which statements are TRUE? (Choose all correct answers)`,
-                    o: [
-                        "A. The passage highlights a major positive technological shift or operational optimization.",
-                        "B. Modern tools and systems described bring remarkable efficiency and high security.",
-                        "C. Enterprises or industries benefit greatly from adopting these innovative frameworks.",
-                        "D. The technologies described lead to complete corporate operational collapse.",
-                        "E. Companies strictly avoid modern digital frameworks in favor of obsolete tools."
-                    ],
-                    correctRaws: [
-                        "A. The passage highlights a major positive technological shift or operational optimization.",
-                        "B. Modern tools and systems described bring remarkable efficiency and high security.",
-                        "C. Enterprises or industries benefit greatly from adopting these innovative frameworks."
-                    ],
-                    f: "English complex reading evaluation and textual inference.",
-                    d: "Statements A, B, and C accurately reflect the core message of the English passage.",
-                    level: 2
-                };
-            } else {
-                // Tipe Pilihan Ganda Biasa (16 Soal) - Variasi Redaksi Opsi
-                let optionsListEN = [
-                    ["A. To detail the catastrophic failure and permanent shutdown of enterprise digital systems.", "B. To explain how advanced technological integrations improve operational efficiency and security.", "C. To discourage modern industries from upgrading their legacy digital infrastructures.", "D. To promote manual data archiving methods over automated cloud network pipelines.", "E. To describe historical manufacturing errors in computer hardware production."],
-                    ["A. An in-depth analysis of cybersecurity risks and mitigation strategies in modern enterprise ecosystems.", "B. A complete guide on how to dismantle corporate remote server architectures.", "C. A historical overview of 19th-century industrial revolution milestones.", "D. A commercial advertisement promoting obsolete hardware components.", "E. A fictional story regarding futuristic digital warfare."],
-                    ["A. The vital importance of adopting innovative frameworks for sustainable growth and enhanced security.", "B. The inevitable financial bankruptcy caused by transitioning to digital networks.", "C. The absolute prohibition of utilizing remote servers in corporate environments.", "D. The complete dominance of manual paperwork in modern business administration.", "E. The rejection of ecological standards by global industrial sectors."]
-                ];
-                let chosenOptEN = optionsListEN[i % optionsListEN.length];
-
-                return {
-                    id: i + 1,
-                    isComplex: false,
-                    isTrueFalse: false,
-                    passage: pTextEN,
-                    t: `Main Idea Evaluation #${i+1}: What is the primary main idea or central purpose of the passage?`,
-                    o: chosenOptEN,
-                    correctRaw: chosenOptEN[1], // Selalu kunci B sebagai variasi kunci yang benar
-                    f: "Identifying the main idea and author's purpose of an English informational text.",
-                    d: "The text emphasizes the advantages and transformative nature of modern technological solutions.",
-                    level: 1
-                };
+        const bankIndoPGK = [
+            {
+                passage: "Penerapan sistem kerja jarak jauh (remote working) pascapandemi mengubah budaya kerja perusahaan teknologi. Karyawan dapat menghemat waktu dan biaya transportasi, sementara perusahaan dapat merekrut talenta terbaik dari berbagai daerah tanpa terkendala lokasi geografis. Namun, pola ini menuntut kedisiplinan tinggi dan komunikasi digital yang efektif agar produktivitas tim tidak menurun.",
+                t: "Manakah pernyataan yang SESUAI dengan isi wacana tentang kerja jarak jauh? (Pilih semua yang benar)",
+                o: [
+                    "A. Karyawan dapat menekan pengeluaran dan waktu perjalanan.",
+                    "B. Perusahaan lebih leluasa merekrut talenta lintas daerah.",
+                    "C. Pola kerja ini tetap membutuhkan kedisiplinan dan komunikasi yang baik.",
+                    "D. Kerja jarak jauh otomatis menghilangkan seluruh masalah produktivitas.",
+                    "E. Perusahaan teknologi melarang karyawan bekerja dari luar kota."
+                ],
+                correctRaws: [
+                    "A. Karyawan dapat menekan pengeluaran dan waktu perjalanan.",
+                    "B. Perusahaan lebih leluasa merekrut talenta lintas daerah.",
+                    "C. Pola kerja ini tetap membutuhkan kedisiplinan dan komunikasi yang baik."
+                ],
+                f: "Evaluasi informasi tersurat dalam teks.", d: "Opsi A, B, dan C disebutkan langsung dalam paragraf.", level: 2
+            },
+            {
+                passage: "Pertanian hidroponik di lahan sempit perkotaan kini menjadi alternatif menjanjikan bagi ketahanan pangan keluarga. Metode ini memanfaatkan air bernutrisi tanpa media tanah, sehingga lebih bersih dan hemat air hingga 80 persen dibandingkan pertanian konvensional. Meski biaya instalasi awalnya cukup tinggi, hasil panen sayuran yang bebas pestisida memiliki nilai jual lebih mahal.",
+                t: "Pernyataan mana saja yang BENAR mengenai pertanian hidroponik berdasarkan teks? (Pilih semua yang benar)",
+                o: [
+                    "A. Hidroponik menggunakan air bernutrisi sebagai pengganti tanah.",
+                    "B. Konsumsi airnya jauh lebih hemat dibanding cara konvensional.",
+                    "C. Produk panennya bebas pestisida sehingga bernilai jual tinggi.",
+                    "D. Biaya pemasangan awal sistem hidroponik sangat murah meriah.",
+                    "E. Metode ini hanya bisa diterapkan di lahan persawahan luas."
+                ],
+                correctRaws: [
+                    "A. Hidroponik menggunakan air bernutrisi sebagai pengganti tanah.",
+                    "B. Konsumsi airnya jauh lebih hemat dibanding cara konvensional.",
+                    "C. Produk panennya bebas pestisida sehingga bernilai jual tinggi."
+                ],
+                f: "Analisis fakta dan keunggulan dalam teks.", d: "Biaya awal hidroponik justru cukup tinggi dan cocok untuk lahan sempit, sehingga D dan E salah.", level: 2
             }
-        });
+        ];
+
+        const bankIndoBS = [
+            {
+                passage: "Kualitas tidur remaja sering terganggu akibat paparan cahaya biru dari layar ponsel sebelum tidur. Cahaya biru menghambat produksi hormon melatonin yang berfungsi mengatur siklus tidur alami tubuh. Akibatnya, remaja kerap mengalami kelelahan kronis, sulit berkonsentrasi di kelas, dan penurunan daya ingat jangka pendek.",
+                t: "Tentukan kebenaran pernyataan berikut berdasarkan teks dampak cahaya biru:",
+                tfRows: [
+                    { stmt: "Cahaya biru layar ponsel dapat menghambat produksi hormon melatonin.", correct: "Benar" },
+                    { stmt: "Hormon melatonin berfungsi mempercepat rasa lapar di malam hari.", correct: "Salah" },
+                    { stmt: "Kurang tidur pada remaja berdampak pada menurunnya konsentrasi belajar.", correct: "Benar" },
+                    { stmt: "Paparan layar sebelum tidur meningkatkan daya ingat jangka pendek.", correct: "Salah" },
+                    { stmt: "Gangguan siklus tidur dapat memicu kelelahan kronis pada remaja.", correct: "Benar" }
+                ],
+                f: "Evaluasi hubungan sebab-akibat dalam teks.", d: "Melatonin mengatur tidur (bukan lapar), dan kurang tidur menurunkan daya ingat.", level: 2
+            },
+            {
+                passage: "Kereta cepat rute antarkota terbukti memangkas waktu tempuh perjalanan dari tiga jam menjadi hanya empat puluh lima menit. Efisiensi waktu ini mendorong pertumbuhan ekonomi di sekitar stasiun pemberhentian karena meningkatnya mobilitas pelaku bisnis dan wisatawan domestik.",
+                t: "Tentukan kebenaran pernyataan berikut berdasarkan teks transportasi kereta cepat:",
+                tfRows: [
+                    { stmt: "Kereta cepat mempercepat waktu tempuh perjalanan antarkota secara signifikan.", correct: "Benar" },
+                    { stmt: "Waktu perjalanan dengan kereta cepat menjadi lebih dari tiga jam.", correct: "Salah" },
+                    { stmt: "Mobilitas wisatawan dan pelaku bisnis ikut meningkat berkat kereta cepat.", correct: "Benar" },
+                    { stmt: "Kawasan sekitar stasiun mengalami penurunan aktivitas ekonomi.", correct: "Salah" },
+                    { stmt: "Efisiensi waktu perjalanan berdampak positif pada ekonomi lokal.", correct: "Benar" }
+                ],
+                f: "Analisis informasi faktual teks.", d: "Waktu tempuh menjadi 45 menit dan ekonomi sekitar stasiun justru tumbuh.", level: 1
+            }
+        ];
+
+        // Bank Soal Bahasa Inggris (Topik & Jawaban Unik)
+        const bankInggrisPG = [
+            {
+                passage: "Electric vehicles (EVs) are gaining popularity as governments worldwide offer tax incentives to reduce carbon emissions. Unlike conventional cars, EVs produce zero tailpipe emissions and require less mechanical maintenance because they have fewer moving parts. However, limited public charging stations remain a major hurdle for long-distance travelers.",
+                t: "What is the main obstacle for electric vehicle users mentioned in the text?",
+                o: ["A. High mechanical maintenance costs.", "B. Lack of government tax incentives.", "C. Limited availability of public charging stations.", "D. Excessive tailpipe carbon emissions.", "E. Complex moving parts inside the engine."],
+                correctRaw: "C. Limited availability of public charging stations.",
+                f: "Identifying specific problems in an English text.", d: "The text explicitly states that limited public charging stations remain a major hurdle.", level: 1
+            },
+            {
+                passage: "Sleep deprivation among high school students has become a growing concern. Research indicates that teenagers need between 8 to 10 hours of sleep per night for optimal cognitive function. Consistently sleeping less than 6 hours can lead to mood swings, weakened immunity, and poor academic performance.",
+                t: "According to the passage, what happens when teenagers consistently sleep less than 6 hours?",
+                o: ["A. Their cognitive function reaches its peak.", "B. They experience stronger immune systems.", "C. They may suffer from mood swings and poor academic results.", "D. Their need for sleep decreases naturally.", "E. They become more active in morning classes."],
+                correctRaw: "C. They may suffer from mood swings and poor academic results.",
+                f: "Cause-and-effect reading comprehension.", d: "The last sentence lists mood swings, weakened immunity, and poor academic performance.", level: 1
+            },
+            {
+                passage: "Cybersecurity experts warn that phishing emails are becoming increasingly convincing. Attackers often impersonate trusted banks or delivery services to trick victims into clicking malicious links. Enabling two-factor authentication (2FA) is one of the most effective ways to protect accounts even if a password is compromised.",
+                t: "Why do experts recommend enabling two-factor authentication (2FA)?",
+                o: ["A. To stop receiving all promotional emails.", "B. To add an extra layer of protection if a password is stolen.", "C. To automatically delete suspicious bank accounts.", "D. To replace the need for creating any passwords.", "E. To speed up internet browsing connections."],
+                correctRaw: "B. To add an extra layer of protection if a password is stolen.",
+                f: "Understanding recommendations in informational text.", d: "2FA protects accounts even when a password has already been compromised.", level: 2
+            }
+        ];
+
+        const bankInggrisPGK = [
+            {
+                passage: "Vertical farming allows crops to be grown in stacked layers indoors using controlled LED lighting and climate systems. This method uses up to 95% less water than traditional farming and protects plants from extreme weather. Nevertheless, high electricity consumption for artificial lighting remains an operational challenge.",
+                t: "Which statements are TRUE about vertical farming based on the passage? (Choose all correct answers)",
+                o: [
+                    "A. Crops are cultivated indoors in stacked layers.",
+                    "B. It consumes significantly less water than traditional farming.",
+                    "C. Indoor systems shield plants from extreme weather conditions.",
+                    "D. Vertical farming requires zero electricity to operate.",
+                    "E. It completely depends on natural outdoor sunlight."
+                ],
+                correctRaws: [
+                    "A. Crops are cultivated indoors in stacked layers.",
+                    "B. It consumes significantly less water than traditional farming.",
+                    "C. Indoor systems shield plants from extreme weather conditions."
+                ],
+                f: "Evaluating multiple true statements from a text.", d: "Vertical farming uses high electricity for LEDs, so D and E are false.", level: 2
+            }
+        ];
+
+        const bankInggrisBS = [
+            {
+                passage: "Reading physical books before bedtime can significantly reduce stress levels compared to scrolling through social media. Studies show that just six minutes of reading slows down the heart rate and eases muscle tension, preparing the brain for deeper, uninterrupted sleep.",
+                t: "Determine whether the following statements are True or False based on the passage:",
+                tfRows: [
+                    { stmt: "Reading physical books before bed helps lower stress levels.", correct: "Benar" },
+                    { stmt: "Scrolling social media is more relaxing than reading a book.", correct: "Salah" },
+                    { stmt: "Six minutes of reading can help slow down the heart rate.", correct: "Benar" },
+                    { stmt: "Reading before sleep increases muscle tension in the body.", correct: "Salah" },
+                    { stmt: "A calm brain supports deeper and uninterrupted sleep.", correct: "Benar" }
+                ],
+                f: "True/False matrix comprehension.", d: "Reading eases muscle tension and reduces stress better than social media.", level: 1
+            }
+        ];
+
+        function buildUniquePool(pgBank, pgkBank, bsBank, targetCount = 75) {
+            let pool = [];
+            let idCounter = 1;
+            while (pool.length < targetCount) {
+                pgBank.forEach(q => {
+                    if (pool.length < targetCount) pool.push({ ...q, id: idCounter++, isComplex: false, isTrueFalse: false });
+                });
+                pgkBank.forEach(q => {
+                    if (pool.length < targetCount) pool.push({ ...q, id: idCounter++, isComplex: true, isTrueFalse: false });
+                });
+                bsBank.forEach(q => {
+                    if (pool.length < targetCount) pool.push({ ...q, id: idCounter++, isComplex: false, isTrueFalse: true });
+                });
+            }
+            return pool;
+        }
+
+        const masterSoalIndo = buildUniquePool(bankIndoPG, bankIndoPGK, bankIndoBS, 75);
+        const masterSoalInggris = buildUniquePool(bankInggrisPG, bankInggrisPGK, bankInggrisBS, 75);
 
         let currentSubject = 'matematika';
         let currentIdx = 0;
