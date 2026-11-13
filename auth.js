@@ -15,7 +15,7 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// Menyimpan sesi agar user tidak perlu login ulang terus-menerus di browser
+// Menyimpan sesi agar user tidak perlu login ulang terus-menerus[cite: 1]
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 let currentUser = null;
@@ -48,6 +48,7 @@ auth.onAuthStateChanged(user => {
     }
 });
 
+// Fungsi Sign In (Masuk)
 function login() {
     const email = document.getElementById('login-email').value.trim();
     const pass = document.getElementById('login-password').value;
@@ -84,8 +85,49 @@ function login() {
         });
 }
 
+// Fungsi Sign Up (Daftar Akun Baru)
+function signUp() {
+    const email = document.getElementById('login-email').value.trim();
+    const pass = document.getElementById('login-password').value;
+    const errorMsg = document.getElementById('login-error');
+    const loginBtn = document.getElementById('login-btn');
+
+    if (!email || !pass) {
+        if (errorMsg) errorMsg.innerText = "Harap isi email dan password untuk mendaftar!";
+        return;
+    }
+
+    if (errorMsg) errorMsg.innerText = "";
+    if (loginBtn) {
+        loginBtn.disabled = true;
+        loginBtn.innerText = "Mendaftarkan...";
+    }
+
+    auth.createUserWithEmailAndPassword(email, pass)
+        .then((userCredential) => {
+            alert("Akun berhasil dibuat dan otomatis masuk!");
+            closeLoginModal();
+            document.getElementById('login-email').value = "";
+            document.getElementById('login-password').value = "";
+            if (loginBtn) {
+                loginBtn.disabled = false;
+                loginBtn.innerText = "Masuk";
+            }
+        })
+        .catch(err => {
+            if (loginBtn) {
+                loginBtn.disabled = false;
+                loginBtn.innerText = "Masuk";
+            }
+            if (errorMsg) errorMsg.innerText = "Pendaftaran gagal: " + err.message;
+        });
+}
+
+// Fungsi Sign Out (Keluar)
 function logout() { 
-    auth.signOut(); 
+    auth.signOut().then(() => {
+        alert("Berhasil keluar akun.");
+    }); 
 }
 
 function toggleSidebar() {
