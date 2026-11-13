@@ -1,11 +1,11 @@
 const firebaseConfig = {
-    apiKey: "AIzaSyCFrS9L0YFDB29-n5OvC2EkVFKclW2wRTk",
-    authDomain: "hafar-web.firebaseapp.com",
-    projectId: "hafar-web",
-    storageBucket: "hafar-web.firebasestorage.app",
-    messagingSenderId: "887471904367",
-    appId: "1:887471904367:web:c5bb4694916a522dbf9f9a",
-    measurementId: "G-Y5WWTJSFFK"
+  apiKey: "AIzaSyCFrS9L0YFDB29-n5OvC2EkVFKclW2wRTk",
+  authDomain: "hafar-web.firebaseapp.com",
+  projectId: "hafar-web",
+  storageBucket: "hafar-web.firebasestorage.app",
+  messagingSenderId: "887471904367",
+  appId: "1:887471904367:web:cd859c0c01c65d7bbf9f9a",
+  measurementId: "G-V16SW1J8L8"
 };
 
 if (!firebase.apps.length) {
