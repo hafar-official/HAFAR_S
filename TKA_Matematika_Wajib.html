@@ -459,18 +459,18 @@
                 </div>
 
                 <div id="startOverlay" class="start-overlay">
-                    <h3 style="color: #ffffff; margin-bottom: 8px; font-size: 1.3rem;">Identitas Peserta Ujian</h3>
+                    <h3 style="color: #ffffff; margin-bottom: 8px; font-size: 1.3rem;">Masukkan Identitas Anda</h3>
                     <p style="color: #94a3b8; font-size: 0.85rem; max-width: 500px; margin: 0 auto 20px auto; line-height: 1.5;">
-                        Nama dan email disesuaikan otomatis dari akun yang sedang aktif. Silakan lengkapi asal instansi/daerahmu.
+                        Dengan memasukkan identitasmu, namamu akan tertampil di leaderboard.
                     </p>
                     
                     <div class="form-group">
-                        <label>Nama Pengguna / Akun:</label>
-                        <input type="text" id="inputNama" class="form-input" placeholder="Memuat akun..." readonly style="background: rgba(15, 23, 42, 0.6); color: #38bdf8; cursor: not-allowed;" required>
+                        <label>Nama Karakter / Nama Anda:</label>
+                        <input type="text" id="inputNama" class="form-input" placeholder="Contoh: Sairo / Kael" required>
                     </div>
                     <div class="form-group">
-                        <label>Asal Instansi / Daerah:</label>
-                        <input type="text" id="inputKelas" class="form-input" placeholder="Contoh: XI TKJ 2 / Malang" required>
+                        <label>Asal:</label>
+                        <input type="text" id="inputKelas" class="form-input" placeholder="Contoh: Dimensi Akhir / Malang" required>
                     </div>
                     <div class="form-group">
                         <label>Pilih Mode Pengerjaan:</label>
@@ -625,6 +625,8 @@
     <script src="auth.js"></script>
 
     <script>
+// Menggunakan inisialisasi Firebase & db dari auth.js
+
         // Master Soal Matematika Wajib (25 Soal)
         const masterSoalMatematika = Array.from({length: 25}, (_, i) => {
             const list = [
@@ -688,7 +690,7 @@
         // Bank Soal Bahasa Indonesia (Topik & Jawaban Unik)
         const bankIndoPG = [
             {
-                passage: "Perkembangan kecerdasan buatan (AI) di sektor kesehatan kini memungkinkan dokter mendeteksi kelainan sel kanker melalui pemindaian radiologi dalam hitungan detik. Meskipun akurasi mencapai 96 persen, para ahli medis menegaskan bahwa AI tetap berfungsi sebagai asisten diagnostik, bukan pengganti keputusan klinis dokter.",
+                passage: "Perkembangan kecerdasan buatan (AI) di sektor kesehatan kini memungkinkan dokter mendeteksi kelainan sel kanker melalui pemindaian radiologi dalam hitungan detik. Meskipun akurasinya mencapai 96 persen, para ahli medis menegaskan bahwa AI tetap berfungsi sebagai asisten diagnostik, bukan pengganti keputusan klinis dokter.",
                 t: "Apa peran utama kecerdasan buatan dalam dunia medis berdasarkan teks tersebut?",
                 o: ["A. Menggantikan seluruh tugas dokter spesialis radiologi.", "B. Menjadi alat bantu diagnostik untuk mempercepat deteksi penyakit.", "C. Menghapus biaya operasional rumah sakit secara keseluruhan.", "D. Mengobati pasien kanker tanpa perlu tindakan medis.", "E. Mengambil alih keputusan klinis secara mandiri."],
                 correctRaw: "B. Menjadi alat bantu diagnostik untuk mempercepat deteksi penyakit.",
@@ -885,11 +887,15 @@
         function initRandomizedQuestions() {
             dbSoal = {};
 
+            // 1. Matematika Wajib (Tetap 25 Soal)
             let shuffledMath = [...masterSoalMatematika].sort(() => 0.5 - Math.random());
             let mathLimit = (examUser.mode === 'latihan') ? 5 : 25;
             dbSoal.matematika = shuffledMath.slice(0, mathLimit).map((q, idx) => formatQuestion(q, idx + 1));
 
+            // 2. Bahasa Indonesia (Bindo): 16 PG, 7 PGK, 7 BS = 30 Soal
             dbSoal.indo = generateBalancedSubtest(masterSoalIndo);
+
+            // 3. Bahasa Inggris (Inggris): 16 PG, 7 PGK, 7 BS = 30 Soal
             dbSoal.inggris = generateBalancedSubtest(masterSoalInggris);
         }
 
@@ -991,22 +997,6 @@
                 wm.innerText = `HAFAR'S EXAM SYSTEM`;
             }
         }
-
-        // Integrasi Otomatis Akun Login Firebase ke Kolom Nama Identitas Ujian
-        firebase.auth().onAuthStateChanged((user) => {
-            const inputNama = document.getElementById('inputNama');
-            if (user) {
-                // Mengambil email aktif atau bagian depan email sebagai nama identitas
-                const userIdentifier = user.email;
-                if (inputNama) {
-                    inputNama.value = userIdentifier;
-                }
-            } else {
-                if (inputNama) {
-                    inputNama.value = "Tamu (Belum Login)";
-                }
-            }
-        });
 
         function startQuiz() {
             const nameInput = document.getElementById('inputNama').value.trim();
@@ -1732,17 +1722,15 @@
             document.getElementById('quizArea').style.display = 'none';
             document.getElementById('startOverlay').style.display = 'block';
             document.getElementById('btnNext').style.display = 'inline-block';
-            
-            // Re-sync nama dari auth saat reset
-            if(firebase.auth().currentUser) {
-                document.getElementById('inputNama').value = firebase.auth().currentUser.email;
-            }
+            document.getElementById('inputNama').value = examUser.name || '';
             document.getElementById('inputKelas').value = examUser.kelas || '';
 
             updateWatermark();
             unlockAllTabs();
             fetchLeaderboard(currentSubject);
         }
+
+
 
         loadFromStorage();
     </script>
