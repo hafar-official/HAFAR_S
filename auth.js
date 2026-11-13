@@ -15,6 +15,7 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+// Menyimpan sesi agar user tidak perlu login ulang terus-menerus di browser
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 let currentUser = null;
