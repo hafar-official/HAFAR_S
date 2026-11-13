@@ -1,5 +1,5 @@
 const firebaseConfig = {
-    apiKey: "AIzaSyCFrS9L0YFDB29-n5OvC2EkVFKclW2wRTK",
+    apiKey: "AIzaSyCFrS9L0YFDB29-n50vC2EkVFKclW2wRTk",
     authDomain: "hafar-web.firebaseapp.com",
     projectId: "hafar-web",
     storageBucket: "hafar-web.firebasestorage.app",
@@ -48,20 +48,59 @@ auth.onAuthStateChanged(user => {
         if (uploadVideoSection) uploadVideoSection.style.display = 'none';
     }
 
-    if (typeof loadPhotos === "function") {
-        loadPhotos();
-    }
-    if (typeof loadVideos === "function") {
-        loadVideos();
-    }
+    if (typeof loadPhotos === "function") loadPhotos();
+    if (typeof loadVideos === "function") loadVideos();
 });
+
+// Fungsi Toggle Tampilan Form Masuk vs Daftar
+function switchAuthMode(mode) {
+    const signupExtra = document.getElementById('signup-extra-fields');
+    const modalTitle = document.getElementById('modal-main-title');
+    const modalSubtitle = document.getElementById('modal-main-subtitle');
+    const btnLogin = document.getElementById('login-action-btn');
+    const btnSignup = document.getElementById('signup-action-btn');
+    const switchText = document.getElementById('switch-auth-text');
+    const errorMsg = document.getElementById('login-error');
+    
+    if (errorMsg) errorMsg.innerText = "";
+
+    if (mode === 'signup') {
+        if (signupExtra) signupExtra.style.display = 'block';
+        if (modalTitle) modalTitle.innerText = "DAFTAR AKUN BARU";
+        if (modalSubtitle) modalSubtitle.innerText = "Buat akun kontributor baru HAFAR'S";
+        if (btnLogin) btnLogin.style.display = 'none';
+        if (btnSignup) btnSignup.style.display = 'block';
+        if (switchText) switchText.innerHTML = 'Sudah punya akun? <a href="javascript:void(0)" onclick="switchAuthMode(\'login\')" style="color: #38bdf8; text-decoration: underline;">Masuk di sini</a>';
+    } else {
+        if (signupExtra) signupExtra.style.display = 'none';
+        if (modalTitle) modalTitle.innerText = "AKUN ANGGOTA";
+        if (modalSubtitle) modalSubtitle.innerText = "Masuk untuk mengelola media HAFAR'S";
+        if (btnLogin) btnLogin.style.display = 'block';
+        if (btnSignup) btnSignup.style.display = 'none';
+        if (switchText) switchText.innerHTML = 'Belum punya akun? <a href="javascript:void(0)" onclick="switchAuthMode(\'signup\')" style="color: #38bdf8; text-decoration: underline;">Buat akun baru</a>';
+    }
+}
+
+// Fungsi Toggle Show/Hide Password
+function togglePasswordVisibility(inputId, iconId) {
+    const inputField = document.getElementById(inputId);
+    const iconElem = document.getElementById(iconId);
+    if (!inputField) return;
+    if (inputField.type === "password") {
+        inputField.type = "text";
+        if (iconElem) iconElem.innerText = "🙈";
+    } else {
+        inputField.type = "password";
+        if (iconElem) iconElem.innerText = "👁️";
+    }
+}
 
 // Fungsi Sign In (Masuk)
 function login() {
     const email = document.getElementById('login-email').value.trim();
     const pass = document.getElementById('login-password').value;
     const errorMsg = document.getElementById('login-error');
-    const loginBtn = document.getElementById('login-btn');
+    const loginBtn = document.getElementById('login-action-btn');
 
     if (!email || !pass) {
         if (errorMsg) errorMsg.innerText = "Harap isi email dan password!";
@@ -75,7 +114,10 @@ function login() {
     }
 
     auth.signInWithEmailAndPassword(email, pass)
-        .then(() => {
+        .then((userCredential) => {
+            if (!userCredential.user.emailVerified) {
+                alert("Perhatian: Email Anda belum diverifikasi. Silakan cek kotak masuk/spam email Anda untuk mengonfirmasi bahwa Anda benar-benar pemilik akun ini.");
+            }
             closeLoginModal();
             document.getElementById('login-email').value = "";
             document.getElementById('login-password').value = "";
@@ -89,19 +131,25 @@ function login() {
                 loginBtn.disabled = false;
                 loginBtn.innerText = "Masuk (Sign In)";
             }
-            if (errorMsg) errorMsg.innerText = "Login gagal! Periksa email/password.";
+            if (errorMsg) errorMsg.innerText = "Login gagal: " + err.message;
         });
 }
 
-// Fungsi Sign Up (Daftar Akun Baru)
+// Fungsi Sign Up (Daftar Akun Baru + Konfirmasi Password 2x + Kirim Email Verifikasi)
 function signUp() {
     const email = document.getElementById('login-email').value.trim();
     const pass = document.getElementById('login-password').value;
+    const confirmPass = document.getElementById('login-password-confirm').value;
     const errorMsg = document.getElementById('login-error');
-    const signupBtn = document.getElementById('signup-btn');
+    const signupBtn = document.getElementById('signup-action-btn');
 
-    if (!email || !pass) {
-        if (errorMsg) errorMsg.innerText = "Harap isi email dan password untuk mendaftar!";
+    if (!email || !pass || !confirmPass) {
+        if (errorMsg) errorMsg.innerText = "Harap isi semua kolom termasuk konfirmasi password!";
+        return;
+    }
+
+    if (pass !== confirmPass) {
+        if (errorMsg) errorMsg.innerText = "Password dan ketik ulang password tidak cocok!";
         return;
     }
 
@@ -117,15 +165,26 @@ function signUp() {
     }
 
     auth.createUserWithEmailAndPassword(email, pass)
-        .then(() => {
-            alert("Akun berhasil dibuat dan otomatis masuk!");
-            closeLoginModal();
-            document.getElementById('login-email').value = "";
-            document.getElementById('login-password').value = "";
-            if (signupBtn) {
-                signupBtn.disabled = false;
-                signupBtn.innerText = "Daftar Akun Baru (Sign Up)";
-            }
+        .then((userCredential) => {
+            userCredential.user.sendEmailVerification().then(() => {
+                alert("Akun berhasil dibuat! Kami telah mengirimkan email konfirmasi ke " + email + " untuk memastikan Anda benar-benar ingin masuk ke web ini. Silakan cek kotak masuk atau folder spam email Anda.");
+                closeLoginModal();
+                switchAuthMode('login');
+                document.getElementById('login-email').value = "";
+                document.getElementById('login-password').value = "";
+                document.getElementById('login-password-confirm').value = "";
+                if (signupBtn) {
+                    signupBtn.disabled = false;
+                    signupBtn.innerText = "Daftar Akun Baru (Sign Up)";
+                }
+            }).catch(() => {
+                alert("Akun berhasil dibuat dan otomatis masuk!");
+                closeLoginModal();
+                if (signupBtn) {
+                    signupBtn.disabled = false;
+                    signupBtn.innerText = "Daftar Akun Baru (Sign Up)";
+                }
+            });
         })
         .catch(err => {
             if (signupBtn) {
@@ -156,6 +215,7 @@ function showLoginModal() {
     const modal = document.getElementById("login-modal");
     if (modal) {
         document.body.appendChild(modal);
+        switchAuthMode('login');
         modal.style.display = "flex";
         document.body.classList.add("no-scroll");
         setTimeout(() => modal.classList.add("show"), 10);
