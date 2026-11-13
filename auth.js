@@ -1,5 +1,5 @@
 const firebaseConfig = {
-    apiKey: "AIzaSyCFrS9L0YFDB29-n50vC2EkVFKclW2wRTk",
+    apiKey: "AIzaSyCFrS9L0YFDB29-n5OvC2EkVFKclW2wRTk",
     authDomain: "hafar-web.firebaseapp.com",
     projectId: "hafar-web",
     storageBucket: "hafar-web.firebasestorage.app",
