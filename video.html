@@ -76,51 +76,37 @@
         </div>
     </div>
 
-   <!-- MODAL LOGIN & SIGN UP -->
-<div id="login-modal" class="modal-login-container" onclick="closeLoginModal()" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); z-index: 9999; justify-content: center; align-items: center;">
-    <div class="modal-content-animated" onclick="event.stopPropagation()" style="background: #1e293b; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-        <span onclick="closeLoginModal()" style="position: absolute; top: 12px; right: 18px; color: #94a3b8; font-size: 24px; cursor: pointer;">&times;</span>
-        
-        <h3 id="modal-main-title" style="color: #ffffff; text-align: center; margin-top: 0; margin-bottom: 5px;">AKUN ANGGOTA</h3>
-        <p id="modal-main-subtitle" style="font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bottom: 20px;">Masuk untuk mengelola konten galeri</p>
-
-        <p id="auth-status-msg" style="display: none; font-size: 0.85rem; text-align: center; margin-bottom: 12px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 6px;"></p>
-
-        <input type="email" id="login-email" placeholder="Email Anggota" style="width: 100%; padding: 11px; margin-bottom: 12px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #fff; box-sizing: border-box;">
-
-        <div style="position: relative; margin-bottom: 12px;">
-            <input type="password" id="login-password" placeholder="Password (min. 6 karakter)" style="width: 100%; padding: 11px; padding-right: 40px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #fff; box-sizing: border-box;">
-            <span id="toggle-pass-icon" onclick="togglePasswordVisibility('login-password', 'toggle-pass-icon')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none;">👁️</span>
-        </div>
-
-        <div id="signup-extra-fields" style="display: none; margin-bottom: 12px;">
-            <div style="position: relative;">
-                <input type="password" id="login-password-confirm" placeholder="Ketik Ulang Password" style="width: 100%; padding: 11px; padding-right: 40px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #fff; box-sizing: border-box;">
-                <span id="toggle-conf-icon" onclick="togglePasswordVisibility('login-password-confirm', 'toggle-conf-icon')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none;">👁️</span>
+    <!-- MODAL LOGIN & SIGN UP -->
+    <div id="login-modal" class="modal-login-container" onclick="closeLoginModal()">
+        <div class="modal-content-animated" onclick="event.stopPropagation()" style="max-width: 400px;">
+            <span class="close-lightbox-btn" onclick="closeLoginModal()" style="top: 12px; right: 18px; font-size: 28px;">&times;</span>
+            <h3 id="modal-main-title" style="color: #ffffff; text-align: center; margin-top: 0; font-size: 1.3rem;">AKUN ANGGOTA</h3>
+            <p id="modal-main-subtitle" style="font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bottom: 1.2rem;">Masuk untuk mengelola media HAFAR'S</p>
+            
+            <input type="email" id="login-email" placeholder="Email Anggota" style="width: 100%; padding: 11px; margin-bottom: 12px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px; box-sizing: border-box;">
+            
+            <div style="position: relative; margin-bottom: 12px;">
+                <input type="password" id="login-password" placeholder="Password (min. 6 karakter)" style="width: 100%; padding: 11px 40px 11px 11px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px; box-sizing: border-box; margin-bottom: 0;">
+                <span id="toggle-pass-icon" onclick="togglePasswordVisibility('login-password', 'toggle-pass-icon')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 1.1rem; user-select: none;" title="Lihat/Sembunyikan Password">👁️</span>
             </div>
+
+            <div id="signup-extra-fields" style="display: none; margin-bottom: 12px;">
+                <div style="position: relative;">
+                    <input type="password" id="login-password-confirm" placeholder="Ketik Ulang Password" style="width: 100%; padding: 11px 40px 11px 11px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px; box-sizing: border-box; margin-bottom: 0;">
+                    <span id="toggle-conf-icon" onclick="togglePasswordVisibility('login-password-confirm', 'toggle-conf-icon')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 1.1rem; user-select: none;" title="Lihat/Sembunyikan Password">👁️</span>
+                </div>
+            </div>
+            
+            <button onclick="login()" id="login-action-btn" style="width: 100%; padding: 11px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 10px; transition: background 0.25s ease;">Masuk (Sign In)</button>
+            <button onclick="signUp()" id="signup-action-btn" style="display: none; width: 100%; padding: 11px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 10px; transition: background 0.25s ease;">Daftar Akun Baru (Sign Up)</button>
+            
+            <p id="switch-auth-text" style="text-align: center; font-size: 0.85rem; color: #94a3b8; margin-top: 10px; margin-bottom: 0;">
+                Belum punya akun? <a href="javascript:void(0)" onclick="switchAuthMode('signup')" style="color: #38bdf8; text-decoration: underline;">Buat akun baru</a>
+            </p>
+
+            <p id="login-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; text-align: center; margin-bottom: 0;"></p>
         </div>
-
-        <button type="button" onclick="login()" id="login-action-btn" style="width: 100%; padding: 11px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
-            Masuk (Sign In)
-        </button>
-
-        <button type="button" onclick="signUp()" id="signup-action-btn" style="display: none; width: 100%; padding: 11px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
-            Daftar Akun Baru (Sign Up)
-        </button>
-
-        <!-- Tombol Login dengan Google -->
-        <button type="button" onclick="loginWithGoogle()" style="width: 100%; padding: 11px; margin-top: 10px; background: #ffffff; color: #1e293b; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
-            Masuk dengan Google
-        </button>
-
-        <p id="switch-to-signup-text" style="text-align: center; font-size: 0.85rem; color: #94a3b8; margin-top: 15px; margin-bottom: 0;">
-            Belum punya akun? <a href="javascript:void(0)" onclick="switchAuthTab('signup')" style="color: #38bdf8; text-decoration: none; font-weight: bold;">Buat akun baru</a>
-        </p>
-        <p id="switch-to-login-text" style="display: none; text-align: center; font-size: 0.85rem; color: #94a3b8; margin-top: 15px; margin-bottom: 0;">
-            Sudah punya akun? <a href="javascript:void(0)" onclick="switchAuthTab('login')" style="color: #38bdf8; text-decoration: none; font-weight: bold;">Masuk di sini</a>
-        </p>
     </div>
-</div>
 
     <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html">Privacy & Policy</a></div>
 
