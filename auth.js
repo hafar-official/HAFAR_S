@@ -168,7 +168,7 @@ function signUp() {
     auth.createUserWithEmailAndPassword(email, pass)
         .then((userCredential) => {
             userCredential.user.sendEmailVerification().then(() => {
-                alert("Akun berhasil dibuat! Kami telah mengirimkan email konfirmasi ke " + email + " untuk memastikan Anda benar-benar ingin masuk ke web ini. Silakan cek kotak masuk atau folder spam email Anda.");
+                alert("Akun berhasil dibuat! Kami telah mengirimkan email konfirmasi ke " + email + ". Silakan cek kotak masuk atau folder spam email Anda.");
                 closeLoginModal();
                 switchAuthMode('login');
                 document.getElementById('login-email').value = "";
