@@ -1,5 +1,5 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyCFrS9L0YFDB29-n5OvC2EkVFKclW2wRTk",
+  apiKey: "AIzaSyCFrS9L0YFDB29-n50vC2EkVFKclW2wRTk",
   authDomain: "hafar-web.firebaseapp.com",
   projectId: "hafar-web",
   storageBucket: "hafar-web.firebasestorage.app",
@@ -20,7 +20,7 @@ auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 let currentUser = null;
 
-// Pantau Status Auth Pengguna
+// Pantau Status Auth Pengguna (Berlaku untuk semua halaman termasuk Latihan Soal TKA)
 auth.onAuthStateChanged(user => {
     currentUser = user;
     const loggedOutBox = document.getElementById('sidebar-logged-out');
@@ -28,11 +28,16 @@ auth.onAuthStateChanged(user => {
     const emailDisplay = document.getElementById('user-email-display');
     const uploadContainer = document.getElementById('upload-container');
     const uploadVideoSection = document.getElementById('upload-video-section');
+    
+    // Elemen khusus halaman Latihan Soal TKA
+    const inputNamaTKA = document.getElementById('inputNama');
+    const inputKelasTKA = document.getElementById('inputKelas');
 
     if (user) {
         if (loggedOutBox) loggedOutBox.style.display = 'none';
         if (loggedInBox) loggedInBox.style.display = 'block';
         if (emailDisplay) emailDisplay.innerText = user.email;
+        
         if (uploadContainer) {
             uploadContainer.style.display = 'block';
             const dateInput = document.getElementById('photo-date-input');
@@ -41,11 +46,29 @@ auth.onAuthStateChanged(user => {
         if (uploadVideoSection) {
             uploadVideoSection.style.display = 'block';
         }
+
+        // Otomatis isi email/nama pada form Latihan Soal TKA
+        if (inputNamaTKA) {
+            inputNamaTKA.value = user.email;
+            inputNamaTKA.readOnly = true;
+        }
+        // Muat asal daerah/instansi tersimpan jika ada
+        if (inputKelasTKA && !inputKelasTKA.value) {
+            const savedAsal = localStorage.getItem('hafar_saved_asal_' + user.uid);
+            if (savedAsal) {
+                inputKelasTKA.value = savedAsal;
+            }
+        }
     } else {
         if (loggedOutBox) loggedOutBox.style.display = 'block';
         if (loggedInBox) loggedInBox.style.display = 'none';
         if (uploadContainer) uploadContainer.style.display = 'none';
         if (uploadVideoSection) uploadVideoSection.style.display = 'none';
+
+        if (inputNamaTKA) {
+            inputNamaTKA.value = "Tamu (Belum Login)";
+            inputNamaTKA.readOnly = true;
+        }
     }
 
     if (typeof loadPhotos === "function") loadPhotos();
