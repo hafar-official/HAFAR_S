@@ -1,4 +1,6 @@
-// Konfigurasi Firebase Web App Terbaru
+// ==========================================
+// 1. KONFIGURASI FIREBASE
+// ==========================================
 const firebaseConfig = {
     apiKey: "AIzaSyCFrS9L0YFDB29-n50vC2EkVFKclW2wRTk",
     authDomain: "hafar-web.firebaseapp.com",
@@ -7,43 +9,65 @@ const firebaseConfig = {
     messagingSenderId: "887471904367",
     appId: "1:887471904367:web:cd859c0c01c65d7bbf9f9a",
     measurementId: "G-V16SW1J8L8"
-};[cite: 5]
+};
 
-// Inisialisasi Firebase
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
-}[cite: 5]
+}
 
-const auth = firebase.auth();[cite: 5]
-const db = firebase.firestore();[cite: 5]
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-// Menyimpan sesi agar user tidak perlu login ulang terus-menerus
-auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);[cite: 5]
+// Simpan sesi login secara lokal
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
-let currentUser = null;[cite: 5]
-let isSignUpMode = false;
+let currentUser = null;
 
-// Pantau Status Auth Pengguna di Seluruh Halaman
+// ==========================================
+// 2. FUNGSI MENU SIDEBAR (AGAR TOMBOL MENU BISA DIKLIK)
+// ==========================================
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar') || document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebar-overlay') || document.querySelector('.sidebar-overlay');
+    
+    if (sidebar) {
+        sidebar.classList.toggle('active');
+        // Fallback jika memakai style display/transform langsung
+        if (sidebar.style.left === '0px') {
+            sidebar.style.left = '-280px';
+        } else if (sidebar.style.left === '-280px' || !sidebar.classList.contains('active')) {
+            sidebar.style.left = '0px';
+        }
+    }
+    if (overlay) {
+        overlay.classList.toggle('active');
+        overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+    }
+}
+
+// ==========================================
+// 3. PANTAU STATUS LOGIN PENGGUNA
+// ==========================================
 auth.onAuthStateChanged((user) => {
-    currentUser = user;[cite: 5]
-    const loggedOutBox = document.getElementById('sidebar-logged-out');[cite: 5]
-    const loggedInBox = document.getElementById('sidebar-logged-in');[cite: 5]
+    currentUser = user;
+    const loggedOutBox = document.getElementById('sidebar-logged-out');
+    const loggedInBox = document.getElementById('sidebar-logged-in');
     const userEmailDisplay = document.getElementById('user-email-display');
 
     if (user) {
-        // Jika user berhasil login (baik via Email/Password maupun Google)
         if (loggedOutBox) loggedOutBox.style.display = 'none';
         if (loggedInBox) loggedInBox.style.display = 'block';
         if (userEmailDisplay) userEmailDisplay.textContent = user.email;
     } else {
-        // Jika user belum login / sudah logout
         if (loggedOutBox) loggedOutBox.style.display = 'block';
         if (loggedInBox) loggedInBox.style.display = 'none';
         if (userEmailDisplay) userEmailDisplay.textContent = '';
     }
 });
 
-// Buka & Tutup Modal Login
+// ==========================================
+// 4. KONTROL MODAL LOGIN & SIGN UP
+// ==========================================
 function openLoginModal() {
     const modal = document.getElementById('login-modal');
     if (modal) modal.style.display = 'flex';
@@ -52,140 +76,131 @@ function openLoginModal() {
 function closeLoginModal() {
     const modal = document.getElementById('login-modal');
     if (modal) modal.style.display = 'none';
-    clearAuthError();
+    showAuthMessage('', false);
 }
 
-// Beralih antara Mode Masuk (Sign In) dan Daftar (Sign Up)
-function toggleAuthMode() {
-    isSignUpMode = !isSignUpMode;
-    const title = document.getElementById('auth-modal-title');
-    const submitBtn = document.getElementById('auth-submit-btn');
-    const toggleText = document.getElementById('auth-toggle-text');
-    const toggleLink = document.getElementById('auth-toggle-link');
-    const confirmGroup = document.getElementById('confirm-password-group');
+function switchAuthTab(mode) {
+    const title = document.getElementById('modal-main-title');
+    const subtitle = document.getElementById('modal-main-subtitle');
+    const extraFields = document.getElementById('signup-extra-fields');
+    const loginBtn = document.getElementById('login-action-btn');
+    const signupBtn = document.getElementById('signup-action-btn');
+    const switchToSignup = document.getElementById('switch-to-signup-text');
+    const switchToLogin = document.getElementById('switch-to-login-text');
 
-    clearAuthError();
+    showAuthMessage('', false);
 
-    if (isSignUpMode) {
+    if (mode === 'signup') {
         if (title) title.textContent = "DAFTAR ANGGOTA BARU";
-        if (submitBtn) submitBtn.textContent = "Daftar (Sign Up)";
-        if (toggleText) toggleText.textContent = "Sudah punya akun?";
-        if (toggleLink) toggleLink.textContent = "Masuk di sini";
-        if (confirmGroup) confirmGroup.style.display = 'block';
+        if (subtitle) subtitle.textContent = "Buat akun untuk mulai berkontribusi di HAFAR'S";
+        if (extraFields) extraFields.style.display = 'block';
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (signupBtn) signupBtn.style.display = 'block';
+        if (switchToSignup) switchToSignup.style.display = 'none';
+        if (switchToLogin) switchToLogin.style.display = 'block';
     } else {
         if (title) title.textContent = "AKUN ANGGOTA";
-        if (submitBtn) submitBtn.textContent = "Masuk (Sign In)";
-        if (toggleText) toggleText.textContent = "Belum punya akun?";
-        if (toggleLink) toggleLink.textContent = "Buat akun baru";
-        if (confirmGroup) confirmGroup.style.display = 'none';
+        if (subtitle) subtitle.textContent = "Masuk untuk mengelola konten galeri";
+        if (extraFields) extraFields.style.display = 'none';
+        if (loginBtn) loginBtn.style.display = 'block';
+        if (signupBtn) signupBtn.style.display = 'none';
+        if (switchToSignup) switchToSignup.style.display = 'block';
+        if (switchToLogin) switchToLogin.style.display = 'none';
     }
 }
 
-// Fitur Lihat / Sembunyikan Password (Show/Hide)
-function togglePasswordVisibility(inputId, iconElement) {
+function togglePasswordVisibility(inputId, iconId) {
     const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
     if (!input) return;
 
     if (input.type === "password") {
         input.type = "text";
-        if (iconElement) iconElement.textContent = "🙈";
+        if (icon) icon.textContent = "🙈";
     } else {
         input.type = "password";
-        if (iconElement) iconElement.textContent = "👁️";
+        if (icon) icon.textContent = "👁️";
     }
 }
 
-// Tampilkan Pesan Error di Modal
-function showAuthError(message) {
-    const errorBox = document.getElementById('auth-error-msg');
-    if (errorBox) {
-        errorBox.textContent = message;
-        errorBox.style.display = 'block';
-    } else {
-        alert(message);
+function showAuthMessage(msg, isError = true) {
+    const msgBox = document.getElementById('auth-status-msg');
+    if (msgBox) {
+        msgBox.textContent = msg;
+        msgBox.style.color = isError ? '#ff6b6b' : '#51cf66';
+        msgBox.style.display = msg ? 'block' : 'none';
+    } else if (msg) {
+        alert(msg);
     }
 }
 
-function clearAuthError() {
-    const errorBox = document.getElementById('auth-error-msg');
-    if (errorBox) {
-        errorBox.textContent = '';
-        errorBox.style.display = 'none';
-    }
-}
-
-// Proses Login atau Daftar dengan Email & Password
-function handleAuthSubmit(event) {
-    if (event) event.preventDefault();
-    clearAuthError();
-
-    const email = document.getElementById('auth-email').value.trim();
-    const password = document.getElementById('auth-password').value;
+// ==========================================
+// 5. AKSI LOGIN, SIGN UP, GOOGLE & LOGOUT
+// ==========================================
+function login() {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
 
     if (!email || !password) {
-        showAuthError("Email dan kata sandi wajib diisi.");
+        showAuthMessage("Email dan password wajib diisi!");
         return;
     }
 
-    if (isSignUpMode) {
-        // Mode Pendaftaran Baru (Sign Up)
-        const confirmPassword = document.getElementById('auth-confirm-password').value;
-        if (password !== confirmPassword) {
-            showAuthError("Konfirmasi kata sandi tidak cocok!");
-            return;
-        }
-        if (password.length < 6) {
-            showAuthError("Kata sandi minimal 6 karakter.");
-            return;
-        }
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                // Kirim email verifikasi otomatis
-                return userCredential.user.sendEmailVerification().then(() => {
-                    alert("Pendaftaran berhasil! Tautan verifikasi telah dikirim ke " + email + ". Silakan periksa kotak masuk atau folder spam.");
-                    closeLoginModal();
-                });
-            })
-            .catch((error) => {
-                showAuthError("Pendaftaran gagal: " + error.message);
-            });
-    } else {
-        // Mode Masuk (Sign In)
-        auth.signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                // Cek apakah email sudah diverifikasi
-                if (!user.emailVerified) {
-                    alert("Email Anda belum diverifikasi. Silakan klik tautan verifikasi di email Anda (atau verifikasi melalui Firebase Console).");
-                }
-                closeLoginModal();
-            })
-            .catch((error) => {
-                showAuthError("Login gagal: " + error.message);
-            });
-    }
-}
-
-// Fungsi Login dengan Google
-function loginWithGoogle() {
-    clearAuthError();
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider)
-        .then((result) => {
-            console.log("Login Google berhasil:", result.user.email);
+    auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
             closeLoginModal();
         })
         .catch((error) => {
-            showAuthError("Gagal login dengan Google: " + error.message);
+            showAuthMessage("Gagal masuk: " + error.message);
         });
 }
 
-// Fungsi Keluar (Sign Out)
-function logoutUser() {
+function signUp() {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const confirmPassword = document.getElementById('login-password-confirm').value;
+
+    if (!email || !password) {
+        showAuthMessage("Email dan password wajib diisi!");
+        return;
+    }
+    if (password !== confirmPassword) {
+        showAuthMessage("Konfirmasi password tidak cocok!");
+        return;
+    }
+    if (password.length < 6) {
+        showAuthMessage("Password minimal 6 karakter!");
+        return;
+    }
+
+    auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            return userCredential.user.sendEmailVerification().then(() => {
+                alert("Pendaftaran berhasil! Cek email " + email + " untuk verifikasi.");
+                closeLoginModal();
+            });
+        })
+        .catch((error) => {
+            showAuthMessage("Gagal mendaftar: " + error.message);
+        });
+}
+
+function loginWithGoogle() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider)
+        .then((result) => {
+            console.log("Login Google sukses:", result.user.email);
+            closeLoginModal();
+        })
+        .catch((error) => {
+            showAuthMessage("Gagal login Google: " + error.message);
+        });
+}
+
+function logout() {
     auth.signOut()
         .then(() => {
-            alert("Anda telah keluar dari akun.");
+            alert("Berhasil keluar dari akun.");
         })
         .catch((error) => {
             alert("Gagal keluar: " + error.message);
