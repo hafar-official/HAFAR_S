@@ -15,7 +15,7 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// Menyimpan sesi agar user tidak perlu login ulang terus-menerus[cite: 1]
+// Menyimpan sesi agar user tidak perlu login ulang terus-menerus
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 let currentUser = null;
@@ -27,6 +27,7 @@ auth.onAuthStateChanged(user => {
     const loggedInBox = document.getElementById('sidebar-logged-in');
     const emailDisplay = document.getElementById('user-email-display');
     const uploadContainer = document.getElementById('upload-container');
+    const uploadVideoSection = document.getElementById('upload-video-section');
 
     if (user) {
         if (loggedOutBox) loggedOutBox.style.display = 'none';
@@ -34,17 +35,24 @@ auth.onAuthStateChanged(user => {
         if (emailDisplay) emailDisplay.innerText = user.email;
         if (uploadContainer) {
             uploadContainer.style.display = 'block';
-            const dateInput = document.getElementById('photo-date');
-            if (dateInput) dateInput.valueAsDate = new Date();
+            const dateInput = document.getElementById('photo-date-input');
+            if (dateInput && !dateInput.value) dateInput.valueAsDate = new Date();
+        }
+        if (uploadVideoSection) {
+            uploadVideoSection.style.display = 'block';
         }
     } else {
         if (loggedOutBox) loggedOutBox.style.display = 'block';
         if (loggedInBox) loggedInBox.style.display = 'none';
         if (uploadContainer) uploadContainer.style.display = 'none';
+        if (uploadVideoSection) uploadVideoSection.style.display = 'none';
     }
 
     if (typeof loadPhotos === "function") {
         loadPhotos();
+    }
+    if (typeof loadVideos === "function") {
+        loadVideos();
     }
 });
 
@@ -73,13 +81,13 @@ function login() {
             document.getElementById('login-password').value = "";
             if (loginBtn) {
                 loginBtn.disabled = false;
-                loginBtn.innerText = "Masuk";
+                loginBtn.innerText = "Masuk (Sign In)";
             }
         })
         .catch(err => {
             if (loginBtn) {
                 loginBtn.disabled = false;
-                loginBtn.innerText = "Masuk";
+                loginBtn.innerText = "Masuk (Sign In)";
             }
             if (errorMsg) errorMsg.innerText = "Login gagal! Periksa email/password.";
         });
@@ -90,34 +98,39 @@ function signUp() {
     const email = document.getElementById('login-email').value.trim();
     const pass = document.getElementById('login-password').value;
     const errorMsg = document.getElementById('login-error');
-    const loginBtn = document.getElementById('login-btn');
+    const signupBtn = document.getElementById('signup-btn');
 
     if (!email || !pass) {
         if (errorMsg) errorMsg.innerText = "Harap isi email dan password untuk mendaftar!";
         return;
     }
 
+    if (pass.length < 6) {
+        if (errorMsg) errorMsg.innerText = "Password minimal 6 karakter!";
+        return;
+    }
+
     if (errorMsg) errorMsg.innerText = "";
-    if (loginBtn) {
-        loginBtn.disabled = true;
-        loginBtn.innerText = "Mendaftarkan...";
+    if (signupBtn) {
+        signupBtn.disabled = true;
+        signupBtn.innerText = "Mendaftarkan...";
     }
 
     auth.createUserWithEmailAndPassword(email, pass)
-        .then((userCredential) => {
+        .then(() => {
             alert("Akun berhasil dibuat dan otomatis masuk!");
             closeLoginModal();
             document.getElementById('login-email').value = "";
             document.getElementById('login-password').value = "";
-            if (loginBtn) {
-                loginBtn.disabled = false;
-                loginBtn.innerText = "Masuk";
+            if (signupBtn) {
+                signupBtn.disabled = false;
+                signupBtn.innerText = "Daftar Akun Baru (Sign Up)";
             }
         })
         .catch(err => {
-            if (loginBtn) {
-                loginBtn.disabled = false;
-                loginBtn.innerText = "Masuk";
+            if (signupBtn) {
+                signupBtn.disabled = false;
+                signupBtn.innerText = "Daftar Akun Baru (Sign Up)";
             }
             if (errorMsg) errorMsg.innerText = "Pendaftaran gagal: " + err.message;
         });
@@ -131,23 +144,33 @@ function logout() {
 }
 
 function toggleSidebar() {
-    document.getElementById("sidebar").classList.toggle("active");
-    document.getElementById("overlay").classList.toggle("active");
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    if (sidebar) sidebar.classList.toggle("active");
+    if (overlay) overlay.classList.toggle("active");
 }
 
 function showLoginModal() {
-    if (document.getElementById("sidebar").classList.contains("active")) toggleSidebar();
+    const sidebar = document.getElementById("sidebar");
+    if (sidebar && sidebar.classList.contains("active")) toggleSidebar();
     const modal = document.getElementById("login-modal");
-    modal.style.display = "flex";
-    setTimeout(() => modal.classList.add("show"), 10);
+    if (modal) {
+        document.body.appendChild(modal);
+        modal.style.display = "flex";
+        document.body.classList.add("no-scroll");
+        setTimeout(() => modal.classList.add("show"), 10);
+    }
 }
 
 function closeLoginModal() {
     const modal = document.getElementById("login-modal");
-    modal.classList.remove("show");
-    setTimeout(() => {
-        modal.style.display = "none";
-        const errorMsg = document.getElementById('login-error');
-        if (errorMsg) errorMsg.innerText = "";
-    }, 300);
+    if (modal) {
+        modal.classList.remove("show");
+        setTimeout(() => {
+            modal.style.display = "none";
+            document.body.classList.remove("no-scroll");
+            const errorMsg = document.getElementById('login-error');
+            if (errorMsg) errorMsg.innerText = "";
+        }, 200);
+    }
 }

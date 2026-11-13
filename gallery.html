@@ -9,148 +9,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .card {
-            position: relative;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, border-color 0.3s ease-out;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
-            border-color: rgba(56, 189, 248, 0.5);
-        }
-
-        .card img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            display: block;
-            cursor: pointer;
-            transition: transform 0.4s ease-in-out;
-        }
-
-        .card:hover img {
-            transform: scale(1.06);
-        }
-
-        .card-info {
-            padding: 14px;
-            text-align: center;
-            background: rgba(15, 23, 42, 0.8);
-            position: relative;
-            z-index: 2;
-        }
-
-        .card-info p {
-            margin: 0;
-            color: #f1f5f9;
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
-        .delete-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(239, 68, 68, 0.9);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            font-weight: bold;
-            z-index: 10;
-            transition: transform 0.2s ease, background 0.2s ease;
-        }
-
-        .delete-btn:hover {
-            transform: scale(1.15);
-            background: rgba(220, 38, 38, 1);
-        }
-
-        #lightbox {
-            display: none;
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            background: rgba(0, 0, 0, 0.92);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 99999999 !important;
-            justify-content: center;
-            align-items: center;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        #lightbox.active {
-            display: flex !important;
-        }
-
-        .lightbox-img-content {
-            max-width: 90vw;
-            max-height: 85vh;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-            object-fit: contain;
-            animation: zoomIn 0.2s ease-out;
-            margin: auto;
-            display: block;
-        }
-
-        .close-lightbox-btn {
-            position: absolute;
-            top: 25px;
-            right: 35px;
-            font-size: 45px;
-            color: #ffffff;
-            cursor: pointer;
-            user-select: none;
-            z-index: 100000000;
-            line-height: 1;
-            transition: color 0.2s ease;
-        }
-
-        .close-lightbox-btn:hover {
-            color: #ef4444;
-        }
-
-        .modal-login-container {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(5px);
-            z-index: 99999;
-            justify-content: center;
-            align-items: center;
-        }
-
-        @keyframes zoomIn {
-            from { transform: scale(0.85); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
         input[type="date"]::-webkit-calendar-picker-indicator {
             filter: invert(1);
             cursor: pointer;
@@ -179,7 +37,7 @@
             <div class="sidebar-user-box">
                 <div id="sidebar-logged-out">
                     <p style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 10px;">Akses Kontributor HAFAR'S</p>
-                    <button onclick="showLoginModal()" style="width: 100%; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">🔑 Login Anggota</button>
+                    <button onclick="showLoginModal()" style="width: 100%; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: background 0.25s ease, transform 0.2s ease;">🔑 Login / Daftar Anggota</button>
                 </div>
                 <div id="sidebar-logged-in" style="display: none;">
                     <p style="font-size: 0.75rem; color: #34d399; font-weight: bold;">✓ Akses Anggota Aktif</p>
@@ -197,7 +55,7 @@
 
         <!-- Form Upload -->
         <div id="upload-container" style="display: none; background: rgba(255, 255, 255, 0.05); padding: 1.2rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); margin-bottom: 25px; margin-top: 15px;">
-            <h4 style="color: #38bdf8; margin-top: 0;">📸 UNGGAH FOTO KE DOKUMENTASI:</h4>
+            <h4 style="color: #38bdf8; margin-top: 0; margin-bottom: 12px;">📸 UNGGAH FOTO KE DOKUMENTASI:</h4>
             
             <label for="photo-date-input" style="color: #cbd5e1; font-size: 0.85rem; display: block; margin-bottom: 6px;">Pilih Tanggal Kegiatan (Otomatis hari ini jika dibiarkan):</label>
             <input type="date" id="photo-date-input" style="width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 6px; box-sizing: border-box; cursor: pointer;">
@@ -218,22 +76,24 @@
         <img id="lightbox-img" class="lightbox-img-content" src="" alt="Preview Fullscreen" onclick="event.stopPropagation()">
     </div>
 
-    <!-- Modal Login -->
-    <div id="login-modal" class="modal-login-container">
-        <div style="background: #1e293b; padding: 2rem; border-radius: 14px; width: 90%; max-width: 380px; position: relative; border: 1px solid rgba(255,255,255,0.15);" onclick="event.stopPropagation()">
-            <span class="close-lightbox-btn" onclick="closeLoginModal()" style="color: #cbd5e1; top: 12px; right: 18px; font-size: 28px;">&times;</span>
-            <h3 style="color: #ffffff; text-align: center;">LOGIN ANGGOTA</h3>
-            <p style="font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bottom: 1.2rem;">Masuk untuk mengunggah & mengelola media</p>
+    <!-- MODAL LOGIN & SIGN UP -->
+    <div id="login-modal" class="modal-login-container" onclick="closeLoginModal()">
+        <div class="modal-content-animated" onclick="event.stopPropagation()">
+            <span class="close-lightbox-btn" onclick="closeLoginModal()" style="top: 12px; right: 18px; font-size: 28px;">&times;</span>
+            <h3 style="color: #ffffff; text-align: center; margin-top: 0;">AKUN ANGGOTA</h3>
+            <p style="font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bottom: 1.2rem;">Masuk atau Daftar untuk mengelola media HAFAR'S</p>
             
-            <input type="email" id="login-email" placeholder="Email Anggota" style="width: 100%; padding: 11px; margin-bottom: 12px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px;">
-            <input type="password" id="login-password" placeholder="Password" style="width: 100%; padding: 11px; margin-bottom: 16px; border: 1px solid #475569; background: #0f172a; color: white; border-radius: 8px;">
+            <input type="email" id="login-email" placeholder="Email Anggota">
+            <input type="password" id="login-password" placeholder="Password (min. 6 karakter)">
             
-            <button onclick="login()" id="login-btn" style="width: 100%; padding: 11px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Masuk</button>
-            <p id="login-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; text-align: center;"></p>
+            <button onclick="login()" id="login-btn" style="width: 100%; padding: 11px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 8px; transition: background 0.25s ease, transform 0.2s ease;">Masuk (Sign In)</button>
+            <button onclick="signUp()" id="signup-btn" style="width: 100%; padding: 11px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.25s ease, transform 0.2s ease;">Daftar Akun Baru (Sign Up)</button>
+            
+            <p id="login-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; text-align: center; margin-bottom: 0;"></p>
         </div>
     </div>
 
-    <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html" style="color: inherit; text-decoration: underline;">Privacy & Policy</a></div>
+    <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html">Privacy & Policy</a></div>
 
     <script src="auth.js"></script>
     <script>
@@ -251,17 +111,6 @@
             lightbox.classList.remove('active');
         }
 
-        function showLoginModal() {
-            const modal = document.getElementById('login-modal');
-            document.body.appendChild(modal);
-            modal.style.display = 'flex';
-            modal.style.top = window.scrollY + 'px';
-        }
-
-        function closeLoginModal() {
-            document.getElementById('login-modal').style.display = 'none';
-        }
-
         function formatDate(dateObj) {
             const d = String(dateObj.getDate()).padStart(2, '0');
             const m = String(dateObj.getMonth() + 1).padStart(2, '0');
@@ -271,6 +120,7 @@
 
         function setTodayDate() {
             const dateInput = document.getElementById('photo-date-input');
+            if (!dateInput) return;
             const today = new Date();
             const yyyy = today.getFullYear();
             const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -333,6 +183,8 @@
         }
 
         async function uploadPhoto() {
+            if (!currentUser) return alert("Anda harus login terlebih dahulu!");
+
             const dateValue = document.getElementById('photo-date-input').value;
             const fileInput = document.getElementById('photo-file-input').files[0];
             const status = document.getElementById('upload-photo-status');
@@ -355,6 +207,7 @@
                 await db.collection('photos').add({
                     url: base64Image,
                     eventDate: selectedDate,
+                    uploaded_by: currentUser.email,
                     createdAt: new Date()
                 });
 
@@ -369,18 +222,28 @@
             }
         }
 
-        function deletePhoto(docId) {
+        function deletePhoto(docId, uploaderEmail) {
+            if (!currentUser) {
+                alert("Anda harus login terlebih dahulu!");
+                return;
+            }
+            if (uploaderEmail && currentUser.email !== uploaderEmail) {
+                alert("Akses ditolak! Anda hanya dapat menghapus foto yang Anda unggah sendiri.");
+                return;
+            }
             if (confirm("Apakah Anda yakin ingin menghapus foto ini?")) {
                 db.collection('photos').doc(docId).delete().then(() => {
                     loadPhotos();
+                }).catch(err => {
+                    alert("Gagal menghapus foto: " + err.message);
                 });
             }
         }
 
         function loadPhotos() {
-            // Mengurutkan foto berdasarkan eventDate secara menurun (terbaru ke terlama)
             db.collection('photos').orderBy('eventDate', 'desc').get().then(snapshot => {
                 const grid = document.getElementById('gallery-grid');
+                if (!grid) return;
                 grid.innerHTML = '';
 
                 if (snapshot.empty) {
@@ -403,12 +266,13 @@
                         formattedDate = formatDate(new Date());
                     }
 
+                    const uploader = data.uploaded_by || "";
                     const card = document.createElement('div');
                     card.className = 'card';
 
                     let deleteBtnHtml = '';
-                    if (currentUser) {
-                        deleteBtnHtml = `<button class="delete-btn" onclick="deletePhoto('${docId}')" title="Hapus Foto">✕</button>`;
+                    if (currentUser && uploader === currentUser.email) {
+                        deleteBtnHtml = `<button class="delete-btn" onclick="deletePhoto('${docId}', '${uploader}')" title="Hapus Foto Saya">✕</button>`;
                     }
 
                     card.innerHTML = `
@@ -416,17 +280,13 @@
                         <img src="${data.url}" alt="Kegiatan Tanggal: ${formattedDate}" onclick="openLightbox('${data.url}')">
                         <div class="card-info">
                             <p>Kegiatan Tanggal: ${formattedDate}</p>
+                            ${uploader ? `<small style="color: #64748b; font-size: 0.75rem; display: block; margin-top: 4px;">Oleh: ${uploader}</small>` : ''}
                         </div>
                     `;
                     grid.appendChild(card);
                 });
             });
         }
-
-        auth.onAuthStateChanged(user => {
-            loadPhotos();
-            setTodayDate(); 
-        });
     </script>
 </body>
 </html>

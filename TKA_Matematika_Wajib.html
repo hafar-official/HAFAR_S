@@ -419,6 +419,18 @@
             <a href="video.html">Video</a>
             <a href="TKA_Matematika_Wajib.html" class="active-page">Latihan Soal</a>
             <a href="privacy.html">Privacy & Policy</a>
+            
+            <div class="sidebar-user-box">
+                <div id="sidebar-logged-out">
+                    <p style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 10px;">Akses Kontributor HAFAR'S</p>
+                    <button onclick="showLoginModal()" style="width: 100%; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: background 0.25s ease, transform 0.2s ease;">🔑 Login / Daftar Anggota</button>
+                </div>
+                <div id="sidebar-logged-in" style="display: none;">
+                    <p style="font-size: 0.75rem; color: #34d399; font-weight: bold;">✓ Akses Anggota Aktif</p>
+                    <p id="user-email-display" style="font-size: 0.85rem; color: #ffffff; font-weight: bold; word-break: break-all; margin-bottom: 12px;"></p>
+                    <button onclick="logout()" style="width: 100%; padding: 8px; background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid rgba(239,68,68,0.4); border-radius: 8px; cursor: pointer; font-weight: bold;">Logout</button>
+                </div>
+            </div>
         </nav>
     </div>
     <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
@@ -573,31 +585,32 @@
         </div>
     </div>
 
+    <!-- MODAL LOGIN & SIGN UP -->
+    <div id="login-modal" class="modal-login-container" onclick="closeLoginModal()">
+        <div class="modal-content-animated" onclick="event.stopPropagation()">
+            <span class="close-lightbox-btn" onclick="closeLoginModal()" style="top: 12px; right: 18px; font-size: 28px;">&times;</span>
+            <h3 style="color: #ffffff; text-align: center; margin-top: 0;">AKUN ANGGOTA</h3>
+            <p style="font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bottom: 1.2rem;">Masuk atau Daftar untuk mengelola media HAFAR'S</p>
+            
+            <input type="email" id="login-email" placeholder="Email Anggota">
+            <input type="password" id="login-password" placeholder="Password (min. 6 karakter)">
+            
+            <button onclick="login()" id="login-btn" style="width: 100%; padding: 11px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 8px; transition: background 0.25s ease, transform 0.2s ease;">Masuk (Sign In)</button>
+            <button onclick="signUp()" id="signup-btn" style="width: 100%; padding: 11px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.25s ease, transform 0.2s ease;">Daftar Akun Baru (Sign Up)</button>
+            
+            <p id="login-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; text-align: center; margin-bottom: 0;"></p>
+        </div>
+    </div>
+
     <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html">Privacy & Policy</a></div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="auth.js"></script>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCFeS9L9YFDB29-n50vC2EkVFKc1W2wRTK",
-            authDomain: "hafar-web.firebaseapp.com",
-            projectId: "hafar-web",
-            storageBucket: "hafar-web.firebasestorage.app",
-            messagingSenderId: "887471904367",
-            appId: "1:887471904367:web:c5bb4694916a522dbf9f9a",
-            measurementId: "G-Y5WWTJSFFK"
-        };
-
-        let db = null;
-        try {
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            db = firebase.firestore();
-        } catch (e) {
-            console.warn("Gagal menginisialisasi Firestore:", e);
-        }
+// Menggunakan inisialisasi Firebase & db dari auth.js
 
         // Master Soal Matematika Wajib (25 Soal)
         const masterSoalMatematika = Array.from({length: 25}, (_, i) => {
@@ -850,7 +863,7 @@
         let timerInterval = null;
         let isStarted = false;
         let isSubmitted = false;
-        let currentUser = { name: "", kelas: "", mode: "ujian" };
+        let examUser = { name: "", kelas: "", mode: "ujian" };
         let activeTotalQuestions = 25;
         let cheatCount = 0;
 
@@ -861,7 +874,7 @@
 
             // 1. Matematika Wajib (Tetap 25 Soal)
             let shuffledMath = [...masterSoalMatematika].sort(() => 0.5 - Math.random());
-            let mathLimit = (currentUser.mode === 'latihan') ? 5 : 25;
+            let mathLimit = (examUser.mode === 'latihan') ? 5 : 25;
             dbSoal.matematika = shuffledMath.slice(0, mathLimit).map((q, idx) => formatQuestion(q, idx + 1));
 
             // 2. Bahasa Indonesia (Bindo): 16 PG, 7 PGK, 7 BS = 30 Soal
@@ -872,7 +885,7 @@
         }
 
         function generateBalancedSubtest(masterArr) {
-            if (currentUser.mode === 'latihan') {
+            if (examUser.mode === 'latihan') {
                 return masterArr.slice(0, 5).map((q, idx) => formatQuestion(q, idx + 1));
             }
 
@@ -912,7 +925,7 @@
                         timeLeft = data.timeLeft !== undefined ? data.timeLeft : 75 * 60;
                         isStarted = data.isStarted || false;
                         isSubmitted = data.isSubmitted || false;
-                        currentUser = data.currentUser || { name: "", kelas: "", mode: "ujian" };
+                        examUser = data.examUser || { name: "", kelas: "", mode: "ujian" };
                         cheatCount = data.cheatCount || 0;
                         activeTotalQuestions = dbSoal[currentSubject] ? dbSoal[currentSubject].length : 25;
 
@@ -925,7 +938,7 @@
                             if (!isSubmitted) {
                                 lockOtherTabs(currentSubject);
                                 initTimer();
-                                if (currentUser.mode === 'ujian') initAntiCheat();
+                                if (examUser.mode === 'ujian') initAntiCheat();
                             } else {
                                 showResultView();
                             }
@@ -955,7 +968,7 @@
                 timeLeft,
                 isStarted,
                 isSubmitted,
-                currentUser,
+                examUser,
                 cheatCount
             };
             localStorage.setItem('hafar_tka_state', JSON.stringify(state));
@@ -963,8 +976,8 @@
 
         function updateWatermark() {
             const wm = document.getElementById('examWatermark');
-            if (currentUser.name && currentUser.kelas) {
-                wm.innerText = `${currentUser.name} - ${currentUser.kelas} | HAFAR'S EXAM`;
+            if (examUser.name && examUser.kelas) {
+                wm.innerText = `${examUser.name} - ${examUser.kelas} | HAFAR'S EXAM`;
             } else {
                 wm.innerText = `HAFAR'S EXAM SYSTEM`;
             }
@@ -980,7 +993,7 @@
                 return;
             }
 
-            currentUser = { name: nameInput, kelas: kelasInput, mode: modeInput };
+            examUser = { name: nameInput, kelas: kelasInput, mode: modeInput };
             cheatCount = 0;
 
             initRandomizedQuestions();
@@ -994,7 +1007,7 @@
             updateWatermark();
             lockOtherTabs(currentSubject);
             initTimer();
-            if (currentUser.mode === 'ujian') {
+            if (examUser.mode === 'ujian') {
                 initAntiCheat();
             }
             loadQuestion();
@@ -1012,12 +1025,12 @@
         }
 
         function handleCheatDetection() {
-            if (!isStarted || isSubmitted || currentUser.mode !== 'ujian') return;
+            if (!isStarted || isSubmitted || examUser.mode !== 'ujian') return;
             triggerPenalty("Terdeteksi meninggalkan halaman / berpindah tab!");
         }
 
         function handleVisibilityChange() {
-            if (!isStarted || isSubmitted || currentUser.mode !== 'ujian') return;
+            if (!isStarted || isSubmitted || examUser.mode !== 'ujian') return;
             if (document.hidden) {
                 triggerPenalty("Terdeteksi berpindah aplikasi atau menyembunyikan tab ujian!");
             }
@@ -1404,8 +1417,8 @@
             const totalScore = (score / activeData.length) * 100;
             const remainingTimeSeconds = timeLeft;
 
-            if (currentUser.mode === 'ujian') {
-                sendScoreToFirebase(currentSubject, currentUser.name, currentUser.kelas, Math.round(totalScore), remainingTimeSeconds, cheatCount);
+            if (examUser.mode === 'ujian') {
+                sendScoreToFirebase(currentSubject, examUser.name, examUser.kelas, Math.round(totalScore), remainingTimeSeconds, cheatCount);
             }
 
             showResultView(score, activeData.length);
@@ -1432,9 +1445,9 @@
             const reviewContainer = document.getElementById('reviewContainer');
             const totalScore = (score / total) * 100;
 
-            scoreText.innerText = `Nama: ${currentUser.name} (${currentUser.kelas}) — Skor: ${Math.round(totalScore)} / 100 (${score} Benar dari ${total}) | Sisa Waktu: ${formatTimeRemaining(timeLeft)} | Pelanggaran: ${cheatCount}`;
+            scoreText.innerText = `Nama: ${examUser.name} (${examUser.kelas}) — Skor: ${Math.round(totalScore)} / 100 (${score} Benar dari ${total}) | Sisa Waktu: ${formatTimeRemaining(timeLeft)} | Pelanggaran: ${cheatCount}`;
             
-            if (currentUser.mode === 'ujian') {
+            if (examUser.mode === 'ujian') {
                 if (cheatCount > 0) {
                     lbStatusText.innerText = "Ujian selesai. Karena terdeteksi pelanggaran, skor Anda dicatat ke Penalty Board.";
                     lbStatusText.style.color = "#fca5a5";
@@ -1694,20 +1707,15 @@
             document.getElementById('quizArea').style.display = 'none';
             document.getElementById('startOverlay').style.display = 'block';
             document.getElementById('btnNext').style.display = 'inline-block';
-            document.getElementById('inputNama').value = currentUser.name || '';
-            document.getElementById('inputKelas').value = currentUser.kelas || '';
+            document.getElementById('inputNama').value = examUser.name || '';
+            document.getElementById('inputKelas').value = examUser.kelas || '';
 
             updateWatermark();
             unlockAllTabs();
             fetchLeaderboard(currentSubject);
         }
 
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        }
+
 
         loadFromStorage();
     </script>

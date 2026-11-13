@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video - HAFAR'S</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Firebase SDK (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -32,7 +31,7 @@
             <div class="sidebar-user-box">
                 <div id="sidebar-logged-out">
                     <p style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 10px;">Akses Kontributor HAFAR'S</p>
-                    <button onclick="showLoginModal()" style="width: 100%; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: background 0.25s ease, transform 0.2s ease;">🔑 Login Anggota</button>
+                    <button onclick="showLoginModal()" style="width: 100%; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: background 0.25s ease, transform 0.2s ease;">🔑 Login / Daftar Anggota</button>
                 </div>
                 <div id="sidebar-logged-in" style="display: none;">
                     <p style="font-size: 0.75rem; color: #34d399; font-weight: bold;">✓ Akses Anggota Aktif</p>
@@ -77,47 +76,27 @@
         </div>
     </div>
 
-    <!-- MODAL LOGIN -->
-    <div id="login-modal" class="modal-login-container">
+    <!-- MODAL LOGIN & SIGN UP -->
+    <div id="login-modal" class="modal-login-container" onclick="closeLoginModal()">
         <div class="modal-content-animated" onclick="event.stopPropagation()">
-            <span class="close-lightbox-btn" onclick="closeLoginModal()">&times;</span>
-            <h3 style="color: #ffffff; text-align: center; margin-top: 0;">LOGIN ANGGOTA</h3>
-            <p style="font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bottom: 1.2rem;">Masuk untuk mengunggah & mengelola media</p>
+            <span class="close-lightbox-btn" onclick="closeLoginModal()" style="top: 12px; right: 18px; font-size: 28px;">&times;</span>
+            <h3 style="color: #ffffff; text-align: center; margin-top: 0;">AKUN ANGGOTA</h3>
+            <p style="font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bottom: 1.2rem;">Masuk atau Daftar untuk mengelola media HAFAR'S</p>
             
             <input type="email" id="login-email" placeholder="Email Anggota">
-            <input type="password" id="login-password" placeholder="Password">
+            <input type="password" id="login-password" placeholder="Password (min. 6 karakter)">
             
-            <button onclick="login()" id="login-btn" style="width: 100%; padding: 11px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.25s ease, transform 0.2s ease;">Masuk</button>
+            <button onclick="login()" id="login-btn" style="width: 100%; padding: 11px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 8px; transition: background 0.25s ease, transform 0.2s ease;">Masuk (Sign In)</button>
+            <button onclick="signUp()" id="signup-btn" style="width: 100%; padding: 11px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.25s ease, transform 0.2s ease;">Daftar Akun Baru (Sign Up)</button>
+            
             <p id="login-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; text-align: center; margin-bottom: 0;"></p>
         </div>
     </div>
 
     <div class="footer">&copy; 2026 HAFAR'S. Semua hak dilindungi. | <a href="privacy.html">Privacy & Policy</a></div>
 
-    <!-- SCRIPT AUTH & SISTEM PEMUTAR VIDEO -->
     <script src="auth.js"></script>
     <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        }
-
-        function showLoginModal() {
-            const modal = document.getElementById('login-modal');
-            document.body.appendChild(modal);
-            modal.style.display = 'flex';
-            document.body.classList.add('no-scroll');
-        }
-
-        function closeLoginModal() {
-            const modal = document.getElementById('login-modal');
-            modal.style.display = 'none';
-            document.body.classList.remove('no-scroll');
-        }
-
-        // FUNGSI INSPECT VIDEO (LIGHTBOX MODAL)
         function bukaInspectVideo(embedUrl, title, uploader, timestamp) {
             const modal = document.getElementById('video-inspect-modal');
             const iframe = document.getElementById('inspect-iframe');
@@ -136,6 +115,7 @@
                 dateElem.textContent = '';
             }
 
+            document.body.appendChild(modal);
             modal.style.display = 'flex';
             document.body.classList.add('no-scroll');
         }
@@ -143,49 +123,33 @@
         function tutupInspectVideo() {
             const modal = document.getElementById('video-inspect-modal');
             const iframe = document.getElementById('inspect-iframe');
-            iframe.src = ""; // Matikan audio/video saat modal ditutup
+            iframe.src = "";
             modal.style.display = 'none';
             document.body.classList.remove('no-scroll');
         }
 
-        // FUNGSI KONVERSI URL OTOMATIS KE FORMAT PLAYER EMBED
         function dapatkanUrlEmbed(url) {
             if (!url) return '';
-            
-            // 1. Google Drive Link Parser
             if (url.includes('drive.google.com')) {
                 const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-                if (match && match[1]) {
-                    return `https://drive.google.com/file/d/${match[1]}/preview`;
-                }
+                if (match && match[1]) return `https://drive.google.com/file/d/${match[1]}/preview`;
             }
-            
-            // 2. YouTube Standard Link (youtube.com/watch?v=...)
             if (url.includes('youtube.com/watch')) {
                 const match = url.match(/v=([a-zA-Z0-9_-]+)/);
-                if (match && match[1]) {
-                    return `https://www.youtube.com/embed/${match[1]}`;
-                }
+                if (match && match[1]) return `https://www.youtube.com/embed/${match[1]}`;
             }
-
-            // 3. YouTube Short Link (youtu.be/...)
             if (url.includes('youtu.be/')) {
                 const match = url.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
-                if (match && match[1]) {
-                    return `https://www.youtube.com/embed/${match[1]}`;
-                }
+                if (match && match[1]) return `https://www.youtube.com/embed/${match[1]}`;
             }
-
             return url;
         }
 
-        // FUNGSI SIMPAN LINK KE FIRESTORE
         async function simpanLinkVideo() {
             const titleInput = document.getElementById('video-title');
             const urlInput = document.getElementById('video-url-input');
-            const user = firebase.auth().currentUser;
 
-            if (!user) {
+            if (!currentUser) {
                 alert("Anda harus login terlebih dahulu!");
                 return;
             }
@@ -198,10 +162,10 @@
             const embedUrl = dapatkanUrlEmbed(urlInput.value.trim());
 
             try {
-                await firebase.firestore().collection("videos").add({
+                await db.collection("videos").add({
                     title: titleInput.value.trim() || "Video Dokumentasi HAFAR'S",
                     embedUrl: embedUrl,
-                    uploader: user.email,
+                    uploader: currentUser.email,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
@@ -214,12 +178,11 @@
             }
         }
 
-        // FUNGSI MEMUAT DAN MENAMPILKAN VIDEO DI GRID
         function loadVideos() {
             const videoGrid = document.getElementById('video-grid');
             if (!videoGrid) return;
 
-            firebase.firestore().collection("videos").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+            db.collection("videos").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
                 videoGrid.innerHTML = "";
 
                 if (snapshot.empty) {
@@ -230,18 +193,15 @@
                 snapshot.forEach((doc) => {
                     const data = doc.data();
                     const videoId = doc.id;
-                    const currentUser = firebase.auth().currentUser;
 
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.style.cursor = 'pointer';
-
-                    // Buka modal inspect saat kartu diklik
                     card.onclick = () => bukaInspectVideo(data.embedUrl, data.title, data.uploader, data.createdAt);
 
                     let deleteBtnHtml = '';
                     if (currentUser && currentUser.email === data.uploader) {
-                        deleteBtnHtml = `<button class="delete-btn" onclick="hapusVideo(event, '${videoId}')">&times;</button>`;
+                        deleteBtnHtml = `<button class="delete-btn" onclick="hapusVideo(event, '${videoId}')" title="Hapus Video Saya">&times;</button>`;
                     }
 
                     card.innerHTML = `
@@ -264,29 +224,17 @@
             });
         }
 
-        // FUNGSI HAPUS VIDEO (Dengan event.stopPropagation agar tidak memicu modal inspect)
         async function hapusVideo(event, id) {
-            event.stopPropagation(); // Hentikan efek klik pada card
+            event.stopPropagation();
             if (!confirm("Yakin ingin menghapus video ini?")) return;
             try {
-                await firebase.firestore().collection("videos").doc(id).delete();
+                await db.collection("videos").doc(id).delete();
                 alert("Video berhasil dihapus.");
             } catch (err) {
                 console.error("Gagal menghapus:", err);
                 alert("Gagal menghapus video.");
             }
         }
-
-        // PANTAU STATUS LOGIN PENGGUNA DA SINKRONKAN TAMPILAN
-        firebase.auth().onAuthStateChanged((user) => {
-            const uploadSection = document.getElementById('upload-video-section');
-            if (user) {
-                uploadSection.style.display = 'block';
-            } else {
-                uploadSection.style.display = 'none';
-            }
-            loadVideos();
-        });
     </script>
 </body>
 </html>
